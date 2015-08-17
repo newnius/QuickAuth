@@ -20,7 +20,7 @@
         <li><a href="<?php echo DOMAIN ?>/register.php">Sign up</a></li>
         <li><a href="<?php echo DOMAIN ?>/login.php">Sign in</a></li>
       <?php }else{ ?>
-        <li><a href="<?php echo DOMAIN ?>/ucenter.php?profile"><?php echo $_SESSION['username']?></a></li>
+        <li><a href="<?php echo DOMAIN ?>/ucenter.php?profile"><?php echo htmlspecialchars($_SESSION['username'])?></a></li>
         <li><a href="<?php echo DOMAIN ?>/ucenter.php">Explore</a></li>
       <?php } ?>
         <li class="dropdown">

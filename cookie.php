@@ -8,4 +8,13 @@
       chk_cookie($_COOKIE['username'], $_COOKIE['sid']);
     }
   }
+
+  if(!isset($_SESSION['time'])){
+    $_SESSION['time'] = time;
+  }else{
+    if(time() - $_SESSION['time'] > SESSION_TIME_OUT){
+      signout();
+    }
+  }
+  $_SESSION['time'] = time();
 ?>

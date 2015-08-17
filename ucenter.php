@@ -138,7 +138,7 @@
           <div class="panel panel-default">
             <div class="panel-heading">Welcome</div> 
             <div class="panel-body">
-              Welcome back, <?php echo $username ?>.<br/>
+              Welcome back, <?php echo htmlspecialchars($username) ?>.<br/>
               Your ip: &nbsp; <?php echo get_ip() ?>.<br/>
               Now: &nbsp; <?php echo date('H:i:s',time()) ?>
             </div>
@@ -156,8 +156,8 @@
           <div class="panel panel-default">
             <div class="panel-heading">Profile</div> 
             <div class="panel-body">
-              Username:&nbsp;<?php echo $profile['username'] ?><br/>
-              Email:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $profile['email'] ?>
+              Username:&nbsp;<?php echo htmlspecialchars($profile['username']) ?><br/>
+              Email:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo htmlspecialchars($profile['email']) ?>
               <?php if($profile['verified'] == 'f'){
                       echo '(<a href="?verify">Verify</a>)';
                     }else{
@@ -209,7 +209,7 @@
             <div class="panel-heading">Verify</div> 
             <div class="panel-body">
             <?php //a link of change email(if not verified) should be given here ?>
-              Email:<?php echo $profile['email'] ?>
+              Email:<?php echo htmlspecialchars($profile['email']) ?>
               <?php if($profile['verified']=='t'){
                         echo '(Verified)';
                         echo '<br/><br/>If you no longer own this email, you can choose to <a href="#">Unverify</a> it.';
@@ -243,7 +243,7 @@
                   for($i=0; $i<$cnt; $i++){ ?>
                   <tr>
                     <td><?php echo $i+1 ?></td>
-                    <td><?php echo $logs[$i]['account'] ?></td>
+                    <td><?php echo htmlspecialchars($logs[$i]['account']) ?></td>
                     <td><?php echo date('M,d H:i',$logs[$i]['time'])?></td>
                     <td><?php echo $logs[$i]['accepted']=='t'?'Success':'Failed' ?></td>
                     <td><?php echo long2ip($logs[$i]['ip']) ?></td>

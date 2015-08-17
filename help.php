@@ -80,7 +80,7 @@
           <div id="qid-3" class="panel panel-default">
             <div class="panel-heading">How to use QuickAuth (As a developer)</div> 
             <div class="panel-body">
-              <p>Here is a <a href="#">demo</a>, help yourself.</p>
+              <p>Here is a <a href="http://demo.newnius.com/quickauthdemo/demo.php" target="_blank">demo</a>, help yourself.</p>
             </div>
           </div>
           <div id="qid-4" class="panel panel-default">
