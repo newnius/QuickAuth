@@ -1,2 +1,4 @@
-qa-config*.php
+qa-config.php
+qa-config-sae.php
+qa-config-local.php
 
