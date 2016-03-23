@@ -104,7 +104,7 @@
           <div id="qid-7" class="panel panel-default">
             <div class="panel-heading">How long will the auth be valid</div> 
             <div class="panel-body">
-              <p>&nbsp;&nbsp;THe access token can be used only once, so you don't have to worry about consistent access.</p>
+              <p>&nbsp;&nbsp;The access token can be used only once, so you don't have to worry about consistent access.</p>
             </div>
           </div>
           <div id="qid-8" class="panel panel-default">
