@@ -10,7 +10,7 @@
   }
 
   if(!isset($_SESSION['time'])){
-    $_SESSION['time'] = time;
+    $_SESSION['time'] = time();
   }else{
     if(time() - $_SESSION['time'] > SESSION_TIME_OUT){
       signout();

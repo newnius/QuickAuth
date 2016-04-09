@@ -164,7 +164,7 @@
                       echo '(Verified)';
                     }
               ?><br/>
-              Join time:&nbsp;<?php echo date('M,d H:i',$logs[$i]['time'])?>
+              Join time:&nbsp;<?php echo date('M,d H:i',$profile['reg_time'])?>
             </div>
           </div>
         </div>
