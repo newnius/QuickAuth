@@ -38,14 +38,14 @@
         <ul class="nav nav-tabs">
           <li role="presentation active"><a href="#how-user">User</a></li>
           <li role="presentation"><a href="#how-developer">Developer</a></li>
-	</ul>
-	<div id="how-user">
-	  <p>As a user: All you need to do is when the websites you visit redirect you here, fill in your username and password. Done!</p>
-	</div>
-	<div id="how-developer">
-	  <p>Here is a <a href="<?php echo DOMAIN ?>/help.php#qid-3">demo</a>, help yourself.</p>
-	  <a class="btn btn-primary btn-lg" href="<?php echo DOMAIN ?>/register.php?tryitfree">Try it <strong>FREE</strong></a>
-	</div>
+        </ul>
+        <div id="how-user">
+          <p>As a user: All you need to do is when the websites you visit redirect you here, fill in your username and password. Done!</p>
+        </div>
+        <div id="how-developer">
+          <p>Here is a <a href="<?php echo DOMAIN ?>/help.php#qid-3">demo</a>, help yourself.</p>
+              <a class="btn btn-primary btn-lg" href="<?php echo DOMAIN ?>/register.php?tryitfree">Try it <strong>FREE</strong></a>
+        </div>
       </div>
     </div>
     <div class="jumbotron">
