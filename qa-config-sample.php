@@ -31,7 +31,7 @@
   
   
   // if not vefified, not allowed to login	
-  define('FORCE_VERIFY'， false);
+  define('FORCE_VERIFY', false);
  
   // secure module
   // protect from CC, mostly in those sites provide vague search
