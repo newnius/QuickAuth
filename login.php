@@ -1,9 +1,10 @@
 <?php 
-  session_start(); 
-  require_once('qa-config.php');
+  //require_once('auth-header.php');
+  require_once('config.inc.php');
+  require_once('util4p/Session.class.php');
+  require_once('init.inc.php');
   require_once('secure.php');
   require_once('cookie.php');
-  require_once('auth-header.php');
 ?>
 <!DOCTYPE html>
 <html lang="en-US">
@@ -50,7 +51,7 @@
           </div>
           <button id="btn-login" class="btn btn-lg btn-primary btn-block" type="submit" >Sign in</button>
           <p class="msg">
-            <a href="<?php echo DOMAIN ?>/register.php" >Register</a>
+            <a href="<?=BASE_URL?>/register.php" >Register</a>
           </p>
           <div class="alert alert-danger alert-dismissable my-info"  style="display:none">
       	    <button type="button" class="close" data-dismiss="alert"  aria-hidden="true">&times;</button>
@@ -62,7 +63,7 @@
       <div id="haveloged" class="panel panel-default">
         <h4>You have loged in</h4>
         <div><input type="radio" checked="checked"/>&nbsp;&nbsp;<?php echo $_SESSION['username'] ?></div><br/>
-        <a href="<?php echo DOMAIN ?>/ucenter.php" class="btn btn-primary ">Enter Ucenter</a>
+        <a href="<?=BASE_URL?>/ucenter.php" class="btn btn-primary ">Enter Ucenter</a>
         &nbsp;&nbsp;&nbsp;<a href="ucenter.php?signout">Sign out</a>
       </div>
       <?php } ?>

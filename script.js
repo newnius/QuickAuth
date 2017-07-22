@@ -77,7 +77,7 @@
         return false;
       }
       var ajax = $.ajax({
-        url: "ajax-account.php?action=reg",
+        url: "ajax.php?action=user_register",
         type: 'POST',
         data: {
           username: username,
@@ -86,14 +86,15 @@
         }
       });
 
-      ajax.done(function(msg){
-        if(msg=="1"){
+      ajax.done(function(json){
+      	var res = JSON.parse(json);
+      	if(res["errno"] == 0){
           alert('Welcome, my new friend!');
           window.location.href="login.php";
         }else{
           $("#btn-register").removeAttr("disabled");
           $("#btn-register").html("Register");
-          $("#reg-error-msg").html(msg);
+          $("#reg-error-msg").html(res["msg"]);
           $("#reg-error").css("display","block");
           $("#register").effect("shake");
         }
@@ -124,7 +125,7 @@
       $("#btn-login").html("submiting");
       $("#btn-login").attr("disabled","disabled");
       var ajax = $.ajax({
-        url: "ajax-account.php?action=login",
+        url: "ajax.php?action=login",
         type: 'POST',	
         data: {
           account: account,
@@ -133,11 +134,12 @@
         }
       });
 
-      ajax.done(function(msg){
-        if(msg=="1"){
+      ajax.done(function(json){
+      	var res = JSON.parse(json);
+      	if(res["errno"] == 0){
           window.location.href = "ucenter.php";
         }else{
-          $("#signin-error-msg").html(msg);
+          $("#signin-error-msg").html(res["msg"]);
           $("#signin-error").css("display","block");
           $("#password").val("");
           $("#login").effect("shake");

@@ -1,11 +1,4 @@
 <?php
-  //deny directly access
-  if(!defined('IN_QA')){
-    header('HTTP/1.1 403 Forbidden');  
-    echo '<h1>403 Forbidden</h1>';
-    exit;
-  }
-
   /* 0 success
    * 1 maximun deliver per ip per day exceeded
    * 2 maximun deliver per email per day exceeded

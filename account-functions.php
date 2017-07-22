@@ -1,11 +1,4 @@
 <?php
-  //deny directly access
-  if(!defined('IN_QA')){
-    header('HTTP/1.1 403 Forbidden');  
-    echo '<h1>403 Forbidden</h1>';
-    exit;
-  }
-	
   if(file_exists('email-functions.php')){
     require_once('email-functions.php');
   }else{

@@ -1,6 +1,6 @@
 <?php
   session_start();
-  require_once('qa-config.php');
+  require_once('config.inc.php');
   require_once('secure.php');
   require_once('cookie.php');
 ?>
