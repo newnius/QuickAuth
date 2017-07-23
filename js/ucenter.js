@@ -5,66 +5,15 @@ console.log(page_type);
       load_users();
       register_events_user();
       break;
-    case "links":
-      load_links();
-      register_events_link();
-      break;
-    case "awards":
-      load_awards();
-      register_events_award();
-      break;
-    case "slides":
-      load_slides();
-      register_events_slide();
-      break;
-    case "options":
-      load_options();
-      register_events_option();
-      break;
-    case "posts":
-      load_posts();
-      register_events_post();
-      break;
-    case "newss":
-      load_newss();
-      register_events_news();
-      break;
-    case "news_edit":
-      //init_news(id);
-      register_events_news();
-      break;
-    case "pages":
-      load_pages();
-      register_events_page();
-      break;
-    case "page_edit":
-      register_events_page();
-      break;
     case "logs":
       load_logs('self');
       break;
     case "logs_all":
       load_logs('all');
       break;
-    case "cv":
-      load_cv('zh');
-      register_events_profile();
-      break;
-    case "cv_en":
-      load_cv('en');
-      register_events_profile();
-      break;
     case "profile":
       load_profile();
       register_events_profile();
-      break;
-    case "achievements":
-      load_achievements('self');
-      register_events_achievement();
-      break;
-    case "achievements_all":
-      load_achievements('all');
-      register_events_achievement();
       break;
     case "changepwd":
       register_events_user();
@@ -78,7 +27,7 @@ console.log(page_type);
 function load_logs(scope){
   $table = $("#table-log");
   $table.bootstrapTable({
-    url: 'ajax.php?action=get_signin_log&scope='+scope,
+    url: 'ajax.php?action=get_log&scope='+scope,
     responseHandler: signinLogResponseHandler,
     cache: true,
     striped: true,
