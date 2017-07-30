@@ -28,6 +28,7 @@
 		const USER_NOT_EXIST = 20;
 		const USER_IS_BLOCKED = 21;
 
+		const USERNAME_MISMATCH_EMAIL = 22;
 
 		public static function getErrorMsg($errno){
 			switch($errno){
@@ -96,6 +97,9 @@
 
 				case CRErrorCode::INVALID_PASSWORD:
 					return '无效的密码！';
+
+				case CRErrorCode::USERNAME_MISMATCH_EMAIL:
+					return '用户名与邮箱不匹配！';
 
 				default:
 					return '未知错误！('.$errno.')';

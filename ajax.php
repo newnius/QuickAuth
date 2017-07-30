@@ -29,6 +29,12 @@
 			$res = user_get_users($rule);
 			break;
 
+		case 'user_get':
+			$rule = new CRObject();
+			$rule->set('username', cr_get_GET('username'));
+			$res = user_get($rule);
+			break;
+
 		case 'user_register':
 			$user = new CRObject();
 			$user->set('username', cr_get_POST('username'));
@@ -62,6 +68,28 @@
 			$rule->set('limit', 20);
 			$rule->set('order', 'latest');
 			$res = user_get_log($rule);
+			break;
+
+		case 'reset_pwd_send_code':
+			$user = new CRObject();
+			$user->set('username', cr_get_POST('username'));
+			$user->set('email', cr_get_POST('email'));
+			$res = reset_pwd_send_code($user);
+			break;
+
+		case 'reset_pwd':
+			$user = new CRObject();
+			$user->set('username', cr_get_POST('username'));
+			$user->set('email', cr_get_POST('email'));
+			$user->set('password', cr_get_POST('password'));
+			$user->set('code', cr_get_POST('code'));
+			$res = reset_pwd($user);
+			break;
+
+		case 'verify_email_send_code':
+			break;
+
+		case 'verify_email':
 			break;
 	}
 

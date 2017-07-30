@@ -1,6 +1,7 @@
 <?php 
-  session_start(); 
-  require_once('qa-config.php'); 
+  require_once('util4p/Session.class.php');
+  require_once('config.inc.php');
+  require_once('init.inc.php');
   require_once('secure.php');
   require_once('cookie.php');
 ?>
@@ -26,6 +27,7 @@
 
   <body>
   <?php require_once('header.php'); ?>
+  <?php require_once('modals.php'); ?>
     <div class="container">
       <div id="lostpass-error">
         <strong>Error:</strong>
@@ -61,6 +63,7 @@
     <script src="script.js"></script>
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
     <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		<script src="//cdn.bootcss.com/blueimp-md5/1.1.1/js/md5.min.js"></script>
     <script src="//cdn.bootcss.com/jqueryui/1.11.4/jquery-ui.js"></script> 
   </body>
 </html>

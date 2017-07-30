@@ -5,6 +5,7 @@
 	require_once('util4p/Session.class.php');
 	require_once('util4p/CRLogger.class.php');
 	require_once('util4p/AccessController.class.php');
+	require_once('util4p/Random.class.php');
 	require_once('UserManager.class.php');
 	
 	require_once('config.inc.php');
@@ -266,4 +267,39 @@
 		$info = new CRObject();
 		$info->set('username', $user->get('username'));
 		return userinfo_remove($info);
+	}
+
+	/**/
+	function reset_pwd_send_code($user){
+		$user_arr = UserManager::getUserByUsername($user->get('username'));
+		if($user_arr == null){
+			$res['errno'] = CRErrorCode::USER_NOT_EXIST;
+			return $res;
+		}
+		if($user_arr['email'] !== $user->get('email')){
+			$res['errno'] = CRErrorCode::USERNAME_MISMATCH_EMAIL;
+			return $res;
+		}
+		$code = Random::randomInt(100000, 999999);
+		$res['errno'] = CRErrorCode::SUCCESS;
+		$res['msg'] = $code;
+		return $res;
+	}
+
+
+	/**/
+	function reset_pwd($user){
+		$user_arr = UserManager::getUserByUsername($user->get('username'));
+		if($user_arr == null){
+			$res['errno'] = CRErrorCode::USER_NOT_EXIST;
+			return $res;
+		}
+		$code = '123456';
+		if($code !== $user->get('code')){
+			$res['errno'] = CRErrorCode::USER_NOT_EXIST;
+			return $res;
+		}
+		$success = UserManager::updateUser(new CRObject($user_arr));
+		$res['errno'] = $success?CRErrorCode::SUCCESS:CRErrorCode::UNKNOWN_ERROR;
+		return $res;
 	}

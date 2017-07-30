@@ -170,7 +170,7 @@
       var username = $("#username").val();
       var email = $("#email").val();
       var ajax = $.ajax({
-        url: "ajax-account.php?action=lostpass",
+        url: "ajax.php?action=reset_pwd_send_code",
         type: 'POST',	
         data: {
           username: username,
@@ -178,16 +178,22 @@
         }
       });
 
-      ajax.done(function(msg){
-        if(msg=="0"){
-          alert("An email has been sent to your email box");
-          window.location.href = "index.php";
+      ajax.done(function(json){
+        $("#btn-lostpass").html("Send email");
+        $("#btn-lostpass").removeAttr("disabled");
+      	var res = JSON.parse(json);
+      	if(res["errno"] == 0){
+    			$('#modal-resetpwd').modal('show');
+    			$('#form-resetpwd-username').val(username);
+    			$('#form-resetpwd-email').val(email);
+    			$('#form-resetpwd-code').val(code);
+
+          //alert("An email has been sent to your email box");
+          //window.location.href = "index.php";
         }else{
-          $("#lostpass-error-msg").html("Unable to deliver("+ msg +"),<br/> <a href='help.php#qid-9'>see why</a>");
+          $("#lostpass-error-msg").html("Unable to deliver("+ res["msg"] +"),<br/> <a href='help.php#qid-9'>see why</a>");
           $("#lostpass-error").css("display","block");
           $("#lostpass").effect("shake");
-          $("#btn-lostpass").html("Send email");
-          $("#btn-lostpass").removeAttr("disabled");
         }
       });
 
@@ -200,12 +206,15 @@
   );
 
 
-  $("#btn-resetpwd").click(
+  $("#form-resetpwd-submit").click(
     function(e){
       e.preventDefault();
       $("#btn-resetpwd").html("submiting");
       $("#btn-resetpwd").attr("disabled","disabled");
-      if(!chkUsername() || !chkPwd()){
+      var username = $("#form-resetpwd-username").val();
+      var password = cryptPwd($("#form-resetpwd-password").val());
+			var code = '123456';
+      if(false){
         $("#btn-resetpwd").html("Reset");
         $("#btn-resetpwd").removeAttr("disabled");
         $("#resetpwd-error-msg").html("<br/>* username can not be empty<br/>* password length should >= 6");
@@ -213,27 +222,24 @@
         $("#resetpwd").effect("shake");
         return false;
       }
-      var username = $("#username").val();
-      var password = cryptPwd($("#password").val());
-      var auth_key = $("#auth_key").val();
       var ajax = $.ajax({
-        url: "ajax-account.php?action=resetpwd",
+        url: "ajax.php?action=reset_pwd",
         type: 'POST',	
         data: {
           username: username,
           password: password,
-          auth_key: auth_key
+					code: code
   	}
       });
 
-      ajax.done(function(msg){
-        if(msg=="1"){
+      ajax.done(function(json){
+      	var res = JSON.parse(json);
+      	if(res["errno"] == 0){
           alert("Your password has been successfully reset");
           window.location.href = "login.php";
         }else{
-          $("#resetpwd-error-msg").html(msg);
-          $("#resetpwd-error").css("display","block");
-          $("#resetpwd").effect("shake");
+          $("#form-resetpwd-msg").html(res["msg"]);
+          $("#form-resetpwd-msg").effect("shake");
           $("#btn-resetpwd").html("Reset");
           $("#btn-resetpwd").removeAttr("disabled");
         }

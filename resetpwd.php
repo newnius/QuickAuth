@@ -1,6 +1,7 @@
 <?php 
-  session_start();
-  require_once('qa-config.php'); 
+  require_once('util4p/Session.class.php');
+  require_once('config.inc.php');
+  require_once('init.inc.php');
   require_once('secure.php');
   require_once('cookie.php');
 ?>
