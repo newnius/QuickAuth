@@ -46,7 +46,7 @@
               <input type="checkbox" id="rememberme" value="remember-me"> Remember me
             </label>
             <label>
-              <span><abbr title="Click to reset your password" class="text-right" id="forget-pwd">Forget pwd?</abbr></span>
+              <span><a class="text-right" href="lostpass.php">Forget?</a></span>
  	    </label>        
           </div>
           <button id="btn-login" class="btn btn-lg btn-primary btn-block" type="submit" >Sign in</button>

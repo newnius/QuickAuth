@@ -42,7 +42,7 @@
               <div class="input-group-addon">
                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
               </div>
-              <input type="text" class="form-control" id="username" placeholder="Username" required />
+              <input type="text" class="form-control" id="form-lostpass-username" placeholder="Username" required />
             </div>
           </div>
           <div class="form-group">
@@ -51,10 +51,10 @@
               <div class="input-group-addon">
                 <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
               </div>
-              <input type="email" class="form-control" id="email" placeholder="Email" required />
+              <input type="email" class="form-control" id="form-lostpass-email" placeholder="Email" required />
             </div>
           </div>
-          <button id="btn-lostpass" class="btn btn-lg btn-primary btn-block" type="submit" >Send Email</button>
+          <button id="form-lostpass-submit" class="btn btn-lg btn-primary btn-block" type="submit" >Send Email</button>
         </form>
       </div>
     </div> <!-- /container -->

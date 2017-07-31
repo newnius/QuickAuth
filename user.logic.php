@@ -174,6 +174,39 @@
 		return $res;
 	}
 
+	/**/
+	function user_update_pwd($user)
+	{
+		$user_arr = UserManager::getUserByUsername($user->get('username'));
+		if($user_arr === null){
+			$res['errno'] = CRErrorCode::USER_NOT_EXIST;
+			return $res; 
+		}
+		if(!password_verify($user->get('old_pwd'), $user_arr['password']))
+		{ /* need provide old password */
+			$res['errno'] = CRErrorCode::WRONG_PASSWORD;
+			return $res;
+		}
+		$password = password_hash($user->get('password'), PASSWORD_DEFAULT);
+		$user_arr['password'] = $password;
+		$success = UserManager::updateUser(new CRObject($user_arr));
+		$res['errno'] = $success?CRErrorCode::SUCCESS:CRErrorCode::UNKNOWN_ERROR;
+		return $res;
+/*
+		$success = UserManager::updateUser($user_new);
+		if($success){
+			$log = new CRObject();
+			$log->set('tag', "user-".Session::get('username'));
+			$log->set('content', "更新帐号信息:{$user->get('username')}");
+			CRLogger::log2db($log);
+			$res['errno'] = CRErrorCode::SUCCESS;
+			return $res;
+		}
+		$res['errno'] = CRErrorCode::UNKNOWN_ERROR;
+		return $res;
+		*/
+	}
+
 	/*
 	 * check if cookie is valid, if so, log in the user
 	 */

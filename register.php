@@ -27,13 +27,10 @@
 
   <body>
     <?php require_once('header.php'); ?>
+    <?php require_once('modals.php'); ?>
     <div class="container">
-      <div id="reg-error">
-        <strong>Error:</strong>
-        <span id="reg-error-msg"></span>
-      </div>
       <div id="register">
-        <form class="form-register">
+        <form class="form-signup">
           <h2>Sign up</h2>
           <div class="form-group">
             <label class="sr-only" for="inputUsername">Username</label>
@@ -41,12 +38,8 @@
               <div class="input-group-addon">
                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
               </div>
-              <input type="text" class="form-control" id="username" placeholder="Username" required />
-              <div class="input-group-addon">
-                <span id="username-msg-icon" class="glyphicon glyphicon-star" aria-hidden="true"></span>
-              </div>
+              <input type="text" class="form-control" id="form-signup-username" placeholder="Username" required />
             </div>
-            <span class="text-danger" id="username-msg"></span>
           </div>
           <div class="form-group">
             <label class="sr-only" for="inputEmail">Email</label>
@@ -54,12 +47,8 @@
               <div class="input-group-addon">
                 <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
               </div>
-              <input type="email" class="form-control" id="email" placeholder="Email" required />
-              <div class="input-group-addon">
-                <span id="email-msg-icon" class="glyphicon glyphicon-star" aria-hidden="true"></span>
-              </div>
+              <input type="email" class="form-control" id="form-signup-email" placeholder="Email" required />
             </div>
-            <span class="text-danger" id="email-msg"></span>
           </div>
           <div class="form-group">
             <label class="sr-only" for="inputPassword">Password</label>
@@ -67,12 +56,8 @@
               <div class="input-group-addon">
                 <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
               </div>
-              <input type="password" class="form-control" id="password" placeholder="Password" required />
-              <div class="input-group-addon">
-                <span id="password-msg-icon" class="glyphicon glyphicon-star" aria-hidden="true"></span>
-              </div>
+              <input type="password" class="form-control" id="form-signup-password" placeholder="Password" required />
             </div>
-            <span class="text-danger" id="password-msg"></span>
           </div>
           <button id="btn-register" class="btn btn-lg btn-primary btn-block" type="Register" >Register</button>
         </form>
@@ -80,11 +65,8 @@
     </div> <!-- /container -->
     <?php require_once('footer.php'); ?>
     <script src="script.js"></script>
-    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
     <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="//cdn.bootcss.com/jqueryui/1.11.4/jquery-ui.js"></script> 
     <script src="//cdn.bootcss.com/blueimp-md5/1.1.1/js/md5.min.js"></script>
   </body>
 </html>
-
-

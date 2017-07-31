@@ -47,10 +47,17 @@
 			$user = new CRObject();
 			$user->set('username', cr_get_POST('username', Session::get('username')));
 			$user->set('email', cr_get_POST('email'));
-			$user->set('old_pwd', cr_get_POST('oldpwd'));
 			$user->set('password', cr_get_POST('password'));
 			$user->set('role', cr_get_POST('role'));
 			$res = user_update($user);
+			break;
+
+		case 'update_pwd':
+			$user = new CRObject();
+			$user->set('username', cr_get_POST('username', Session::get('username')));
+			$user->set('old_pwd', cr_get_POST('oldpwd'));
+			$user->set('password', cr_get_POST('password'));
+			$res = user_update_pwd($user);
 			break;
 
 		case 'user_remove':
