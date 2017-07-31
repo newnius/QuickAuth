@@ -9,48 +9,6 @@
     }
   );
 
-
-  $("#username").blur(
-    function(){
-      var username = $("#username").val();
-        if(chkUsername()){
-          isUsernameReged(username,function(msg){
-            if(msg=='true'){
-              $("#username-msg-icon").addClass("glyphicon glyphicon-remove");
-              $("#username-msg").html("occupied");
-            }else{
-              $("#username-msg-icon").addClass("glyphicon glyphicon-ok");
-              $("#username-msg").html("");
-            }
-          });			
-        }
-  });
-
-
-  $("#email").blur(
-    function(){
-      var email = $(this).val();
-      if(chkEmail()){
-        isEmailReged(email,function(msg){
-          if(msg=='true'){
-            $("#email-msg-icon").addClass("glyphicon glyphicon-remove");
-            $("#email-msg").html("occupied");
-          }else{
-            $("#email-msg-icon").addClass("glyphicon glyphicon-ok");
-            $("#email-msg").html("");
-          }
-        });
-      }
-  });
-
-
-  $("#password").blur(
-    function(){
-      chkPwd();
-    }
-  );
-
-
   $("#iAgree").click(
     function(){
       if($(this).prop("checked")==true){
@@ -183,13 +141,8 @@
         $("#btn-lostpass").removeAttr("disabled");
       	var res = JSON.parse(json);
       	if(res["errno"] == 0){
-    			$('#modal-resetpwd').modal('show');
-    			$('#form-resetpwd-username').val(username);
-    			$('#form-resetpwd-email').val(email);
-    			$('#form-resetpwd-code').val(code);
-
-          //alert("An email has been sent to your email box");
-          //window.location.href = "index.php";
+    			$('#modal-msg').modal('show');
+    			$('#modal-msg-content').text("Email has been sent to your email box.");
         }else{
           $("#lostpass-error-msg").html("Unable to deliver("+ res["msg"] +"),<br/> <a href='help.php#qid-9'>see why</a>");
           $("#lostpass-error").css("display","block");
@@ -209,19 +162,12 @@
   $("#form-resetpwd-submit").click(
     function(e){
       e.preventDefault();
-      $("#btn-resetpwd").html("submiting");
-      $("#btn-resetpwd").attr("disabled","disabled");
       var username = $("#form-resetpwd-username").val();
-      var password = cryptPwd($("#form-resetpwd-password").val());
-			var code = '123456';
-      if(false){
-        $("#btn-resetpwd").html("Reset");
-        $("#btn-resetpwd").removeAttr("disabled");
-        $("#resetpwd-error-msg").html("<br/>* username can not be empty<br/>* password length should >= 6");
-        $("#resetpwd-error").css("display","block");
-        $("#resetpwd").effect("shake");
-        return false;
-      }
+      var password = $("#form-resetpwd-password").val();
+      password = cryptPwd(password);
+			var code = getParameterByName("code");
+    	$('#modal-msg').modal('show');
+    	$('#modal-msg-content').text("Processing...");
       var ajax = $.ajax({
         url: "ajax.php?action=reset_pwd",
         type: 'POST',	
@@ -229,57 +175,16 @@
           username: username,
           password: password,
 					code: code
-  	}
+				}
       });
 
       ajax.done(function(json){
       	var res = JSON.parse(json);
       	if(res["errno"] == 0){
-          alert("Your password has been successfully reset");
-          window.location.href = "login.php";
+    			$('#modal-msg-content').text("Your password has been successfully reset.");
         }else{
-          $("#form-resetpwd-msg").html(res["msg"]);
-          $("#form-resetpwd-msg").effect("shake");
-          $("#btn-resetpwd").html("Reset");
-          $("#btn-resetpwd").removeAttr("disabled");
+    			$('#modal-msg-content').text(res["msg"]);
         }
-      });
-
-      ajax.fail(function(jqXHR,textStatus){
-        alert("Request failed :" + textStatus);
-          $("#btn-resetpwd").html("Send email");
-          $("#btn-resetpwd").removeAttr("disabled");
-      });
-    }
-  );
-
-
-  $("#btn-verify-online").click(
-    function(e){
-      e.preventDefault();
-      $("#btn-verify-online").html("submiting");
-      $("#btn-verify-online").attr("disabled","disabled");
-      var ajax = $.ajax({
-        url: "ajax-account.php?action=verifyon",
-        type: 'POST',	
-        data: {  	}
-      });
-
-      ajax.done(function(msg){
-        if(msg=="0"){
-          $("#verify-online-msg").html("An email has been sent");;
-          $("#btn-verify-online").html("Send me an email");
-        }else{
-          $("#verify-online-msg").html("Unable to deliver("+ msg +"), <a href='help.php#qid-9'>see why</a>");
-          $("#btn-verify-online").html("Send me an email");
-          //$("#btn-verify-online").removeAttr("disabled");
-        }
-      });
-
-      ajax.fail(function(jqXHR,textStatus){
-        alert("Request failed :" + textStatus);
-        $("#btn-verify-online").html("Send me an email");
-        $("#btn-verify-online").removeAttr("disabled");
       });
     }
   );

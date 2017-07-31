@@ -49,8 +49,7 @@
 		{
 			$username = $user->get('username');
 			$email = $user->get('email');
-			$pwd = $user->get('pwd');
-			$pwd = password_hash($pwd, PASSWORD_DEFAULT);
+			$password = $user->get('password');
 			$role = $user->get('role');
 			if(!Validator::isEmail($email)){ return false; }
 
@@ -62,7 +61,7 @@
 			$sql = $builder->build();
 
 			$params = array(
-				$username, $email, $pwd, $role, time(), ip2long(cr_get_client_ip())
+				$username, $email, $password, $role, time(), ip2long(cr_get_client_ip())
 			);
 			$count = (new MysqlPDO())->execute($sql, $params);
 			return $count==1;
@@ -77,8 +76,7 @@
 			$username = $user->get('username');
 			$email = $user->get('email');
 			$email_verified = $user->getInt('email_verified');
-			$pwd = $user->get('pwd');
-			$pwd = password_hash($pwd, PASSWORD_DEFAULT);
+			$password = $user->get('password');
 			$role = $user->get('role');
 			if(!Validator::isEmail($email)){ return false; }
 
@@ -90,7 +88,7 @@
 			$builder->update('qa_user', $key_values);
 			$builder->where($where_arr);
 			$sql = $builder->build();
-			$params = array($email, $email_verified, $pwd, $role, $username);
+			$params = array($email, $email_verified, $password, $role, $username);
 			$count = (new MysqlPDO())->execute($sql, $params);
 			return $count == 1;
 		}
@@ -137,7 +135,7 @@
 		{
       $offset = $rule->getInt('offset', 0);
       $limit = $rule->getInt('limit', -1);
-			$selected_rows = array();
+			$selected_rows = array('username', 'email', 'email_verified', 'role', 'reg_time', 'reg_ip');
 			$where_arr = array();
 			$builder = new SQLBuilder();
 			$builder->select('qa_user', $selected_rows);

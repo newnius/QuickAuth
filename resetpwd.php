@@ -16,7 +16,7 @@
     <meta name="description" content="QuickAuth is an implement of authorization. By using QuickAuth, you can log in to some websites without sign up for another account, which most likely will be used only once. Also,it is totally free!" />
     <meta name="author" content="Newnius"/>
     <link rel="icon" href="favicon.ico"/>
-    <title>Reset password | QuickAuth</title>
+    <title>Sign up | QuickAuth</title>
     <!-- Bootstrap core CSS -->
     <link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"/>
     <!-- Custom styles for this template -->
@@ -27,39 +27,48 @@
 
   <body>
     <?php require_once('header.php'); ?>
+    <?php require_once('modals.php'); ?>
     <div class="container">
-      <div id="resetpwd-error">
+      <div id="reg-error">
         <strong>Error:</strong>
-        <span id="resetpwd-error-msg"></span>
+        <span id="reg-error-msg"></span>
       </div>
       <div id="resetpwd">
-        <form class="form-resetpwd">
-          <h2>Reset password</h2>
+        <form class="form-resetpwd" action="#">
+          <h2>Reset Password</h2>
           <div class="form-group">
             <label class="sr-only" for="inputUsername">Username</label>
             <div class="input-group">
               <div class="input-group-addon">
                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
               </div>
-              <input type="text" class="form-control" id="username" placeholder="Username" required />
+              <input type="text" class="form-control" id="form-resetpwd-username" placeholder="Username" required />
             </div>
           </div>
           <div class="form-group">
-            <label class="sr-only" for="inputPassword">New Password</label>
+            <label class="sr-only" for="inputPassword">Password</label>
             <div class="input-group">
               <div class="input-group-addon">
                 <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
               </div>
-              <input type="password" class="form-control" id="password" placeholder="New password" required />
+              <input type="password" class="form-control" id="form-resetpwd-password" placeholder="Password" required />
             </div>
           </div>
-          <input type="hidden" id="auth_key" value="<?php echo $_GET['key'] ?>"/>
-          <button id="btn-resetpwd" class="btn btn-lg btn-primary btn-block" type="submit" >Reset</button>
+          <div class="form-group">
+            <label class="sr-only" for="inputPassword">Repeat</label>
+            <div class="input-group">
+              <div class="input-group-addon">
+                <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+              </div>
+              <input type="password" class="form-control" id="form-resetpwd-repeat" placeholder="Repeat password" required />
+            </div>
+          </div>
+          <button id="form-resetpwd-submit" class="btn btn-lg btn-primary btn-block" type="submita">Reset</button>
         </form>
       </div>
     </div> <!-- /container -->
     <?php require_once('footer.php'); ?>
-
+    <script src="js/util.js"></script>
     <script src="script.js"></script>
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
     <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
@@ -67,5 +76,3 @@
     <script src="//cdn.bootcss.com/blueimp-md5/1.1.1/js/md5.min.js"></script>
   </body>
 </html>
-
-

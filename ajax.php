@@ -16,7 +16,7 @@
 		case 'login':
 			$user = new CRObject();
 			$user->set('account', cr_get_POST('account'));
-			$user->set('pwd', cr_get_POST('password'));
+			$user->set('password', cr_get_POST('password'));
 			$user->set('remember_me', cr_get_POST('rememberme', 'false')=='true');
 			$res = user_login($user);
 			break;
@@ -26,12 +26,12 @@
 			$rule->set('offset', 0);
 			$rule->set('limit', 20);
 			$rule->set('order', 'latest');
-			$res = user_get_users($rule);
+			$res = users_get($rule);
 			break;
 
 		case 'user_get':
 			$rule = new CRObject();
-			$rule->set('username', cr_get_GET('username'));
+			$rule->set('username', cr_get_GET('username', Session::get('username')));
 			$res = user_get($rule);
 			break;
 
@@ -39,7 +39,7 @@
 			$user = new CRObject();
 			$user->set('username', cr_get_POST('username'));
 			$user->set('email', cr_get_POST('email'));
-			$user->set('pwd', cr_get_POST('password'));
+			$user->set('password', cr_get_POST('password'));
 			$res = user_register($user);
 			break;
 
@@ -48,7 +48,7 @@
 			$user->set('username', cr_get_POST('username', Session::get('username')));
 			$user->set('email', cr_get_POST('email'));
 			$user->set('old_pwd', cr_get_POST('oldpwd'));
-			$user->set('pwd', cr_get_POST('password'));
+			$user->set('password', cr_get_POST('password'));
 			$user->set('role', cr_get_POST('role'));
 			$res = user_update($user);
 			break;
@@ -87,9 +87,17 @@
 			break;
 
 		case 'verify_email_send_code':
+			$user = new CRObject();
+			$user->set('username', Session::get('username'));
+			$res = verify_email_send_code($user);
 			break;
 
 		case 'verify_email':
+			$user = new CRObject();
+			$user->set('username', cr_get_POST('username'));
+			$user->set('email', cr_get_POST('email'));
+			$user->set('code', cr_get_POST('code'));
+			$res = reset_pwd($user);
 			break;
 	}
 

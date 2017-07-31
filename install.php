@@ -32,10 +32,13 @@
 		$password = md5($password.'account');
 		$password = md5($password.'newnius');
 		$password = md5($password.'com');
+
+		$password = password_hash($password, PASSWORD_DEFAULT);
+
 		$user = new CRObject();
 		$user->set('username', 'root');
 		$user->set('email', 'root@domain.com');
-		$user->set('pwd', $password);
+		$user->set('password', $password);
 		$user->set('role', 'root');
 		var_dump(UserManager::addUser($user));
 	}

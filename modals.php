@@ -377,41 +377,17 @@
 </div>
 
 
-<!-- reset pwd modal -->
-<div class="modal fade" id="modal-resetpwd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!-- msg modal -->
+<div class="modal fade" id="modal-msg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 id="modal-resetpwd-title" class="modal-title">重置密码</h4>
+        <h4 id="modal-msg-title" class="modal-title">提示</h4>
       </div>
       <div class="modal-body">
-        <form id="form-resetpwd" action="javascript:void(0)">
-          <input type="hidden" id="form-resetpwd-username" class="form-group form-control" required />
-          <input type="hidden" id="form-resetpwd-email" class="form-group form-control" required />
-          <table class="table">
-            <tr>
-              <th>密码</th>
-              <td>
-                <label for="password" class="sr-only">密码</label>
-                <input type="password" id="form-resetpwd-password" class="form-group form-control"  placeholder="6位以上" required />
-              </td>
-            </tr>
-            <tr>
-              <th>重复</th>
-              <td>
-                <label for="password" class="sr-only">重复密码</label>
-                <input type="password" id="form-resetpwd-repeat" class="form-group form-control"  placeholder="再次输入密码" required />
-              </td>
-            </tr>
-          </table>
-          <div>
-            <button id="form-resetpwd-submit" type="submit" class="btn btn-primary">确认重置</button>
-            <span id="form-resetpwd-msg" class="text-danger"></span>
-          </div>
-        </form>
+				<h4 id="modal-msg-content" class="text-msg text-center">lalalalal</h4>
       </div>
     </div>
   </div>
 </div>
-

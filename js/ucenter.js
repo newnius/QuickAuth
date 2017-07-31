@@ -13,7 +13,7 @@ console.log(page_type);
       break;
     case "profile":
       load_profile();
-      register_events_profile();
+      register_events_user();
       break;
     case "changepwd":
       register_events_user();

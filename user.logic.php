@@ -49,6 +49,8 @@
 			$res['errno'] = CRErrorCode::EMAIL_OCCUPIED;
 			return $res;
 		}
+		$password = password_hash($user->get('password'), PASSWORD_DEFAULT);
+		$user->set('password', $password);
 		$success = UserManager::addUser($user);
 		if(!$success){
 			$res['errno'] = CRErrorCode::UNKNOWN_ERROR;
@@ -60,7 +62,7 @@
 	function user_login($user)
 	{
 		$account = $user->get('account');// may be username, email or pnone number etc.
-		$pwd = $user->get('pwd');
+		$password = $user->get('password');
 		$remember_me = $user->get('remember_me', false);
 
 		$user = null;
@@ -82,7 +84,7 @@
 			$res['errno'] = CRErrorCode::USER_IS_BLOCKED;
 			return $res;
 		}
-		if(password_verify($pwd, $user['password'])){
+		if(password_verify($password, $user['password'])){
 			Session::put('username', $user['username']);
 			Session::put('role', $user['role']);
 			if(ENABLE_COOKIE && $remember_me){
@@ -126,7 +128,7 @@
 		}
 		/* fill user properties */
 		$user_new->set('email', $user_new->get('email', $user['email']));
-		$user_new->set('pwd', $user_new->get('pwd', $user['password']));
+		$user_new->set('password', $user_new->get('password', $user['password']));
 		$user_new->set('role', $user_new->get('role', $user['role']));
 		if(!validate_email($user_new->get('email'))){
 			$res['errno'] = CRErrorCode::INVALID_EMAIL;
@@ -158,6 +160,7 @@
 			}
 		}
 
+		//$pwd = password_hash($user->get('pwd_new'), PASSWORD_DEFAULT);
 		$success = UserManager::updateUser($user_new);
 		if($success){
 			$log = new CRObject();
@@ -174,7 +177,7 @@
 	/*
 	 * check if cookie is valid, if so, log in the user
 	 */
-	function login_from_cookie($username, $pwd)
+	function login_from_cookie($username, $password)
 	{
 		if(!ENABLE_COOKIE){
 			return false;
@@ -188,7 +191,7 @@
 			signout();
 			return false;
 		}
-		if($pwd == UserManager::cryptPwdForCookie($user['password'])){
+		if($password == UserManager::cryptPwdForCookie($user['password'])){
 			Session::put('username', $user['username']);
 			Session::put('role', $user['role']);
 			Session::put('loged', false);
@@ -204,7 +207,26 @@
 
 
 	/**/
-	function user_get_users($rule)
+	function user_get($rule)
+	{
+		if(Session::get('username')===$rule->get('username') || AccessController::hasAccess(Session::get('role', 'visitor'), 'user_get_others')){ //access control
+			$res['errno'] = CRErrorCode::SUCCESS;
+			$user = UserManager::getUserByUsername($rule->get('username'));
+			if($user===null){
+				$res['errno'] = CRErrorCode::USER_NOT_EXIST;
+			}else{
+				unset($user['password']);
+				$res['user'] = $user;
+			}
+			$res['user'] = $user;
+			return $res;
+		}
+		$res['errno'] = CRErrorCode::NO_PRIVILEGE;
+		return $res;
+	}
+
+	/**/
+	function users_get($rule)
 	{
 		if(!AccessController::hasAccess(Session::get('role', 'visitor'), 'user_get_others')){ //access control
 			$res['errno'] = CRErrorCode::NO_PRIVILEGE;
@@ -288,6 +310,25 @@
 
 
 	/**/
+	function verify_email_send_code($user){
+		$user_arr = UserManager::getUserByUsername($user->get('username'));
+		if($user_arr === null){
+			$res['errno'] = CRErrorCode::USER_NOT_EXIST;
+			return $res;
+		}
+		if($user_arr['email_verified'] === '1'){
+			$res['errno'] = CRErrorCode::EMAIL_ALREADY_VERIFIED;
+			return $res;
+		}
+		
+		$code = Random::randomInt(100000, 999999);
+		$res['errno'] = CRErrorCode::SUCCESS;
+		$res['msg'] = $code;
+		return $res;
+	}
+
+
+	/**/
 	function reset_pwd($user){
 		$user_arr = UserManager::getUserByUsername($user->get('username'));
 		if($user_arr == null){
@@ -295,10 +336,32 @@
 			return $res;
 		}
 		$code = '123456';
+		$password = password_hash($user->get('password'), PASSWORD_DEFAULT);
+		$user_arr['password'] = $password;
 		if($code !== $user->get('code')){
+			$res['errno'] = CRErrorCode::CODE_EXPIRED;
+			return $res;
+		}
+		$success = UserManager::updateUser(new CRObject($user_arr));
+		$res['errno'] = $success?CRErrorCode::SUCCESS:CRErrorCode::UNKNOWN_ERROR;
+		return $res;
+	}
+
+
+	/**/
+	function verify_email($user){
+		$user_arr = UserManager::getUserByUsername($user->get('username'));
+		if($user_arr == null){
 			$res['errno'] = CRErrorCode::USER_NOT_EXIST;
 			return $res;
 		}
+		$code = '123456';
+		if($code !== $user->get('code')){
+			$res['errno'] = CRErrorCode::CODE_EXPIRED;
+			return $res;
+		}
+		$user_arr['email_verified'] = 1;
+		var_dump($user_arr);
 		$success = UserManager::updateUser(new CRObject($user_arr));
 		$res['errno'] = $success?CRErrorCode::SUCCESS:CRErrorCode::UNKNOWN_ERROR;
 		return $res;

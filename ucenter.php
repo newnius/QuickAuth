@@ -222,67 +222,29 @@
               <div class="panel panel-default">
                 <div class="panel-heading">基本信息</div> 
                 <div class="panel-body">
-                  <form id="form-profile" action="javascript:void(0)">
                     <table class="table">
                       <tr>
-                        <th>图片</th>
+                        <th>用户名</th>
                         <td>
-                          <div>
-                            <img id="profile-picture" style="max-width:100px;" src="images/no-user-image.gif" alt="教师照片" />
-                          </div>
-                          <input id="form-profile-picture" name="picture" type="file" class="hidden" />
-                          <button id="form-profile-upload" class="btn btn-default edit hidden">更换图片</button>
+                          <span id="user-username">Loading...</span>
                         </td>
                       </tr>
                       <tr>
-                        <th>姓名</th>
+                        <th>Email</th>
                         <td>
-                          <span class="view" id="profile-name-zh">Loading...</span>
-                          <input type="text" id="form-profile-name-zh" class="form-group form-control edit hidden" placeholder="姓名（中文）" maxlength=24 required />
+                          <span id="user-email">Loading...</span><a href="javascript:void(0)" id="btn-verify-email" class="btn">Verify</a>
                         </td>
                       </tr>
                       <tr>
-                        <th>姓名（英）</th>
+                        <th>Role</th>
                         <td>
-                          <span class="view" id="profile-name-en">Loading...</span>
-                          <input type="text" id="form-profile-name-en" class="form-group form-control edit hidden" placeholder="姓名（英文）" maxlength=24 required />
-                        </td>
-                      </tr>
-                      <tr class="hidden">
-                        <th>分组</th>
-                        <td>
-                          <span class="view" id="profile-group">Loading...</span>
-                          <select id="form-profile-group" class="form-group form-control edit hidden" required>
-                            <option value="0">其他</option>
-                            <option value="1">兼职研究员</option>
-                            <option value="2">专职研究员</option>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr class="hidden">
-                        <th>职称</th>
-                        <td>
-                          <span class="view" id="profile-title">Loading...</span>
-                          <select id="form-profile-title" class="form-group form-control edit hidden" required>
-                            <option value="0">其他</option>
-                            <option value="1">讲师</option>
-                            <option value="2">副教授</option>
-                            <option value="3">教授</option>
-                          </select>
+                          <span id="user-role">Loading...</span>
                         </td>
                       </tr>
                       <tr>
+                        <th>Password</th>
                         <td>
-                          <button id="form-profile-edit" class="btn btn-default view">
-                            <i class="glyphicon glyphicon-edit"></i>
-                            &nbsp;编辑
-                          </button>
-                        </td>
-                        <td>
-                          <button id="form-profile-save" class="btn btn-default edit hidden">
-                            <i class="glyphicon glyphicon-floppy-disk"></i>
-                            &nbsp;保存
-                          </button>
+                          <span>******</span><a href="?changepwd" class="btn">Update</a>
                         </td>
                       </tr>
                     </table>

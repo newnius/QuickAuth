@@ -29,6 +29,9 @@
 		const USER_IS_BLOCKED = 21;
 
 		const USERNAME_MISMATCH_EMAIL = 22;
+		
+		const CODE_EXPIRED = 23;
+		const EMAIL_ALREADY_VERIFIED = 24;
 
 		public static function getErrorMsg($errno){
 			switch($errno){
@@ -100,6 +103,12 @@
 
 				case CRErrorCode::USERNAME_MISMATCH_EMAIL:
 					return '用户名与邮箱不匹配！';
+
+				case CRErrorCode::CODE_EXPIRED:
+					return '链接已失效！';
+
+				case CRErrorCode::EMAIL_ALREADY_VERIFIED:
+					return '邮箱已验证！';
 
 				default:
 					return '未知错误！('.$errno.')';

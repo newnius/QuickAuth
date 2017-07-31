@@ -1,39 +1,5 @@
 function register_events_user()
 {
-  $("#username").blur(function(){
-    var username = $("#username").val();
-    if(chkUsername()){
-      isUsernameReged(username,function(msg){
-        if(msg=='true'){
-          $("#username-msg-icon").addClass("glyphicon glyphicon-remove");
-          $("#username-msg").html("occupied");
-        }else{
-          $("#username-msg-icon").addClass("glyphicon glyphicon-ok");
-          $("#username-msg").html("");
-        }
-      });     
-    }
-  });
-
-  $("#email").blur(function(){
-    var email = $(this).val();
-    if(chkEmail()){
-      isEmailReged(email,function(msg){
-        if(msg=='true'){
-          $("#email-msg-icon").addClass("glyphicon glyphicon-remove");
-          $("#email-msg").html("occupied");
-        }else{
-          $("#email-msg-icon").addClass("glyphicon glyphicon-ok");
-          $("#email-msg").html("");
-        }
-      });
-    }
-  });
-
-  $("#password").blur(function(){
-    chkPwd();
-  });
-
   $("#iAgree").click(function(){
     if($(this).prop("checked")==true){
       $("#btn-register").removeAttr("disabled");
@@ -164,31 +130,29 @@ function register_events_user()
     });
   });
 
-  $("#btn-verify-online").click(function(e){
-    e.preventDefault();
-    $("#btn-verify-online").html("submiting");
-    $("#btn-verify-online").attr("disabled","disabled");
-    var ajax = $.ajax({
-      url: "ajax-account.php?action=verifyon",
-      type: 'POST', 
-      data: {   }
-    });
-    ajax.done(function(msg){
-      if(msg=="0"){
-        $("#verify-online-msg").html("An email has been sent");;
-        $("#btn-verify-online").html("Send me an email");
-      }else{
-        $("#verify-online-msg").html("Unable to deliver("+ msg +"), <a href='help.php#qid-9'>see why</a>");
-        $("#btn-verify-online").html("Send me an email");
-        //$("#btn-verify-online").removeAttr("disabled");
-      }
-    });
-    ajax.fail(function(jqXHR,textStatus){
-      alert("Request failed :" + textStatus);
-      $("#btn-verify-online").html("Send me an email");
-      $("#btn-verify-online").removeAttr("disabled");
-    });
-  });
+
+  $("#btn-verify-email").click(
+    function(e){
+      e.preventDefault();
+    	$('#modal-msg').modal('show');
+    	$('#modal-msg-content').text("Processing...");
+      var ajax = $.ajax({
+        url: "ajax.php?action=verify_email_send_code",
+        type: 'POST',
+        data: {}
+      });
+
+      ajax.done(function(json){
+      	var res = JSON.parse(json);
+      	if(res["errno"] == 0){
+    			$('#modal-msg-content').text("Email has been sent to your email box.");
+        }else{
+    			$('#modal-msg-content').text(res["msg"]);
+        }
+      });
+    }
+  );
+
 
   $("#btn-changepwd").click(function(e){
     e.preventDefault();
@@ -371,9 +335,7 @@ function register_events_user()
         $("#modal-user").effect("shake");
       }
     });
-      
   });
- 
 }
 
   function chkUsername(){
@@ -566,9 +528,9 @@ function show_modal_user(user){
   $('#form-user-role').val(user.role);
 }
 
-function load_userinfo_in_user_modal(username){
+function load_userinfo_in_user_modal(username=''){
   var ajax = $.ajax({
-    url: "ajax.php?action=userinfo_get",
+    url: "ajax.php?action=user_get",
     type: 'GET',
     data: { username:username }
   });
@@ -578,6 +540,29 @@ function load_userinfo_in_user_modal(username){
       var info = res["userinfo"];
       $('#form-user-group').val(info.group);
       $('#form-user-show-cv').val(info.show_cv);
+    }else{
+      alert(res['msg']);
+    }
+  });
+}
+
+function load_profile(){
+  var ajax = $.ajax({
+    url: "ajax.php?action=user_get",
+    type: 'GET',
+    data: { }
+  });
+  ajax.done(function(json){
+    var res = JSON.parse(json);
+    if(res["errno"] == 0){
+      var user = res["user"];
+      $('#user-username').text(user.username);
+      $('#user-email').text(user.email);
+			if(user.email_verified==1){
+      	$('#btn-verify-email').text("Verified");
+      	$('#btn-verify-email').addClass("disabled");
+			}
+      $('#user-role').text(user.role);
     }else{
       alert(res['msg']);
     }
