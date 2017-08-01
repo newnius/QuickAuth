@@ -1,7 +1,8 @@
 <?php 
   //require_once('auth-header.php');
   require_once('config.inc.php');
-  require_once('util4p/Session.class.php');
+	require_once('predis/autoload.php');
+  require_once('util4p/ReSession.class.php');
   require_once('init.inc.php');
   require_once('secure.php');
   require_once('cookie.php');

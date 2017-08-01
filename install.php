@@ -40,7 +40,7 @@
 		$user->set('email', 'root@domain.com');
 		$user->set('password', $password);
 		$user->set('role', 'root');
-		var_dump(UserManager::addUser($user));
+		var_dump(UserManager::add($user));
 	}
 
 

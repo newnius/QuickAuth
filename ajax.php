@@ -1,7 +1,8 @@
 <?php
+	require_once('predis/autoload.php');
 	require_once('util4p/util.php');
 	require_once('util4p/CRErrorCode.class.php');
-	require_once('util4p/Session.class.php');
+	require_once('util4p/ReSession.class.php');
 
 	require_once('user.logic.php');
 

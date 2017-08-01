@@ -1,8 +1,9 @@
 <?php
+	require_once('predis/autoload.php');
 	require_once('util4p/CRObject.class.php');
 	require_once('util4p/CRErrorCode.class.php');
 	require_once('util4p/Validator.class.php');
-	require_once('util4p/Session.class.php');
+	require_once('util4p/ReSession.class.php');
 	require_once('util4p/CRLogger.class.php');
 	require_once('util4p/AccessController.class.php');
 	require_once('util4p/Random.class.php');
@@ -39,17 +40,17 @@
 			$res['errno'] = CRErrorCode::INVALID_EMAIL;
 			return $res;
 		}
-		if(UserManager::getUserByUsername($username)!==null){ 
+		if(UserManager::getByUsername($username)!==null){ 
 			$res['errno'] = CRErrorCode::USERNAME_OCCUPIED;
 			return $res;
 		}
-		if(UserManager::getUserByEmail($email)!==null){ 
+		if(UserManager::getByEmail($email)!==null){ 
 			$res['errno'] = CRErrorCode::EMAIL_OCCUPIED;
 			return $res;
 		}
 		$password = password_hash($user->get('password'), PASSWORD_DEFAULT);
 		$user->set('password', $password);
-		$success = UserManager::addUser($user);
+		$success = UserManager::add($user);
 		$res['errno'] = $success?CRErrorCode::SUCCESS:CRErrorCode::UNKNOWN_ERROR;
 		
 		$log = new CRObject();
@@ -67,9 +68,9 @@
 		$password = $user->get('password');
 		$remember_me = $user->get('remember_me', false);
 		if(strpos($account, '@') !== false){
-			$user_arr = UserManager::getUserByEmail($account);
+			$user_arr = UserManager::getByEmail($account);
 		}else{
-			$user_arr = UserManager::getUserByUsername($account);
+			$user_arr = UserManager::getByUsername($account);
 		}
 		if($user_arr === null){
 			$res['errno'] = CRErrorCode::USER_NOT_EXIST;
@@ -120,7 +121,7 @@
 	/**/
 	function user_update($user_new)
 	{
-		$user_arr = UserManager::getUserByUsername($user_new->get('username'));
+		$user_arr = UserManager::getByUsername($user_new->get('username'));
 		if($user_arr == null){
 			$res['errno'] = CRErrorCode::USER_NOT_EXIST;
 			return $res; 
@@ -131,7 +132,7 @@
 				return $res;
 			}
 			if($user_arr['email'] !== $user_new->get('email')){
-				if(UserManager::getUserByEmail($user_new->get('email'))!==null){
+				if(UserManager::getByEmail($user_new->get('email'))!==null){
 					$res['errno'] = CRErrorCode::EMAIL_OCCUPIED;
 					return $res;
 				}
@@ -157,7 +158,7 @@
 			return $res;
 		}
 
-		$success = UserManager::updateUser(new CRObject($user_arr));
+		$success = UserManager::update(new CRObject($user_arr));
 		$res['errno'] = $success?CRErrorCode::SUCCESS:CRErrorCode::UNKNOWN_ERROR;
 		$log = new CRObject();
 		$log->set('scope', Session::get('username'));
@@ -176,7 +177,7 @@
 	/**/
 	function user_update_pwd($user)
 	{
-		$user_arr = UserManager::getUserByUsername($user->get('username'));
+		$user_arr = UserManager::getByUsername($user->get('username'));
 		if($user_arr === null){
 			$res['errno'] = CRErrorCode::USER_NOT_EXIST;
 			return $res; 
@@ -188,7 +189,7 @@
 		}
 		$password = password_hash($user->get('password'), PASSWORD_DEFAULT);
 		$user_arr['password'] = $password;
-		$success = UserManager::updateUser(new CRObject($user_arr));
+		$success = UserManager::update(new CRObject($user_arr));
 		$res['errno'] = $success?CRErrorCode::SUCCESS:CRErrorCode::UNKNOWN_ERROR;
 		$log = new CRObject();
 		$log->set('scope', Session::get('username'));
@@ -214,7 +215,7 @@
 			return false;
 		}
 
-		$user = UserManager::getUserByUsername($username);
+		$user = UserManager::getByUsername($username);
 		if($user == null){
 			signout();
 			return false;
@@ -241,7 +242,7 @@
 	{
 		if(Session::get('username')===$rule->get('username') || AccessController::hasAccess(Session::get('role', 'visitor'), 'user_get_others')){ //access control
 			$res['errno'] = CRErrorCode::SUCCESS;
-			$user = UserManager::getUserByUsername($rule->get('username'));
+			$user = UserManager::getByUsername($rule->get('username'));
 			if($user===null){
 				$res['errno'] = CRErrorCode::USER_NOT_EXIST;
 			}else{
@@ -264,7 +265,7 @@
 		}
 		$res['errno'] = CRErrorCode::SUCCESS;
 		$res['count'] = UserManager::getCount($rule);
-		$res['users'] = UserManager::getUsers($rule);
+		$res['users'] = UserManager::gets($rule);
 		return $res;
 	}
 
@@ -292,7 +293,7 @@
 
 	/**/
 	function reset_pwd_send_code($user){
-		$user_arr = UserManager::getUserByUsername($user->get('username'));
+		$user_arr = UserManager::getByUsername($user->get('username'));
 		if($user_arr == null){
 			$res['errno'] = CRErrorCode::USER_NOT_EXIST;
 			return $res;
@@ -317,7 +318,7 @@
 
 	/**/
 	function verify_email_send_code($user){
-		$user_arr = UserManager::getUserByUsername($user->get('username'));
+		$user_arr = UserManager::getByUsername($user->get('username'));
 		if($user_arr === null){
 			$res['errno'] = CRErrorCode::USER_NOT_EXIST;
 			return $res;
@@ -343,7 +344,7 @@
 
 	/**/
 	function reset_pwd($user){
-		$user_arr = UserManager::getUserByUsername($user->get('username'));
+		$user_arr = UserManager::getByUsername($user->get('username'));
 		if($user_arr == null){
 			$res['errno'] = CRErrorCode::USER_NOT_EXIST;
 			return $res;
@@ -355,7 +356,7 @@
 			$res['errno'] = CRErrorCode::CODE_EXPIRED;
 			return $res;
 		}
-		$success = UserManager::updateUser(new CRObject($user_arr));
+		$success = UserManager::update(new CRObject($user_arr));
 
 		$res['errno'] = $success?CRErrorCode::SUCCESS:CRErrorCode::UNKNOWN_ERROR;
 		$log = new CRObject();
@@ -370,7 +371,7 @@
 
 	/**/
 	function verify_email($user){
-		$user_arr = UserManager::getUserByUsername($user->get('username'));
+		$user_arr = UserManager::getByUsername($user->get('username'));
 		if($user_arr == null){
 			$res['errno'] = CRErrorCode::USER_NOT_EXIST;
 			return $res;
@@ -381,7 +382,7 @@
 			return $res;
 		}
 		$user_arr['email_verified'] = 1;
-		$success = UserManager::updateUser(new CRObject($user_arr));
+		$success = UserManager::update(new CRObject($user_arr));
 		$res['errno'] = $success?CRErrorCode::SUCCESS:CRErrorCode::UNKNOWN_ERROR;
 		$log = new CRObject();
 		$log->set('scope', $user->get('username'));
