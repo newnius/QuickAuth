@@ -7,7 +7,7 @@
 	require_once('util4p/AccessController.class.php');
 	require_once('util4p/Random.class.php');
 	require_once('UserManager.class.php');
-	
+
 	require_once('config.inc.php');
 	require_once('init.inc.php');
 
@@ -121,51 +121,46 @@
 	/**/
 	function user_update($user_new)
 	{
-		$user = UserManager::getUserByUsername($user_new->get('username'));
-		if($user == null){
+		$user_arr = UserManager::getUserByUsername($user_new->get('username'));
+		if($user_arr == null){
 			$res['errno'] = CRErrorCode::USER_NOT_EXIST;
 			return $res; 
 		}
-		/* fill user properties */
-		$user_new->set('email', $user_new->get('email', $user['email']));
-		$user_new->set('password', $user_new->get('password', $user['password']));
-		$user_new->set('role', $user_new->get('role', $user['role']));
-		if(!validate_email($user_new->get('email'))){
-			$res['errno'] = CRErrorCode::INVALID_EMAIL;
-			return $res;
+		if($user_new->get('email')!==null){
+			if(!validate_email($user_new->get('email'))){
+				$res['errno'] = CRErrorCode::INVALID_EMAIL;
+				return $res;
+			}
+			if($user_arr['email'] !== $user_new->get('email')){
+				if(UserManager::getUserByEmail($user_arr['email'])!==null){
+					$res['errno'] = CRErrorCode::EMAIL_OCCUPIED;
+					return $res;
+				}
+				$user_arr['email_verified'] = 0;
+			}
+			$user_arr['email'] = $user_new->get('email');
+		}
+		if($user_new->get('password')!==null){
+			$user_arr['password'] = password_hash($user_new->get('password'), PASSWORD_DEFAULT);
+		}
+		if($user_arr['username']!==Session::get('username')) { //update self role is not allowed
+			if(!AccessController::hasAccess(Session::get('role'), 'user_update_'.$user_arr['role'])){// can update
+				$res['errno'] = CRErrorCode::NO_PRIVILEGE;
+				return $res;
+			}
+			if(!AccessController::hasAccess(Session::get('role'), 'user_update_'.$user_new->get('role', ''))){// can update to role
+				$res['errno'] = CRErrorCode::NO_PRIVILEGE;
+				return $res;
+			}
+			$user_arr['role'] = $user_new->get('role');
 		}
 
-		if($user['username']==Session::get('username'))
-		{ /* update self */
-			if(!AccessController::hasAccess(Session::get('role'), 'user_update_self')){
-				$res['errno'] = CRErrorCode::NO_PRIVILEGE;
-				return $res;
-			}
-			if( !AccessController::hasAccess(Session::get('role'), 'user_update_teacher') //admin changes self group
-				&& !($user_arr['password']==UserManager::cryptPwdForStore($user_new->get('old_pwd'), $user_arr['salt'])))
-			{ /* need provide old password */
-				$res['errno'] = CRErrorCode::WRONG_PASSWORD;
-				return $res;
-			}
-			$user_new->set('role', $user_arr['role']); //update self role is not allowed
-		}else
-		{  /* update others */
-			if(!AccessController::hasAccess(Session::get('role'), 'user_update_'.$user['role'])){// can update
-				$res['errno'] = CRErrorCode::NO_PRIVILEGE;
-				return $res;
-			}
-			if(!AccessController::hasAccess(Session::get('role'), 'user_add_'.$user_new->get('role', ''))){// can update role
-				$res['errno'] = CRErrorCode::NO_PRIVILEGE;
-				return $res;
-			}
-		}
-
-		//$pwd = password_hash($user->get('pwd_new'), PASSWORD_DEFAULT);
-		$success = UserManager::updateUser($user_new);
+		$success = UserManager::updateUser(new CRObject($user_arr));
 		if($success){
 			$log = new CRObject();
-			$log->set('tag', "user-".Session::get('username'));
-			$log->set('content', "更新帐号信息:{$user->get('username')}");
+			$log->set('scope', Session::get('username'));
+			$log->set('tag', 'update');
+			$log->set('content', "更新帐号信息:{$user_new->get('username')}");
 			CRLogger::log2db($log);
 			$res['errno'] = CRErrorCode::SUCCESS;
 			return $res;
@@ -266,6 +261,7 @@
 			return $res;
 		}
 		$res['errno'] = CRErrorCode::SUCCESS;
+		$res['count'] = UserManager::getCount($rule);
 		$res['users'] = UserManager::getUsers($rule);
 		return $res;
 	}

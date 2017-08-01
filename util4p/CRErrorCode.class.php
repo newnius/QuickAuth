@@ -27,11 +27,12 @@
 		const NOT_LOGED = 19;
 		const USER_NOT_EXIST = 20;
 		const USER_IS_BLOCKED = 21;
+		const USER_IS_REMOVED = 22;
 
-		const USERNAME_MISMATCH_EMAIL = 22;
-		
-		const CODE_EXPIRED = 23;
-		const EMAIL_ALREADY_VERIFIED = 24;
+		const USERNAME_MISMATCH_EMAIL = 23;
+
+		const CODE_EXPIRED = 24;
+		const EMAIL_ALREADY_VERIFIED = 25;
 
 		public static function getErrorMsg($errno){
 			switch($errno){
@@ -96,7 +97,10 @@
 					return '该条记录未找到！';
 
 				case CRErrorCode::USER_IS_BLOCKED:
-					return '该用户已被锁定！';
+					return '账户已被封禁！';
+
+				case CRErrorCode::USER_IS_REMOVED:
+					return '账户已被注销！';
 
 				case CRErrorCode::INVALID_PASSWORD:
 					return '无效的密码！';

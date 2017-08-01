@@ -23,8 +23,9 @@
 
 		case 'users_get':
 			$rule = new CRObject();
-			$rule->set('offset', 0);
-			$rule->set('limit', 20);
+			$rule->set('search', cr_get_GET('search'));
+			$rule->set('offset', cr_get_GET('offset'));
+			$rule->set('limit', cr_get_GET('limit'));
 			$rule->set('order', 'latest');
 			$res = users_get($rule);
 			break;
@@ -45,7 +46,7 @@
 
 		case 'user_update':
 			$user = new CRObject();
-			$user->set('username', cr_get_POST('username', Session::get('username')));
+			$user->set('username', cr_get_POST('username'));
 			$user->set('email', cr_get_POST('email'));
 			$user->set('password', cr_get_POST('password'));
 			$user->set('role', cr_get_POST('role'));
@@ -54,18 +55,18 @@
 
 		case 'update_pwd':
 			$user = new CRObject();
-			$user->set('username', cr_get_POST('username', Session::get('username')));
+			$user->set('username', Session::get('username'));
 			$user->set('old_pwd', cr_get_POST('oldpwd'));
 			$user->set('password', cr_get_POST('password'));
 			$res = user_update_pwd($user);
 			break;
-
+/*
 		case 'user_remove':
 			$user = new CRObject();
 			$user->set('username', cr_get_POST('username'));
 			$res = user_remove($user);
 			break;
-
+*/
 		case 'get_log':
 			$rule = new CRObject();
 			if(cr_get_GET('scope')=='self'){

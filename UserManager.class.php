@@ -161,6 +161,6 @@
 			$sql = $builder->build();
 			$params = array();
 			$res = (new MysqlPDO())->executeQuery($sql, $params);
-      return $res[0]['count'];
+      return intval($res[0]['count']);
 		}
 	}

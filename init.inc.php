@@ -42,22 +42,23 @@
 		// $operation => arrayof roles
 		$map = array(
 			/* user */
-      'user_get_self' => array('root', 'admin', 'partner', 'developer', 'normal'),
+      'user_get_self' => array('root', 'admin', 'developer', 'normal'),
       'user_get_others' => array('root', 'admin'),
-      'user_update_self' => array('root', 'admin', 'partner', 'developer', 'normal'),
       'user_update_admin' => array('root'),
-      'user_delete_reviewer' => array('root', 'admin'),
-      'user_delete_admin' => array('root'),
-      'get_signin_log_self' => array('root', 'admin', 'partner', 'developer', 'normal'),
-      'get_signin_log_others' => array('root', 'admin'),
+      'user_update_developer' => array('root', 'admin'),
+      'user_update_normal' => array('root', 'admin'),
+      'user_update_blocked' => array('root', 'admin'),
+      'user_update_removed' => array('root', 'admin'),
+      'get_log_self' => array('root', 'admin', 'developer', 'normal'),
+      'get_log_others' => array('root', 'admin'),
 
 			/* ucenter entry show control */
-      'show_ucenter_home' => array('root', 'admin', '', 'normal'),
-      'show_ucenter_profile' => array('admin', 'reviewer', 'normal'),
-      'show_ucenter_changepwd' => array('root', 'admin', 'reviewer', 'normal'),
-      'show_ucenter_logs' => array('root', 'admin', 'reviewer', 'normal'),
+      'show_ucenter_home' => array('root', 'admin', 'developer', 'normal'),
+      'show_ucenter_profile' => array('admin', 'developer', 'normal'),
+      'show_ucenter_changepwd' => array('root', 'admin', 'developer', 'normal'),
+      'show_ucenter_logs' => array('root', 'admin', 'developer', 'normal'),
       'show_ucenter_admin' => array('root', 'admin'),
-      'show_ucenter_signout' => array('root', 'admin', 'reviewer', 'normal'),
+      'show_ucenter_signout' => array('root', 'admin', 'developer', 'normal'),
 
       'show_ucenter_users' => array('root', 'admin'),
       'show_ucenter_logs_all' => array('root', 'admin'),
