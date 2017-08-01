@@ -27,7 +27,7 @@ function load_logs(who)
 {
 	$table = $("#table-log");
 	$table.bootstrapTable({
-		url: 'ajax.php?action=get_logs&scope='+who,
+		url: 'ajax.php?action=get_logs&who='+who,
 		responseHandler: signinLogResponseHandler,
 		cache: true,
 		striped: true,

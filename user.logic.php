@@ -39,11 +39,11 @@
 			$res['errno'] = CRErrorCode::INVALID_EMAIL;
 			return $res;
 		}
-		if(UserManager::isUsernameExists($username)){ 
+		if(UserManager::getUserByUsername($username)!==null){ 
 			$res['errno'] = CRErrorCode::USERNAME_OCCUPIED;
 			return $res;
 		}
-		if(UserManager::isEmailExists($email)){ 
+		if(UserManager::getUserByEmail($email)!==null){ 
 			$res['errno'] = CRErrorCode::EMAIL_OCCUPIED;
 			return $res;
 		}
