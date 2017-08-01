@@ -1,16 +1,19 @@
 <?php
+	require_once('predis/autoload.php');
 	require_once('util4p/CRObject.class.php');
 	require_once('util4p/CRErrorCode.class.php');
 	require_once('util4p/Validator.class.php');
-	require_once('util4p/Session.class.php');
+	//require_once('util4p/Session.class.php');
+	require_once('util4p/ReSession.class.php');
 	require_once('util4p/CRLogger.class.php');
 	require_once('util4p/AccessController.class.php');
 	require_once('util4p/Random.class.php');
-	require_once('UserManager.class.php');
+	//require_once('UserManager.class.php');
 
 	require_once('config.inc.php');
 	require_once('init.inc.php');
 
+/*
 	$rule = new CRObject();
 	$rule->set('scope', 'scope');
 	$rule->set('tag', 'tag');
@@ -22,4 +25,13 @@
 	$rule->set('limit', 0);
 	$rule->set('order', 'latest');
 	var_dump(CRLogger::search($rule));
+*/
+
+    var_dump(Session::put('username', 'newnius', 'namespace1'));
+    var_dump(Session::clear());
+    var_dump(Session::put('username', 'newnius'));
+    var_dump(Session::put('role', 'root'));
+    var_dump(Session::remove('username'));
+    var_dump(Session::clear());
+    var_dump(Session::clearAll());
 

@@ -4,7 +4,7 @@
 	require_once('util4p/MysqlPDO.class.php');
 	require_once('util4p/RedisDAO.class.php');
 	require_once('util4p/CRLogger.class.php');
-	require_once('util4p/Session.class.php');
+	require_once('util4p/ReSession.class.php');
 	require_once('util4p/CRObject.class.php');
 	require_once('util4p/AccessController.class.php');
 
@@ -43,6 +43,7 @@
 		$config = new CRObject();
 		$config->set('time_out', SESSION_TIME_OUT);
 		$config->set('bind_ip', BIND_SESSION_WITH_IP);
+		$config->set('PK', 'username');
 		Session::configure($config);
 	}
 
