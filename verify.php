@@ -20,7 +20,7 @@
 	$user->set('code', $code);
 	$res = verify_email($user);
 	if($res['errno']===0){
-    header('ucenter.php');
+    header('location:ucenter.php');
 	}else{
     header("location:login.php?callback=verify.php?code={$code}");
 	}

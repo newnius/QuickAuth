@@ -31,8 +31,6 @@
 		$username = $user->get('username');
 		$email = $user->get('email');
 		$user->set('role', 'normal');
-
-		$res['errno'] = CRErrorCode::SUCCESS;
 		if(!validate_username($username)){
 			$res['errno'] = CRErrorCode::INVALID_USERNAME;
 			return $res;
@@ -52,10 +50,14 @@
 		$password = password_hash($user->get('password'), PASSWORD_DEFAULT);
 		$user->set('password', $password);
 		$success = UserManager::addUser($user);
-		if(!$success){
-			$res['errno'] = CRErrorCode::UNKNOWN_ERROR;
-			return $res;
-		}
+		$res['errno'] = $success?CRErrorCode::SUCCESS:CRErrorCode::UNKNOWN_ERROR;
+		
+		$log = new CRObject();
+		$log->set('scope', $username);
+		$log->set('tag', 'signup');
+		$content = array('username' => $username, 'email' => $email, 'response' => $res['errno']);
+		$log->set('content', json_encode($content));
+		CRLogger::log2db($log);
 		return $res;
 	}
 
@@ -64,32 +66,29 @@
 		$account = $user->get('account');// may be username, email or pnone number etc.
 		$password = $user->get('password');
 		$remember_me = $user->get('remember_me', false);
-
-		$user = null;
-		if(strpos($username, '@') !== false){
-			$user = UserManager::getUserByEmail($account);
+		if(strpos($account, '@') !== false){
+			$user_arr = UserManager::getUserByEmail($account);
 		}else{
-			$user = UserManager::getUserByUsername($account);
+			$user_arr = UserManager::getUserByUsername($account);
 		}
-
-		if($user == null){
+		if($user_arr === null){
 			$res['errno'] = CRErrorCode::USER_NOT_EXIST;
 			return $res;
 		}
-		if($user['role']=='removed'){ //removed
+		if($user_arr['role']==='removed'){ //removed
 			$res['errno'] = CRErrorCode::USER_IS_REMOVED;
 			return $res;
 		}
-		if($user['role']=='blocked'){ //blocked
+		if($user_arr['role']==='blocked'){ //blocked
 			$res['errno'] = CRErrorCode::USER_IS_BLOCKED;
 			return $res;
 		}
-		if(password_verify($password, $user['password'])){
-			Session::put('username', $user['username']);
-			Session::put('role', $user['role']);
+		if(password_verify($password, $user_arr['password'])){
+			Session::put('username', $user_arr['username']);
+			Session::put('role', $user_arr['role']);
 			if(ENABLE_COOKIE && $remember_me){
 				setcookie('username', $username, time() + 604800);// 7 days
-				setcookie('sid', session_id(), time()+604800);//7 days
+				setcookie('sid', session_id(), time() + 604800);//7 days
 			}
 			$res['errno'] = CRErrorCode::SUCCESS;
 		}else{
@@ -97,10 +96,10 @@
 		}
 
 		$log = new CRObject();
-		$log->set('scope', $user['username']);
+		$log->set('scope', $user_arr['username']);
 		$log->set('tag', 'signin');
-		$content = array('account' => $account, 'response' => null);
-		$log->set('content', $content);
+		$content = array('account' => $account, 'response' => $res['errno']);
+		$log->set('content', json_encode($content));
 		CRLogger::log2db($log);
 		return $res;
 	}
@@ -132,7 +131,7 @@
 				return $res;
 			}
 			if($user_arr['email'] !== $user_new->get('email')){
-				if(UserManager::getUserByEmail($user_arr['email'])!==null){
+				if(UserManager::getUserByEmail($user_new->get('email'))!==null){
 					$res['errno'] = CRErrorCode::EMAIL_OCCUPIED;
 					return $res;
 				}
@@ -153,19 +152,24 @@
 				return $res;
 			}
 			$user_arr['role'] = $user_new->get('role');
+		}else{
+			$res['errno'] = CRErrorCode::NO_PRIVILEGE;
+			return $res;
 		}
 
 		$success = UserManager::updateUser(new CRObject($user_arr));
-		if($success){
-			$log = new CRObject();
-			$log->set('scope', Session::get('username'));
-			$log->set('tag', 'update');
-			$log->set('content', "更新帐号信息:{$user_new->get('username')}");
-			CRLogger::log2db($log);
-			$res['errno'] = CRErrorCode::SUCCESS;
-			return $res;
-		}
-		$res['errno'] = CRErrorCode::UNKNOWN_ERROR;
+		$res['errno'] = $success?CRErrorCode::SUCCESS:CRErrorCode::UNKNOWN_ERROR;
+		$log = new CRObject();
+		$log->set('scope', Session::get('username'));
+		$log->set('tag', 'update');
+		$content = array(
+			'username' => $user_arr['username'],
+			'email' => $user_arr['email'],
+			'role' => $user_arr['role'],
+			'response' => $res['errno']
+		);
+		$log->set('content', json_encode($content));
+		CRLogger::log2db($log);
 		return $res;
 	}
 
@@ -186,20 +190,16 @@
 		$user_arr['password'] = $password;
 		$success = UserManager::updateUser(new CRObject($user_arr));
 		$res['errno'] = $success?CRErrorCode::SUCCESS:CRErrorCode::UNKNOWN_ERROR;
+		$log = new CRObject();
+		$log->set('scope', Session::get('username'));
+		$log->set('tag', 'updatepwd');
+		$content = array(
+			'username' => $user_arr['username'],
+			'response' => $res['errno']
+		);
+		$log->set('content', json_encode($content));
+		CRLogger::log2db($log);
 		return $res;
-/*
-		$success = UserManager::updateUser($user_new);
-		if($success){
-			$log = new CRObject();
-			$log->set('tag', "user-".Session::get('username'));
-			$log->set('content', "更新帐号信息:{$user->get('username')}");
-			CRLogger::log2db($log);
-			$res['errno'] = CRErrorCode::SUCCESS;
-			return $res;
-		}
-		$res['errno'] = CRErrorCode::UNKNOWN_ERROR;
-		return $res;
-		*/
 	}
 
 	/*
@@ -224,8 +224,10 @@
 			Session::put('role', $user['role']);
 			Session::put('loged', false);
 			$log = new CRObject();
-			$log->set('tag', "signin-{$user['username']}");
-			$log->set('content', 'success(Cookie)');
+			$log->set('scope', $username);
+			$log->set('tag', 'signin');
+			$content = array('method' => 'cookie', 'response' => $res['errno']);
+			$log->set('content', json_encode($content));
 			CRLogger::log2db($log);
 			return true;
 		}
@@ -269,56 +271,24 @@
 	/**/
 	function user_get_log($rule)
 	{
-		$rule->set('tag', 'nobody');
-		if(empty($rule->get('username')) || $rule->get('username')!==Session::get('username')){
-			if(!AccessController::hasAccess(Session::get('role', 'visitor'), 'get_signin_log_others')){ //access control
+		if(is_null($rule->get('username')) || $rule->get('username')!==Session::get('username')){
+			if(!AccessController::hasAccess(Session::get('role', 'visitor'), 'get_logs_others')){ //access control
 				$res['errno'] = CRErrorCode::NO_PRIVILEGE;
 				return $res;
 			}
 		}else{
-			if(!AccessController::hasAccess(Session::get('role', 'visitor'), 'get_signin_log_self')){ //access control
+			if(!AccessController::hasAccess(Session::get('role', 'visitor'), 'get_logs_self')){ //access control
 				$res['errno'] = CRErrorCode::NO_PRIVILEGE;
 				return $res;
 			}
 		}
-		if($rule->get('username')){
-			$rule->set('tag', 'signin-'.$rule->get('username', ''));
-		}else{
-			$rule->set('tag', '%');
-			$rule->set('time_begin', mktime(0,0,0,date('m'),date('d')-6,date('Y')));
-			$rule->set('limit', '-1');
-		}
+		$rule->set('scope', $rule->get('username'));
+		$rule->set('time_begin', mktime(0,0,0,date('m'),date('d')-6,date('Y')));//last 7 days
 		$res['errno'] = CRErrorCode::SUCCESS;
 		$res['logs'] = CRLogger::search($rule);
 		return $res;
 	}
 
-	/**/
-	function user_remove($user)
-	{
-		$user_arr = UserManager::getUserByUsername($user->get('username'));
-		if($user_arr == null){
-			$res['errno'] = CRErrorCode::USER_NOT_EXIST;
-			return $res; 
-		}
-		if(!AccessController::hasAccess(Session::get('role'), 'user_delete_'.$user_arr['role'])){// can update
-			$res['errno'] = CRErrorCode::NO_PRIVILEGE;
-			return $res;
-		}
-		$success = UserManager::remove($user);
-		if(!$success){
-			$res['errno'] = CRErrorCode::UNKNOWN_ERROR;
-			return $res;
-		}else{
-			$log = new CRObject();
-			$log->set('tag', "user-".Session::get('username'));
-			$log->set('content', "删除用户:{$user->get('username')}");
-			CRLogger::log2db($log);
-		}
-		$info = new CRObject();
-		$info->set('username', $user->get('username'));
-		return userinfo_remove($info);
-	}
 
 	/**/
 	function reset_pwd_send_code($user){
@@ -334,6 +304,13 @@
 		$code = Random::randomInt(100000, 999999);
 		$res['errno'] = CRErrorCode::SUCCESS;
 		$res['msg'] = $code;
+
+		$log = new CRObject();
+		$log->set('scope', $user->get('username'));
+		$log->set('tag', 'send_email');
+		$content = array('type' => 'reset_pwd', 'email' => $user->get('email'), 'response' => $res['errno']);
+		$log->set('content', json_encode($content));
+		CRLogger::log2db($log);
 		return $res;
 	}
 
@@ -353,6 +330,13 @@
 		$code = Random::randomInt(100000, 999999);
 		$res['errno'] = CRErrorCode::SUCCESS;
 		$res['msg'] = $code;
+
+		$log = new CRObject();
+		$log->set('scope', $user->get('username'));
+		$log->set('tag', 'send_email');
+		$content = array('type' => 'verify_email', 'email' => $user_arr['email'], 'response' => $res['errno']);
+		$log->set('content', json_encode($content));
+		CRLogger::log2db($log);
 		return $res;
 	}
 
@@ -372,7 +356,14 @@
 			return $res;
 		}
 		$success = UserManager::updateUser(new CRObject($user_arr));
+
 		$res['errno'] = $success?CRErrorCode::SUCCESS:CRErrorCode::UNKNOWN_ERROR;
+		$log = new CRObject();
+		$log->set('scope', $user->get('username'));
+		$log->set('tag', 'resetpwd');
+		$content = array('code' => $code, 'response' => $res['errno']);
+		$log->set('content', json_encode($content));
+		CRLogger::log2db($log);
 		return $res;
 	}
 
@@ -390,8 +381,13 @@
 			return $res;
 		}
 		$user_arr['email_verified'] = 1;
-		var_dump($user_arr);
 		$success = UserManager::updateUser(new CRObject($user_arr));
 		$res['errno'] = $success?CRErrorCode::SUCCESS:CRErrorCode::UNKNOWN_ERROR;
+		$log = new CRObject();
+		$log->set('scope', $user->get('username'));
+		$log->set('tag', 'verify_email');
+		$content = array('code' => $code, 'response' => $res['errno']);
+		$log->set('content', json_encode($content));
+		CRLogger::log2db($log);
 		return $res;
 	}

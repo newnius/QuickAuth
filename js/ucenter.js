@@ -23,11 +23,11 @@ $(function(){
 	}
 });
 
-function load_logs(scope)
+function load_logs(who)
 {
 	$table = $("#table-log");
 	$table.bootstrapTable({
-		url: 'ajax.php?action=get_log&scope='+scope,
+		url: 'ajax.php?action=get_logs&scope='+who,
 		responseHandler: signinLogResponseHandler,
 		cache: true,
 		striped: true,
@@ -47,6 +47,12 @@ function load_logs(scope)
 		mobileResponsive: true,
 		showExport: false,
 		columns: [{
+			field: 'scope',
+			title: '操作者',
+			align: 'center',
+			valign: 'middle',
+			sortable: false
+		}, {
 			field: 'tag',
 			title: '标签',
 			align: 'center',

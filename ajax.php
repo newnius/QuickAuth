@@ -4,7 +4,7 @@
 	require_once('util4p/Session.class.php');
 
 	require_once('user.logic.php');
-  
+
 	require_once('config.inc.php');
 	require_once('cookie.php');
 
@@ -17,7 +17,7 @@
 			$user = new CRObject();
 			$user->set('account', cr_get_POST('account'));
 			$user->set('password', cr_get_POST('password'));
-			$user->set('remember_me', cr_get_POST('rememberme', 'false')=='true');
+			$user->set('remember_me', cr_get_POST('rememberme', 'false')==='true');
 			$res = user_login($user);
 			break;
 
@@ -32,7 +32,7 @@
 
 		case 'user_get':
 			$rule = new CRObject();
-			$rule->set('username', cr_get_GET('username', Session::get('username')));
+			$rule->set('username', Session::get('username'));
 			$res = user_get($rule);
 			break;
 
@@ -60,20 +60,15 @@
 			$user->set('password', cr_get_POST('password'));
 			$res = user_update_pwd($user);
 			break;
-/*
-		case 'user_remove':
-			$user = new CRObject();
-			$user->set('username', cr_get_POST('username'));
-			$res = user_remove($user);
-			break;
-*/
-		case 'get_log':
+
+		case 'get_logs':
 			$rule = new CRObject();
-			if(cr_get_GET('scope')=='self'){
+			if(cr_get_GET('who')!=='all'){
 				$rule->set('username', cr_get_GET('username', Session::get('username')));
 			}
-			$rule->set('offset', 0);
-			$rule->set('limit', 20);
+			$rule->set('search', cr_get_GET('search'));
+			$rule->set('offset', cr_get_GET('offset'));
+			$rule->set('limit', cr_get_GET('limit'));
 			$rule->set('order', 'latest');
 			$res = user_get_log($rule);
 			break;
@@ -98,14 +93,6 @@
 			$user = new CRObject();
 			$user->set('username', Session::get('username'));
 			$res = verify_email_send_code($user);
-			break;
-
-		case 'verify_email':
-			$user = new CRObject();
-			$user->set('username', cr_get_POST('username'));
-			$user->set('email', cr_get_POST('email'));
-			$user->set('code', cr_get_POST('code'));
-			$res = reset_pwd($user);
 			break;
 	}
 

@@ -3,12 +3,14 @@
 	require_once('config.inc.php');
 	require_once('util4p/MysqlPDO.class.php');
 	require_once('util4p/RedisDAO.class.php');
+	require_once('util4p/CRLogger.class.php');
 	require_once('util4p/Session.class.php');
 	require_once('util4p/CRObject.class.php');
 	require_once('util4p/AccessController.class.php');
 
 	init_mysql();
 	init_redis();
+	init_logger();
 	init_Session();
 	init_accessMap();
 
@@ -31,6 +33,12 @@
 		RedisDAO::configure($config);
 	}
 
+	function init_logger(){
+		$config = new CRObject();
+		$config->set('db_table', 'qa_log');
+		CRLogger::configure($config);
+	}
+
 	function init_Session(){
 		$config = new CRObject();
 		$config->set('time_out', SESSION_TIME_OUT);
@@ -49,8 +57,8 @@
       'user_update_normal' => array('root', 'admin'),
       'user_update_blocked' => array('root', 'admin'),
       'user_update_removed' => array('root', 'admin'),
-      'get_log_self' => array('root', 'admin', 'developer', 'normal'),
-      'get_log_others' => array('root', 'admin'),
+      'get_logs_self' => array('root', 'admin', 'developer', 'normal'),
+      'get_logs_others' => array('root', 'admin'),
 
 			/* ucenter entry show control */
       'show_ucenter_home' => array('root', 'admin', 'developer', 'normal'),
