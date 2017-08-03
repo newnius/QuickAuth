@@ -29,6 +29,9 @@
 	}elseif(isset($_GET['users'])){
 		$page_type='users';
 
+	}elseif(isset($_GET['users_online'])){
+		$page_type='users_online';
+
 	}elseif(isset($_GET['logs'])){
 		$page_type='logs';
 
@@ -62,6 +65,7 @@
 
 	$admin_entries = array(
 		array('users', '用户管理'),
+		array('users_online', '在线用户'),
 		array('logs_all', '操作日志'),
 	);
 	$visible_admin_entries = array();
@@ -229,9 +233,22 @@
 										</div>
 										<table id="table-user" data-toolbar="#toolbar" class="table table-striped">
 										</table> 
-										<span class="text-info">* 学术团队根据用户名增序排序</span><br/>
-										<span class="text-info">* 不支持现有用户的用户名修改操作</span><br/>
-										<span class="text-info">* 不支持修改自己的角色</span>
+										<span class="text-info">* 不支持修改自己</span>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<?php }elseif($page_type == 'users_online'){ ?>
+						<div id="users_online">
+							<div class="panel panel-default">
+								<div class="panel-heading">在线用户</div> 
+								<div class="panel-body">
+									<div class="table-responsive">
+										<div id="toolbar">
+										</div>
+										<table id="table-user" data-toolbar="#toolbar" class="table table-striped">
+										</table> 
 									</div>
 								</div>
 							</div>

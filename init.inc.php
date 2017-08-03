@@ -61,6 +61,15 @@
       'get_logs_self' => array('root', 'admin', 'developer', 'normal'),
       'get_logs_others' => array('root', 'admin'),
 
+			/* session */
+			'get_online_users' => array('root', 'admin'),
+			'tick_out_user' => array('root', 'admin'),
+			'tick_out_removed' => array('root', 'admin'),
+			'tick_out_blocked' => array('root', 'admin'),
+			'tick_out_normal' => array('root', 'admin'),
+			'tick_out_developer' => array('root', 'admin'),
+			'tick_out_admin' => array('root'),
+
 			/* ucenter entry show control */
       'show_ucenter_home' => array('root', 'admin', 'developer', 'normal'),
       'show_ucenter_profile' => array('admin', 'developer', 'normal'),
@@ -70,6 +79,7 @@
       'show_ucenter_signout' => array('root', 'admin', 'developer', 'normal'),
 
       'show_ucenter_users' => array('root', 'admin'),
+      'show_ucenter_users_online' => array('root', 'admin'),
       'show_ucenter_logs_all' => array('root', 'admin'),
 
 		);

@@ -147,4 +147,31 @@
 			return true;
 		}
 
+		public static function tickOut($id, $namespace='default'){
+			$redis = RedisDAO::instance();
+			if($redis===null){
+				return false;
+			}
+			$redis_key = "{$namespace}.{$id}";
+			$redis->del($redis_key);
+			$redis->disconnect();
+			return true;
+		}
+
+		public static function listOnline($namespace='default'){
+			$redis = RedisDAO::instance();
+			if($redis===null){
+				return false;
+			}
+			$redis_key = "{$namespace}.*";
+			$list = $redis->keys($redis_key);
+			$redis->disconnect();
+			$len = strlen("{$namespace}.");
+			$users = array();
+			foreach($list as $item){
+				$users[][self::$PK] = mb_substr($item, $len);
+			}
+			return $users;
+		}
+
 	}

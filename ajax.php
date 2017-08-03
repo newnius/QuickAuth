@@ -95,6 +95,51 @@
 			$user->set('username', Session::get('username'));
 			$res = verify_email_send_code($user);
 			break;
+
+		/* oauth */
+		case 'auth_grant':
+			break;
+
+		case 'auth_revoke':
+			break;
+
+		case 'auth_list':
+			break;
+
+		case 'site_add':
+			break;
+
+		case 'site_remove':
+			break;
+
+		case 'site_list':
+			break;
+
+		/* session */
+		case 'users_online':
+			$rule = new CRObject();
+			$res = users_online($rule);
+			break;
+
+		case 'tick_out':
+			$rule = new CRObject();
+			$rule->set('username', cr_get_POST('username'));
+			$res = tick_out($rule);
+			break;
+
+		/* rate control */
+		case 'block':
+			$rule = new CRObject();
+			$rule->set('username', cr_get_POST('username'));
+			$rule->set('duration', cr_get_POST('duration'));
+			$res = block($rule);
+			break;
+
+		case 'unblock':
+			$rule = new CRObject();
+			$rule->set('username', cr_get_POST('username'));
+			$res = unblock($rule);
+			break;
 	}
 
 	if(!isset($res['msg']))

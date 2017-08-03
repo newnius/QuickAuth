@@ -9,12 +9,12 @@
 
 	require_once('user.logic.php');
 
-  if(Session::get('username')===null){
+	$code = cr_get_GET('code', '');
+
+	if(Session::get('username')===null){
     header("location:login.php?callback=verify.php?code={$code}");
     exit;
   }
-
-	$code = cr_get_GET('code', '');
 
 	$user = new CRObject();
 	$user->set('username', Session::get('username'));
