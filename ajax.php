@@ -5,6 +5,7 @@
 	require_once('util4p/ReSession.class.php');
 
 	require_once('user.logic.php');
+	require_once('site.logic.php');
 
 	require_once('config.inc.php');
 	require_once('cookie.php');
@@ -107,12 +108,24 @@
 			break;
 
 		case 'site_add':
+			$site = new CRObject();
+			$site->set('domain', cr_get_POST('domain'));
+			$site->set('revoke_url', cr_get_POST('revoke_url'));
+			$site->set('level', cr_get_POST('level'));
+			$res = site_add($site);
+			break;
+
+		case 'site_update':
 			break;
 
 		case 'site_remove':
 			break;
 
-		case 'site_list':
+		case 'sites_get':
+			$rule = new CRObject();
+			$rule->set('offset', cr_get_GET('offset'));
+			$rule->set('limit', cr_get_GET('limit'));
+			$res = sites_get($rule);
 			break;
 
 		/* session */

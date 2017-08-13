@@ -70,6 +70,7 @@
 			'CREATE TABLE `qa_site`(
 				`id` INT AUTO_INCREMENT PRIMARY KEY,
 				`domain` VARCHAR(64) NOT NULL,
+				`revoke_url` VARCHAR(64),
 				`key` CHAR(64) NOT NULL,
 				`owner` VARCHAR(12) NOT NULL,
 				 INDEX(`owner`),

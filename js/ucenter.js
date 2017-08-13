@@ -5,6 +5,10 @@ $(function(){
 			load_users();
 			register_events_user();
 			break;
+		case "sites_all":
+			load_sites();
+			register_events_site();
+			break;
 		case "users_online":
 			load_users_online();
 			register_events_user();

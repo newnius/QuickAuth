@@ -29,6 +29,9 @@
 	}elseif(isset($_GET['users'])){
 		$page_type='users';
 
+	}elseif(isset($_GET['sites_all'])){
+		$page_type='sites_all';
+
 	}elseif(isset($_GET['users_online'])){
 		$page_type='users_online';
 
@@ -65,6 +68,7 @@
 
 	$admin_entries = array(
 		array('users', '用户管理'),
+		array('sites_all', '站点管理'),
 		array('users_online', '在线用户'),
 		array('logs_all', '操作日志'),
 	);
@@ -239,6 +243,25 @@
 							</div>
 						</div>
 
+						<?php }elseif($page_type == 'sites_all'){ ?>
+						<div id="sites_all">
+							<div class="panel panel-default">
+								<div class="panel-heading">站点管理</div> 
+								<div class="panel-body">
+									<div class="table-responsive">
+										<div id="toolbar">
+											<button id="btn-site-add" class="btn btn-primary">
+												<i class="glyphicon glyphicon-plus"></i> 添加站点
+											</button>
+										</div>
+										<table id="table-site" data-toolbar="#toolbar" class="table table-striped">
+										</table> 
+										<span class="text-info">* 不支持</span>
+									</div>
+								</div>
+							</div>
+						</div>
+
 						<?php }elseif($page_type == 'users_online'){ ?>
 						<div id="users_online">
 							<div class="panel panel-default">
@@ -311,6 +334,7 @@
 		<script src="js/util.js"></script>
 		<script src="js/script.js"></script>
 		<script src="js/user.js"></script>
+		<script src="js/site.js"></script>
 		<script src="js/ucenter.js"></script>
 
 		<script src="//cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table-locale-all.min.js"></script>
