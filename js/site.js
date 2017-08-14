@@ -7,6 +7,9 @@ function register_events_site()
 		$('#form-site-revokeurl').val('');
 		$('#form-site-level').val('1');
 		$('#modal-site').modal('show');
+		$("#form-site-domain").removeAttr("disabled");
+		$("#form-site-id-tr").addClass("hidden");
+		$("#form-site-key-tr").addClass("hidden");
 	});
 
 	$('#form-site-submit').click(function(e){
@@ -21,6 +24,7 @@ function register_events_site()
 			url: "ajax.php?action=" + method,
 			type: 'POST', 
 			data: {
+				id: id,
 				domain: domain,
 				revoke_url: revoke_url,
 				level: level
@@ -157,7 +161,8 @@ function show_modal_site(site)
 	$('#form-site-level').val(site.level);
 
 	$('#form-site-domain').attr("disabled", "disabled");
-
+	$("#form-site-id-tr").removeClass("hidden");
+	$("#form-site-key-tr").removeClass("hidden");
 }
 
 function load_profile()

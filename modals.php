@@ -104,14 +104,14 @@
 								</select>
 							</td>
 						</tr>
-						<tr>
+						<tr id="form-site-id-tr">
 							<th>APPID</th>
 							<td>
 								<label for="id" class="sr-only">App ID</label>
 								<input type="text" id="form-site-id" class="form-group form-control" required disabled/>
 							</td>
 						</tr>
-						<tr>
+						<tr id="form-site-key-tr">
 							<th>KEY</th>
 							<td>
 								<label for="key" class="sr-only">Key</label>

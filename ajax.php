@@ -116,6 +116,12 @@
 			break;
 
 		case 'site_update':
+			$site = new CRObject();
+			$site->set('id', cr_get_POST('id'));
+			$site->set('domain', cr_get_POST('domain'));
+			$site->set('revoke_url', cr_get_POST('revoke_url'));
+			$site->set('level', cr_get_POST('level'));
+			$res = site_update($site);
 			break;
 
 		case 'site_remove':

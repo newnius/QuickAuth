@@ -95,19 +95,18 @@
 		{
 			$id = $site->getInt('id');
 			$domain = $site->get('domain');
-			$owner = $site->get('owner');
 			$key = $site->get('key');
 			$revoke_url = $site->get('revoke_url');
 			$level = $site->get('level');
 
-			$key_values = array( 'domain' => '?', 'owner' => '?', 'key' => '?', 'revoke_url' => '?', 'level' => '?');
+			$key_values = array( 'domain' => '?', 'key' => '?', 'revoke_url' => '?', 'level' => '?');
 			$where_arr = array('id' => '?');
 
 			$builder = new SQLBuilder();
 			$builder->update('qa_site', $key_values);
 			$sql = $builder->where($where_arr);
 			$sql = $builder->build();
-			$params = array( $domain, $owner, $key, $revoke_url, $level, $id);
+			$params = array( $domain, $key, $revoke_url, $level, $id);
 			$count = (new MysqlPDO())->execute($sql, $params);
 			return $count===1;
 		}

@@ -13,6 +13,10 @@
 	/**/
 	function site_add($site)
 	{
+		if(!AccessController::hasAccess(Session::get('role'), 'site_add_'.$site->getInt('level', 1))){
+			$res['errno'] = CRErrorCode::NO_PRIVILEGE;
+			return $res;
+		}
 		$site->set('owner', Session::get('username'));
 		$site->set('key', Random::randomString(64));
 		$success = SiteManager::add($site);
@@ -21,8 +25,8 @@
 		$log = new CRObject();
 		$log->set('scope', Session::get('username'));
 		$log->set('tag', 'site_add');
-		$content = array('domain' => $site->get('domain'), 'revoke_url' => $site->get('revoke_url'), 'level' => $site->getInt('level'));
-		$log->set('content', json_encode($site));
+		$content = array('domain' => $site->get('domain'), 'revoke_url' => $site->get('revoke_url'), 'level' => $site->getInt('level'), 'response' => $res['errno']);
+		$log->set('content', json_encode($content));
 		CRLogger::log2db($log);
 		return $res;
 	}
@@ -31,52 +35,35 @@
 	/**/
 	function site_update($site)
 	{
-		$user_arr = UserManager::getByUsername($user_new->get('username'));
-		if($user_arr === null){
-			$res['errno'] = CRErrorCode::USER_NOT_EXIST;
+		$site_arr = SiteManager::get($site);
+		if($site_arr === null){
+			$res['errno'] = CRErrorCode::RECORD_NOT_EXIST;
 			return $res; 
 		}
-		if($user_new->get('email') !== null){
-			if(!validate_email($user_new->get('email'))){
-				$res['errno'] = CRErrorCode::INVALID_EMAIL;
-				return $res;
-			}
-			if($user_arr['email'] !== $user_new->get('email')){
-				if(UserManager::getByEmail($user_new->get('email')) !== null){
-					$res['errno'] = CRErrorCode::EMAIL_OCCUPIED;
-					return $res;
-				}
-				$user_arr['email_verified'] = 0;
-			}
-			$user_arr['email'] = $user_new->get('email');
-		}
-		if($user_new->get('password')!==null){
-			$user_arr['password'] = password_hash($user_new->get('password'), PASSWORD_DEFAULT);
-		}
-		if($user_arr['username']!==Session::get('username')) { //update self is not allowed
-			if(!AccessController::hasAccess(Session::get('role'), 'user_update_'.$user_arr['role'])){// can update
+		if($site_arr['owner']!==Session::get('username')) {
+			if(!AccessController::hasAccess(Session::get('role'), 'site_update_others')){
 				$res['errno'] = CRErrorCode::NO_PRIVILEGE;
 				return $res;
 			}
-			if(!AccessController::hasAccess(Session::get('role'), 'user_update_'.$user_new->get('role', ''))){// can update to role
-				$res['errno'] = CRErrorCode::NO_PRIVILEGE;
-				return $res;
-			}
-			$user_arr['role'] = $user_new->get('role');
-		}else{
+		}
+		if(!AccessController::hasAccess(Session::get('role'), 'site_add_'.$site->getInt('level', 1))){// can update to level
 			$res['errno'] = CRErrorCode::NO_PRIVILEGE;
 			return $res;
 		}
+		$site_arr['level'] = $site->getInt('level', 1);
+		$site_arr['domain'] = $site->get('domain');
+		$site_arr['revoke_url'] = $site->get('revoke_url');
 
-		$success = UserManager::update(new CRObject($user_arr));
+		$success = SiteManager::update(new CRObject($site_arr));
 		$res['errno'] = $success?CRErrorCode::SUCCESS:CRErrorCode::UNKNOWN_ERROR;
 		$log = new CRObject();
 		$log->set('scope', Session::get('username'));
-		$log->set('tag', 'update');
+		$log->set('tag', 'update_site');
 		$content = array(
-			'username' => $user_arr['username'],
-			'email' => $user_arr['email'],
-			'role' => $user_arr['role'],
+			'id' => $site_arr['id'],
+			'domain' => $site_arr['domain'],
+			'revoke_url' => $site_arr['revoke_url'],
+			'level' => $site_arr['level'],
 			'response' => $res['errno']
 		);
 		$log->set('content', json_encode($content));

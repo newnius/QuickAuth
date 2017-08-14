@@ -21,4 +21,9 @@
 			return preg_match("/^([0-9A-Za-z\\-_\\.]+)@([0-9a-z]+\\.[a-z]{2,3}(\\.[a-z]{2})?)$/i", $str)===1;
 		}
 
+		public static function isURL($url)
+		{
+			return !filter_var($url, FILTER_VALIDATE_URL);
+		}
+
 	}
