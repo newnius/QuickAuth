@@ -33,6 +33,9 @@
 
 		const CODE_EXPIRED = 24;
 		const EMAIL_ALREADY_VERIFIED = 25;
+		
+		/* rate limit */
+		const TOO_FAST = 26;
 
 		public static function getErrorMsg($errno){
 			switch($errno){
@@ -113,6 +116,9 @@
 
 				case CRErrorCode::EMAIL_ALREADY_VERIFIED:
 					return '邮箱已验证！';
+
+				case CRErrorCode::TOO_FAST:
+					return '服务器繁忙！';
 
 				default:
 					return '未知错误！('.$errno.')';

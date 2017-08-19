@@ -5,6 +5,7 @@
 	require_once('util4p/RedisDAO.class.php');
 	require_once('util4p/CRLogger.class.php');
 	require_once('util4p/ReSession.class.php');
+	require_once('util4p/RateLimiter.class.php');
 	require_once('util4p/CRObject.class.php');
 	require_once('util4p/AccessController.class.php');
 
@@ -13,6 +14,7 @@
 	init_logger();
 	init_Session();
 	init_accessMap();
+	init_RateLimiter();
 
 	function init_mysql(){
 		$config = new CRObject();
@@ -93,4 +95,17 @@
 
 		);
 		AccessController::setMap($map);
+	}
+
+	function init_RateLimiter()
+	{
+		$rules = array(
+			array('interval' => 300, 'degree' => 100),
+			array('interval' => 3600, 'degree' => 500),
+			array('interval' => 86400, 'degree' => 1000)
+		);
+		$config = new CRObject();
+		$config->set('key_prefix', RATE_LIMIT_KEY_PREFIX);
+		$config->set('rules', $rules);
+		RateLimiter::configure($config);
 	}
