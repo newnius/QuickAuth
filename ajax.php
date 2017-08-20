@@ -11,18 +11,34 @@
 	require_once('config.inc.php');
 	require_once('cookie.php');
 
+
+	function print_response($res)
+	{
+		if(!isset($res['msg']))
+			$res['msg'] = CRErrorCode::getErrorMsg($res['errno']);
+		$json = json_encode($res);
+		//if(isset($_GET['callback']))
+			//$json = $_GET['callback'].'('.$json.')';
+		//else
+			//$json = 'Void('.$json.')';
+		echo $json;
+	}
+
+	if(RateLimiter::getFreezeTime() > 0)
+	{
+		$res['errno'] = CRErrorCode::TOO_FAST;
+		print_response($res);
+		exit;
+	}
+
+
 	$res['errno'] = CRErrorCode::UNKNOWN_REQUEST;
-	
 	$action = cr_get_GET('action');
 
 	switch($action){
 		/* account */
 		case 'login':
-			if(RateLimiter::getFreezeTime()>0){
-				$res['errno'] = CRErrorCode::TOO_FAST;
-				break;
-			}
-			RateLimiter::increase(1);
+			RateLimiter::increase(10);
 			$user = new CRObject();
 			$user->set('account', cr_get_POST('account'));
 			$user->set('password', cr_get_POST('password'));
@@ -31,11 +47,6 @@
 			break;
 
 		case 'users_get':
-			if(RateLimiter::getFreezeTime()>0){
-				$res['errno'] = CRErrorCode::TOO_FAST;
-				break;
-			}
-			RateLimiter::increase(1);
 			$rule = new CRObject();
 			$rule->set('search', cr_get_GET('search'));
 			$rule->set('offset', cr_get_GET('offset'));
@@ -45,10 +56,6 @@
 			break;
 
 		case 'user_get':
-			if(RateLimiter::getFreezeTime()>0){
-				$res['errno'] = CRErrorCode::TOO_FAST;
-				break;
-			}
 			RateLimiter::increase(1);
 			$rule = new CRObject();
 			$rule->set('username', Session::get('username'));
@@ -56,11 +63,7 @@
 			break;
 
 		case 'user_register':
-			if(RateLimiter::getFreezeTime()>0){
-				$res['errno'] = CRErrorCode::TOO_FAST;
-				break;
-			}
-			RateLimiter::increase(1);
+			RateLimiter::increase(20);
 			$user = new CRObject();
 			$user->set('username', cr_get_POST('username'));
 			$user->set('email', cr_get_POST('email'));
@@ -69,10 +72,6 @@
 			break;
 
 		case 'user_update':
-			if(RateLimiter::getFreezeTime()>0){
-				$res['errno'] = CRErrorCode::TOO_FAST;
-				break;
-			}
 			RateLimiter::increase(1);
 			$user = new CRObject();
 			$user->set('username', cr_get_POST('username'));
@@ -83,10 +82,6 @@
 			break;
 
 		case 'update_pwd':
-			if(RateLimiter::getFreezeTime()>0){
-				$res['errno'] = CRErrorCode::TOO_FAST;
-				break;
-			}
 			RateLimiter::increase(1);
 			$user = new CRObject();
 			$user->set('username', Session::get('username'));
@@ -96,10 +91,6 @@
 			break;
 
 		case 'get_logs':
-			if(RateLimiter::getFreezeTime()>0){
-				$res['errno'] = CRErrorCode::TOO_FAST;
-				break;
-			}
 			RateLimiter::increase(1);
 			$rule = new CRObject();
 			if(cr_get_GET('who')!=='all'){
@@ -113,10 +104,6 @@
 			break;
 
 		case 'reset_pwd_send_code':
-			if(RateLimiter::getFreezeTime()>0){
-				$res['errno'] = CRErrorCode::TOO_FAST;
-				break;
-			}
 			RateLimiter::increase(1);
 			$user = new CRObject();
 			$user->set('username', cr_get_POST('username'));
@@ -125,10 +112,6 @@
 			break;
 
 		case 'reset_pwd':
-			if(RateLimiter::getFreezeTime()>0){
-				$res['errno'] = CRErrorCode::TOO_FAST;
-				break;
-			}
 			RateLimiter::increase(1);
 			$user = new CRObject();
 			$user->set('username', cr_get_POST('username'));
@@ -139,10 +122,6 @@
 			break;
 
 		case 'verify_email_send_code':
-			if(RateLimiter::getFreezeTime()>0){
-				$res['errno'] = CRErrorCode::TOO_FAST;
-				break;
-			}
 			RateLimiter::increase(1);
 			$user = new CRObject();
 			$user->set('username', Session::get('username'));
@@ -160,10 +139,6 @@
 			break;
 
 		case 'site_add':
-			if(RateLimiter::getFreezeTime()>0){
-				$res['errno'] = CRErrorCode::TOO_FAST;
-				break;
-			}
 			RateLimiter::increase(1);
 			$site = new CRObject();
 			$site->set('domain', cr_get_POST('domain'));
@@ -173,10 +148,6 @@
 			break;
 
 		case 'site_update':
-			if(RateLimiter::getFreezeTime()>0){
-				$res['errno'] = CRErrorCode::TOO_FAST;
-				break;
-			}
 			RateLimiter::increase(1);
 			$site = new CRObject();
 			$site->set('id', cr_get_POST('id'));
@@ -187,13 +158,13 @@
 			break;
 
 		case 'site_remove':
+			RateLimiter::increase(1);
+			$site = new CRObject();
+			$site->set('id', cr_get_POST('id'));
+			$res = site_remove($site);
 			break;
 
 		case 'sites_get':
-			if(RateLimiter::getFreezeTime()>0){
-				$res['errno'] = CRErrorCode::TOO_FAST;
-				break;
-			}
 			RateLimiter::increase(1);
 			$rule = new CRObject();
 			$rule->set('offset', cr_get_GET('offset'));
@@ -203,21 +174,11 @@
 
 		/* session */
 		case 'users_online':
-			if(RateLimiter::getFreezeTime()>0){
-				$res['errno'] = CRErrorCode::TOO_FAST;
-				break;
-			}
-			RateLimiter::increase(1);
 			$rule = new CRObject();
 			$res = users_online($rule);
 			break;
 
 		case 'tick_out':
-			if(RateLimiter::getFreezeTime()>0){
-				$res['errno'] = CRErrorCode::TOO_FAST;
-				break;
-			}
-			RateLimiter::increase(1);
 			$rule = new CRObject();
 			$rule->set('username', cr_get_POST('username'));
 			$res = tick_out($rule);
@@ -225,34 +186,17 @@
 
 		/* rate control */
 		case 'block':
-			if(RateLimiter::getFreezeTime()>0){
-				$res['errno'] = CRErrorCode::TOO_FAST;
-				break;
-			}
-			RateLimiter::increase(1);
 			$rule = new CRObject();
 			$rule->set('username', cr_get_POST('username'));
-			$rule->set('duration', cr_get_POST('duration'));
+			$rule->set('time', cr_get_POST('time'));
 			$res = block($rule);
 			break;
 
 		case 'unblock':
-			if(RateLimiter::getFreezeTime()>0){
-				$res['errno'] = CRErrorCode::TOO_FAST;
-				break;
-			}
-			RateLimiter::increase(1);
 			$rule = new CRObject();
 			$rule->set('username', cr_get_POST('username'));
 			$res = unblock($rule);
 			break;
 	}
 
-	if(!isset($res['msg']))
-		$res['msg'] = CRErrorCode::getErrorMsg($res['errno']);
-	$json = json_encode($res);
-//	if(isset($_GET['callback']))
-	//	$json = $_GET['callback'].'('.$json.')';
-//else
-	//$json = 'Void('.$json.')';
-	echo $json;
+	print_response($res);

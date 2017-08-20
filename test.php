@@ -27,6 +27,7 @@
 	var_dump(CRLogger::search($rule));
 */
 
+/*
     var_dump(Session::put('username', 'newnius', 'namespace1'));
     var_dump(Session::clear());
     var_dump(Session::put('username', 'newnius'));
@@ -34,4 +35,23 @@
     var_dump(Session::remove('username'));
     var_dump(Session::clear());
     var_dump(Session::clearAll());
+*/
 
+
+	require("sendgrid/sendgrid-php.php");
+	$from = new SendGrid\Email("Example User", "support@newnius.com");
+	$to = new SendGrid\Email("Example User", "me@newnius.com");
+
+	$subject = '[QuickAuth] Verify your email';
+	$content = new SendGrid\Content("text/plain", "and easy to do anywhere, even with PHP");
+
+	$mail = new SendGrid\Mail($from, $subject, $to, $content);
+	$sg = new SendGrid(SENDGRID_API_KEY);
+	$response = $sg->client->mail()->send()->post($mail);
+	if($response->statusCode()==202)
+		echo 'success';
+	$json = $response->body();
+	if(strlen($json)>0){
+		$msg = json_decode($json, true);
+		echo $msg['errors'][0]['message'];
+	}

@@ -7,7 +7,9 @@
 	require_once('util4p/CRLogger.class.php');
 	require_once('util4p/AccessController.class.php');
 	require_once('util4p/Random.class.php');
+
 	require_once('UserManager.class.php');
+	require_once('email.logic.php');
 
 	require_once('config.inc.php');
 	require_once('init.inc.php');
@@ -338,8 +340,18 @@
 		}
 		
 		$code = Random::randomInt(100000, 999999);
-		$res['errno'] = CRErrorCode::SUCCESS;
-		$res['msg'] = $code;
+		
+		$email = new CRObject();
+		$email->set('email', $user_arr['email']);
+		$email->set('username', $user_arr['username']);
+		$email->set('subject', '[QuickAuth] Reset your password');
+		$content = file_get_contents('templates/resetpwd_en.tpl');
+		$content = str_replace('<%username%>', $user_arr['username'], $content);
+		$content = str_replace('<%email%>', $user_arr['email'], $content);
+		$content = str_replace('<%auth_key%>', $code, $content);
+		$email->set('content', $content);
+
+		$res = email_send($email);
 
 		$log = new CRObject();
 		$log->set('scope', $user->get('username'));
