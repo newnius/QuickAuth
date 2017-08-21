@@ -185,6 +185,10 @@
 			break;
 
 		/* rate control */
+		case 'list_punished':
+			$res = list_punished();
+			break;
+
 		case 'block':
 			$rule = new CRObject();
 			$rule->set('username', cr_get_POST('username'));

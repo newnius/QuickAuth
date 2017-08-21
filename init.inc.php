@@ -80,6 +80,10 @@
 			'tick_out_developer' => array('root', 'admin'),
 			'tick_out_admin' => array('root'),
 
+			/* rate limit */
+			
+
+
 			/* ucenter entry show control */
       'show_ucenter_home' => array('root', 'admin', 'developer', 'normal'),
       'show_ucenter_profile' => array('admin', 'developer', 'normal'),

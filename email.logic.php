@@ -13,6 +13,10 @@
 
 	function email_send($email)
 	{
+		if(!can_send($email)){
+			$res['errno'] = CRErrorCode::TOO_FAST;
+			return $res;
+		}
 		$res['errno'] = CRErrorCode::SUCCESS;
 		$from = new SendGrid\Email('QuickAuth', 'support@newnius.com');
 		$to = new SendGrid\Email($email->get('username'), $email->get('email'));
@@ -31,4 +35,9 @@
 			$res['msg'] = $msg['errors'][0]['message'];
 		}
 		return $res;
+	}
+
+	/* count send stats and reduce spam */
+	function can_send($email){
+		return true;
 	}

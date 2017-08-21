@@ -147,7 +147,8 @@
 			return true;
 		}
 
-		public static function tickOut($id, $namespace='default'){
+		public static function tickOut($id, $namespace='default')
+		{
 			$redis = RedisDAO::instance();
 			if($redis===null){
 				return false;
@@ -158,7 +159,8 @@
 			return true;
 		}
 
-		public static function listOnline($namespace='default'){
+		public static function listOnline($namespace='default')
+		{
 			$redis = RedisDAO::instance();
 			if($redis===null){
 				return false;

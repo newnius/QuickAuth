@@ -136,6 +136,43 @@ LUA;
 				}
 			}
 			$redis->disconnect();
+			return null;
+		}
+
+		/* clear degree count and punishing stat */
+		public static function clear($id)
+		{
+			$redis = RedisDAO::instance();
+			if($redis === null)
+			{
+				return null;
+			}
+			foreach(self::$rules as $rule)
+			{
+				$interval = $rule['interval'];
+				$key = self::$keyPrefix.'degree:'.$id.'-'.$interval;
+				$redis->del($key);
+			}
+			$redis->del(self::$keyPrefix.'punishing:'.$id);
+			$redis->disconnect();
+			return true;
+		}
+
+		/* list IDs being punished */
+		public static function listPunished(){
+			$redis = RedisDAO::instance();
+			if($redis===null){
+				return false;
+			}
+			$redis_key = self::$keyPrefix.'punishing:*';
+			$list = $redis->keys($redis_key);
+			$redis->disconnect();
+			$len = strlen(self::$keyPrefix.'punishing:');
+			$ids = array();
+			foreach($list as $item){
+				$ids[]['id'] = mb_substr($item, $len);
+			}
+			return $ids;
 		}
 
 	}

@@ -34,7 +34,7 @@
 		const CODE_EXPIRED = 24;
 		const EMAIL_ALREADY_VERIFIED = 25;
 		const INVALID_COOKIE = 26;
-		
+
 		/* rate limit */
 		const TOO_FAST = 26;
 
