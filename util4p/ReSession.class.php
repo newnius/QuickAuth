@@ -33,7 +33,7 @@
 				return false;
 			}
 			$tmp = $_SESSION[$namespace][self::$PK];
-			$redis_key = "{$namespace}.{$tmp}";
+			$redis_key = "session:{$namespace}.{$tmp}";
 			$list = $redis->hgetall($redis_key);
 			if(isset($list['sid']) && $list['sid']!==session_id()){
 				$redis->del($redis_key);
@@ -64,7 +64,7 @@
 				return $default;
 			}
 			$tmp = $_SESSION[$namespace][self::$PK];
-			$redis_key = "{$namespace}.{$tmp}";
+			$redis_key = "session:{$namespace}.{$tmp}";
 			$list = $redis->hgetall($redis_key);
 			if(isset($list['sid']) && $list['sid']!==session_id()){
 				return $default;
@@ -95,7 +95,7 @@
 				return false;
 			}
 			$tmp = $_SESSION[$namespace][self::$PK];
-			$redis_key = "{$namespace}.{$tmp}";
+			$redis_key = "session:{$namespace}.{$tmp}";
 			$list = $redis->hgetall($redis_key);
 			if(isset($list['sid']) && $list['sid']!==session_id()){
 				return false;
@@ -123,7 +123,7 @@
 				return false;
 			}
 			$tmp = $_SESSION[$namespace][self::$PK];
-			$redis_key = "{$namespace}.{$tmp}";
+			$redis_key = "session:{$namespace}.{$tmp}";
 			$list = $redis->hgetall($redis_key);
 			if(isset($list['sid']) && $list['sid']!==session_id()){
 				return false;
@@ -152,7 +152,7 @@
 			if($redis===null){
 				return false;
 			}
-			$redis_key = "{$namespace}.{$id}";
+			$redis_key = "session:{$namespace}.{$id}";
 			$redis->del($redis_key);
 			$redis->disconnect();
 			return true;
@@ -163,10 +163,10 @@
 			if($redis===null){
 				return false;
 			}
-			$redis_key = "{$namespace}.*";
+			$redis_key = "session:{$namespace}.*";
 			$list = $redis->keys($redis_key);
 			$redis->disconnect();
-			$len = strlen("{$namespace}.");
+			$len = strlen("session:{$namespace}.");
 			$users = array();
 			foreach($list as $item){
 				$users[][self::$PK] = mb_substr($item, $len);

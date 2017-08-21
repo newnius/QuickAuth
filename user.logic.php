@@ -76,7 +76,7 @@
 	{
 		$account = $user->get('account');// may be username, email or pnone number etc.
 		$password = $user->get('password');
-		$remember_me = $user->getBool('remember_me');
+		$remember_me = $user->getBool('remember_me', false);
 		if(strpos($account, '@') !== false){
 			$user_arr = UserManager::getByEmail($account);
 		}else{
@@ -98,8 +98,16 @@
 			Session::put('username', $user_arr['username']);
 			Session::put('role', $user_arr['role']);
 			if(ENABLE_COOKIE && $remember_me){
-				setcookie('username', $username, time() + 604800);// 7 days
-				setcookie('token', session_id(), time() + 604800);//7 days
+				/* include part of password to make sure cookie expire after password updates */
+				$token = Random::randomString(26).substr($user_arr['password'], strlen($user_arr['password']) - 6);
+				$redis = RedisDAO::instance();
+				if($redis!==null){
+					$redis->set('token:'.$user_arr['username'], $token);
+					$redis->expire('token:'.$user_arr['username'], 604800);
+					$redis->disconnect();
+					setcookie('username', $user_arr['username'], time() + 604800);// 7 days
+					setcookie('token', $token, time() + 604800);//7 days
+				}
 			}
 			$res['errno'] = CRErrorCode::SUCCESS;
 		}else{
@@ -121,7 +129,7 @@
 	 */
 	function signout()
 	{
-		setcookie('sid', '', time() - 3600);
+		setcookie('username', '', time() - 3600);
 		setcookie('token', '', time() - 3600);
 		Session::clear();
 		$res['errno'] = CRErrorCode::SUCCESS;
@@ -216,34 +224,36 @@
 	/*
 	 * check if cookie is valid, if so, log in the user
 	 */
-	function login_from_cookie($username, $password)
+	function login_from_cookie($username, $token)
 	{
-		if(!ENABLE_COOKIE){
-			return false;
-		}
-		if(!validate_username($username)){
-			return false;
-		}
-
-		$user = UserManager::getByUsername($username);
-		if($user === null){
-			signout();
-			return false;
-		}
-		if($password === UserManager::cryptPwdForCookie($user['password'])){
-			Session::put('username', $user['username']);
-			Session::put('role', $user['role']);
-			Session::put('loged', false);
-			$log = new CRObject();
-			$log->set('scope', $username);
-			$log->set('tag', 'signin');
-			$content = array('method' => 'cookie', 'response' => $res['errno']);
-			$log->set('content', json_encode($content));
-			CRLogger::log2db($log);
-			return true;
+		$res['errno'] = CRErrorCode::INVALID_COOKIE;
+		if(ENABLE_COOKIE && validate_username($username))
+		{
+			$redis = RedisDAO::instance();
+			if($redis===null){
+				$res['errno'] = CRErrorCode::UNABLE_TO_CONNECT_REDIS;
+				return $res;
+			}
+			$token = $redis->get('token:'.$username);
+			$redis->disconnect();
+			if($token!==null)
+			{
+				$s1 = substr($token, strlen($token) - 6);
+				$user_arr = UserManager::getByUsername($username);
+				if($user_arr !== null){
+					$s2 = substr($user_arr['password'], strlen($user_arr['password']) - 6);
+					if($s1 === $s2){
+						Session::put('username', $user_arr['username']);
+						Session::put('role', $user_arr['role']);
+						Session::put('loged', false);
+						$res['errno'] = CRErrorCode::SUCCESS;
+						return $res;
+					}
+				}
+			}
 		}
 		signout();
-		return false;
+		return $res;
 	}
 
 

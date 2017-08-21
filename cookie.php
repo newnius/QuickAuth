@@ -7,7 +7,7 @@
 	 * check if cookie is set
 	 */
 	if(!Session::get('username') && ENABLE_COOKIE){
-		if(isset($_COOKIE['username']) && isset($_COOKIE['sid'])){
-			login_from_cookie($_COOKIE['username'], $_COOKIE['sid']);
+		if(isset($_COOKIE['username']) && isset($_COOKIE['token'])){
+			$res = login_from_cookie($_COOKIE['username'], $_COOKIE['token']);
 		}
 	}

@@ -33,6 +33,7 @@
 
 		const CODE_EXPIRED = 24;
 		const EMAIL_ALREADY_VERIFIED = 25;
+		const INVALID_COOKIE = 26;
 		
 		/* rate limit */
 		const TOO_FAST = 26;
@@ -119,6 +120,9 @@
 
 				case CRErrorCode::TOO_FAST:
 					return '服务器繁忙！';
+
+				case CRErrorCode::INVALID_COOKIE:
+					return '无效的COOKIE！';
 
 				default:
 					return '未知错误！('.$errno.')';
