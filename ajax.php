@@ -185,22 +185,28 @@
 			break;
 
 		/* rate control */
-		case 'list_punished':
-			$res = list_punished();
+		case 'list_blocked':
+			$res = list_blocked();
+			break;
+
+		case 'get_blocked_time':
+			$ip = cr_get_POST('ip');
+			$res = get_blocked_time($ip);
 			break;
 
 		case 'block':
 			$rule = new CRObject();
-			$rule->set('username', cr_get_POST('username'));
+			$rule->set('ip', cr_get_POST('ip'));
 			$rule->set('time', cr_get_POST('time'));
 			$res = block($rule);
 			break;
 
 		case 'unblock':
 			$rule = new CRObject();
-			$rule->set('username', cr_get_POST('username'));
+			$rule->set('ip', cr_get_POST('ip'));
 			$res = unblock($rule);
 			break;
+
 	}
 
 	print_response($res);

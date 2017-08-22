@@ -13,6 +13,9 @@ $(function(){
 			load_users_online();
 			register_events_user();
 			break;
+		case "blocked_list":
+			load_list_blocked();
+			register_events_blocked();
 		case "logs":
 			load_logs('self');
 			break;

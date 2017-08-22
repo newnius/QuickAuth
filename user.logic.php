@@ -342,7 +342,7 @@
 			$res['errno'] = CRErrorCode::UNABLE_TO_CONNECT_REDIS;
 			return $res;
 		}
-		$redis->set('code:'.$user_arr['username'], $code);
+		$redis->set('code:'.$user_arr['username'], $code, 'EX', 300);
 		$redis->disconnect();
 
 		$email = new CRObject();
@@ -385,7 +385,7 @@
 			$res['errno'] = CRErrorCode::UNABLE_TO_CONNECT_REDIS;
 			return $res;
 		}
-		$redis->set('code:'.$user_arr['username'], $code);
+		$redis->set('code:'.$user_arr['username'], $code, 'EX', 300);
 		$redis->disconnect();
 		
 		$email = new CRObject();
@@ -506,23 +506,62 @@
 			return $res;
 		}
 		$res['errno'] = CRErrorCode::SUCCESS;
-		Session::tickOut($user_arr['username']);
+		$log->set('scope', Session::get('username'));
+		$log = new CRObject();
+		$log->set('scope', $user->get('username'));
+		$log->set('tag', 'tickout');
+		$content = array('username' => $user_arr['username'], 'response' => $res['errno']);
+		$log->set('content', json_encode($content));
+		CRLogger::log2db($log);
 		return $res;
 	}
 
 
-	/* list IDs being punished */
-	function list_punished()
+	/* list IPs being blocked */
+	function list_blocked()
 	{
+		if(!AccessController::hasAccess(Session::get('role', 'visitor'), 'rc_list')){
+			$res['errno'] = CRErrorCode::NO_PRIVILEGE;
+			return $res;
+		}
 		$res['errno'] = CRErrorCode::SUCCESS;
 		$res['list'] = RateLimiter::listPunished();
+		return $res;
+	}
+
+	/* */
+	function get_blocked_time($ip)
+	{
+		if(!AccessController::hasAccess(Session::get('role', 'visitor'), 'rc_list')){
+			$res['errno'] = CRErrorCode::NO_PRIVILEGE;
+			return $res;
+		}
+		$res['errno'] = CRErrorCode::SUCCESS;
+		$res['time'] = RateLimiter::getFreezeTime($ip);
 		return $res;
 	}
 
 	/**/
 	function block($rule)
 	{
+		if(!AccessController::hasAccess(Session::get('role', 'visitor'), 'rc_block')){
+			$res['errno'] = CRErrorCode::NO_PRIVILEGE;
+			return $res;
+		}
 		$res['errno'] = CRErrorCode::SUCCESS;
+		$ip = $rule->get('ip');
+		if($ip === null){
+			$res['errno'] = CRErrorCode::FAIL;
+			return $res;
+		}
+		$r = array('degree' => 9999, 'interval' => $rule->getInt('time', 3600));
+		RateLimiter::punish($r, $ip);
+		$log = new CRObject();
+		$log->set('scope', Session::get('username'));
+		$log->set('tag', 'block');
+		$content = array('ip' => $ip, 'time' => $rule->getInt('time', 3600), 'response' => $res['errno']);
+		$log->set('content', json_encode($content));
+		CRLogger::log2db($log);
 		return $res;
 	}
 
@@ -535,5 +574,11 @@
 		}
 		RateLimiter::clear($rule->get('ip'));
 		$res['errno'] = CRErrorCode::SUCCESS;
+		$log = new CRObject();
+		$log->set('scope', Session::get('username'));
+		$log->set('tag', 'unblock');
+		$content = array('ip' => $rule->get('ip'), 'response' => $res['errno']);
+		$log->set('content', json_encode($content));
+		CRLogger::log2db($log);
 		return $res;
 	}

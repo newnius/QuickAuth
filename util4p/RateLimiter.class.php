@@ -75,8 +75,11 @@ LUA;
 
 
 		/**/
-		public static function punish($rule)
+		public static function punish($rule, $id=null)
 		{
+			if($id === null){
+				$id = self::$id;
+			}
 			$redis = RedisDAO::instance();
 			if($redis === null)
 			{
@@ -84,15 +87,11 @@ LUA;
 			}
 			$lua_script = <<<LUA
 				local degree = redis.call('get', KEYS[1])
-				if(tonumber(degree) == tonumber(ARGV[1])) then
-					return 0
-				else
-					redis.call('set', KEYS[1], ARGV[1])
-					redis.call('expire', KEYS[1], ARGV[2])
-				end
+				redis.call('set', KEYS[1], ARGV[1])
+				redis.call('expire', KEYS[1], ARGV[2])
 				return 1
 LUA;
-			$count = $redis->eval($lua_script, 1, self::$keyPrefix.'punishing:'.self::$id, $rule['degree'], $rule['interval']);
+			$count = $redis->eval($lua_script, 1, self::$keyPrefix.'punishing:'.$id, $rule['degree'], $rule['interval']);
 			$redis->disconnect();
 			return $count === 1;
 		}
@@ -101,14 +100,17 @@ LUA;
 		/*
 		 * get punish time left, negative means not being punished
 		 */
-		public static function getFreezeTime()
+		public static function getFreezeTime($id=null)
 		{
+			if($id === null){
+				$id = self::$id;
+			}
 			$redis = RedisDAO::instance();
 			if($redis === null)
 			{
 				return 0;
 			}
-			$freezeTime = (int)$redis->ttl(self::$keyPrefix.'punishing:'.self::$id);
+			$freezeTime = (int)$redis->ttl(self::$keyPrefix.'punishing:'.$id);
 			$redis->disconnect();
 			return $freezeTime;
 		}
@@ -140,8 +142,11 @@ LUA;
 		}
 
 		/* clear degree count and punishing stat */
-		public static function clear($id)
+		public static function clear($id=null)
 		{
+			if($id === null){
+				$id = self::$id;
+			}
 			$redis = RedisDAO::instance();
 			if($redis === null)
 			{

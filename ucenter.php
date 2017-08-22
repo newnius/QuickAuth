@@ -35,6 +35,9 @@
 	}elseif(isset($_GET['users_online'])){
 		$page_type='users_online';
 
+	}elseif(isset($_GET['blocked_list'])){
+		$page_type='blocked_list';
+
 	}elseif(isset($_GET['logs'])){
 		$page_type='logs';
 
@@ -70,6 +73,7 @@
 		array('users', '用户管理'),
 		array('sites_all', '站点管理'),
 		array('users_online', '在线用户'),
+		array('blocked_list', '封禁列表'),
 		array('logs_all', '操作日志'),
 	);
 	$visible_admin_entries = array();
@@ -277,6 +281,24 @@
 							</div>
 						</div>
 
+						<?php }elseif($page_type == 'blocked_list'){ ?>
+						<div id="blocked">
+							<div class="panel panel-default">
+								<div class="panel-heading">封禁列表</div>
+								<div class="panel-body">
+									<div class="table-responsive">
+										<div id="toolbar">
+											<button id="btn-block-add" class="btn btn-primary">
+												<i class="glyphicon glyphicon-plus"></i> Add
+											</button>
+										</div>
+										<table id="table-block" data-toolbar="#toolbar" class="table table-striped">
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+
 						<?php }elseif($page_type == 'logs'){ ?>
 						<div id="logs">
 							<div class="panel panel-default">
@@ -334,6 +356,8 @@
 		<script src="js/util.js"></script>
 		<script src="js/script.js"></script>
 		<script src="js/user.js"></script>
+		<script src="js/session.js"></script>
+		<script src="js/secure.js"></script>
 		<script src="js/site.js"></script>
 		<script src="js/ucenter.js"></script>
 

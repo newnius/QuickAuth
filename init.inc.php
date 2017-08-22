@@ -81,6 +81,9 @@
 			'tick_out_admin' => array('root'),
 
 			/* rate limit */
+			'rc_list' => array('root', 'admin'),
+			'rc_block' => array('root', 'admin'),
+			'rc_unblock' => array('root', 'admin'),
 			
 
 
@@ -95,6 +98,7 @@
       'show_ucenter_users' => array('root', 'admin'),
       'show_ucenter_sites_all' => array('root', 'admin'),
       'show_ucenter_users_online' => array('root', 'admin'),
+      'show_ucenter_blocked_list' => array('root', 'admin'),
       'show_ucenter_logs_all' => array('root', 'admin'),
 
 		);
