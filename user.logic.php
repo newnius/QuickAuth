@@ -582,3 +582,19 @@
 		CRLogger::log2db($log);
 		return $res;
 	}
+
+	function auth_grant($rule)
+	{
+		$res['errno'] = CRErrorCode::SUCCESS;
+		$res['code'] = Random::randomString(64);
+		$res['state'] = $rule->get('state');
+		return $res;
+	}
+
+	function auth_get_site($rule)
+	{
+		$res['errno'] = 0;
+		$res['domain'] = 'example.com';
+		$res['auto_grant'] = 0;
+		return $res;
+	}

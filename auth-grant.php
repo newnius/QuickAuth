@@ -1,26 +1,26 @@
 <?php 
-  session_start();
-  require_once('qa-config.php');
-  require_once('secure.php');
-  require_once('cookie.php');
-  require_once('auth-functions.php');
-  require_once('account-functions.php');
-  if(!isset($_SESSION['username'])){
-    header('location:login.php?notloged');
-    exit;
-  }
+	require_once('config.inc.php');
+	require_once('predis/autoload.php');
+	require_once('util4p/ReSession.class.php');
+	require_once('init.inc.php');
+	require_once('secure.php');
+	require_once('cookie.php');
 
-  if(!isset($_SESSION['redirect']) || $_SESSION['redirect']==''){
-    header('location:ucenter.php?nothingtoauth');
-    exit;
+	if(Session::get('username')==null){
+		header('location:login.php?a=notloged');
+		exit;
+	}
+/*
+	if(!isset($_SESSION['redirect']) || $_SESSION['redirect']==''){
+		header('location:ucenter.php?nothingtoauth');
+		exit;
   }
-
-  $redirect_url =  $_SESSION['redirect'];
-  $userid = $_SESSION['username'];
-  $access_token = start_auth($userid, $redirect_url);
-  $redirect_to = $redirect_url.'?userid='.$userid.'&access_token='.$access_token;
-  unset($_SESSION['redirect']);
- 
+*/
+$redirect = 'http://example.com';
+//  $redirect_url =  $_SESSION['redirect'];
+  $userid = Session::get('username');
+//  $redirect_to = $redirect_url.'?userid='.$userid.'&access_token='.$access_token;
+//  unset($_SESSION['redirect']);
 ?>
 <!DOCTYPE html>
 <html lang="en-US">
@@ -44,23 +44,29 @@
 
   <body>
     <?php require_once('header.php'); ?>
+		<?php require_once('modals.php'); ?>
     <div class="container">
       <div id="auth_grant" class="panel panel-default">
         <h4>Grant following site to access your account</h4>
-        <span class="text-info"><?php echo htmlspecialchars($redirect_url) ?></span>
-        <p>Information can be accessed:<br/>* Your username<br/>* Your email address<br/>* Some personal information<br/><a href="<?php echo DOMAIN ?>/help.php#qid-5" target="_blank">In detail</a></p>
-        <a href="<?php echo $redirect_to ?>" class="btn btn-success ">Accept</a>
-        <a href="<?php echo DOMAIN ?>/ucenter.php?declineautu" class="btn btn-info">Decline</a>
+        <span class="text-info"><?php echo htmlspecialchars($redirect) ?></span>
+				<form id="form-auth" action="javascript:void(0)">
+        	<p>Information can be accessed:</p>
+					* <input type="checkbox" id="form-auth-username" class="form-group" checked disabled/><span>Username</span><br/>
+					* <input type="checkbox" id="form-auth-email" class="form-group"/><span>Email</span><br/>
+					* <input type="checkbox" id="form-auth-verified" class="form-group"/><span>Verified</span><br/>
+					* <input type="checkbox" id="form-auth-role" class="form-group"/><span>Role</span><br/>
+				<button id="form-auth-accept" type="button" class="btn btn-primary">&nbsp;Accept&nbsp;</button>
+				<button id="form-auth-decline" type="button" class="btn btn-default">&nbsp;Decline&nbsp;</button>
+				</form>
       </div>
     </div> <!-- /container -->
     <?php require_once('footer.php'); ?>
 
-    <script src="script.js"></script>
+    <script src="js/util.js"></script>
+    <script src="js/script.js"></script>
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
     <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="//cdn.bootcss.com/blueimp-md5/1.1.1/js/md5.min.js"></script>
     <script src="//cdn.bootcss.com/jqueryui/1.11.4/jquery-ui.js"></script> 
   </body>
 </html>
-
-

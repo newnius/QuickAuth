@@ -70,11 +70,10 @@
 			'CREATE TABLE `qa_site`(
 				`id` INT AUTO_INCREMENT PRIMARY KEY,
 				`domain` VARCHAR(64) NOT NULL,
-				`revoke_url` VARCHAR(64),
 				`key` CHAR(64) NOT NULL,
 				`owner` VARCHAR(12) NOT NULL,
 				 INDEX(`owner`),
-				`level` INT NOT NULL DEFAULT 0 /* 0-blocked, 1-normal, 99-self*/
+				`level` INT NOT NULL DEFAULT 1 /* 0-removed, 1-normal, 99-self*/
 			)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci'
 		);
 		execute_sqls($sqls);

@@ -129,7 +129,18 @@
 			break;
 
 		/* oauth */
+		case 'auth_get_site':
+			$rule = new CRObject();
+			$rule->set('appid', cr_get_POST('appid'));
+			$rule->set('redirect', cr_get_POST('redirect'));
+			$res = auth_get_site($rule);
+			break;
+
 		case 'auth_grant':
+			$rule = new CRObject();
+			$rule->set('appid', cr_get_POST('appid'));
+			$rule->set('redirect', cr_get_POST('redirect'));
+			$res = auth_grant($rule);
 			break;
 
 		case 'auth_revoke':
