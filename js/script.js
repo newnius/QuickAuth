@@ -1,3 +1,40 @@
+if(window.location.pathname.indexOf("auth") != -1){
+	var appid = getParameterByName('app_id');
+	var state = getParameterByName('state');
+	var scope = getParameterByName('scope');
+	var response_type = getParameterByName('response_type');
+	var redirect_uri = getParameterByName('redirect_uri');
+	var array = scope.split(',');
+	$.each(array,function(i){
+		if(array[i]=='email')
+			$("#form-auth-email").attr("checked", "checked");
+		if(array[i]=='verified')
+			$("#form-auth-verifid").attr("checked", "checked");
+		if(array[i]=='role')
+			$("#form-auth-role").attr("checked", "checked");
+	});
+
+	/* check auto accept */
+	var ajax = $.ajax({
+		url: "ajax.php?action=auth_get_site",
+		type: 'POST',
+		data: {
+			app_id: appid
+		}
+	});
+		
+	ajax.done(function(json){
+		var res = JSON.parse(json);
+		if(res["errno"] == 0){
+			
+		}else{
+			$('#modal-msg').modal('show');
+			$('#modal-msg-content').text(res["msg"]);
+		}
+	});
+
+}
+
 	$(function(){
 		$("#tabs").tabs();
 	});
@@ -119,6 +156,47 @@
 		});
 	});
 
+	$('#form-auth-accept').click(function(e){
+		e.preventDefault();
+		$('#modal-msg').modal('show');
+		var appid = getParameterByName('app_id');
+		var state = getParameterByName('state');
+		var scope = getParameterByName('scope');
+		var response_type = getParameterByName('response_type');
+		var redirect_uri = getParameterByName('redirect_uri');
+		var scope = [];
+		if($("#form-auth-email").prop("checked"))
+			scope.push('email');
+		if($("#form-auth-verified").prop("checked"))
+			scope.push('verified');
+		if($("#form-auth-role").prop("checked"))
+			scope.push('role');
+		var ajax = $.ajax({
+			url: "ajax.php?action=auth_grant",
+			type: 'POST', 
+			data: {
+				appid: appid,
+				state: state,
+				redirect_uri: redirect_uri,
+				scope: scope.join(',')
+			}
+		});
+		ajax.done(function(msg){
+			var res = JSON.parse(msg);
+			if(res["errno"]==0){
+				$('#modal-msg-content').text("SUCCESS");
+				var redirect = decodeURI(redirect_uri);
+				if(redirect.indexOf("#")>-1)
+					redirect = redirect + "&code=" + res['code'] + "&state=" + res["state"] + "&scope=" + scope;
+				else
+					redirect = redirect + "#code=" + res['code'] + "&state=" + res["state"] + "&scope=" + scope;
+				alert(redirect);
+				// redirect
+			}else{
+				$('#modal-msg-content').text(res["msg"]);
+			}
+		});
+	});
 
 	function validateUsername(username)
 	{
