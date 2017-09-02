@@ -35,6 +35,8 @@
 		const EMAIL_ALREADY_VERIFIED = 25;
 		const INVALID_COOKIE = 26;
 
+		const TOKEN_EXPIRED = 27;
+
 		/* rate limit */
 		const TOO_FAST = 26;
 
@@ -123,6 +125,9 @@
 
 				case CRErrorCode::INVALID_COOKIE:
 					return '无效的COOKIE！';
+
+				case CRErrorCode::TOKEN_EXPIRED:
+					return 'Token已失效！';
 
 				default:
 					return '未知错误！('.$errno.')';

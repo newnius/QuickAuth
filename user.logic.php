@@ -583,14 +583,93 @@
 		return $res;
 	}
 
+	/* 
+	 * array('response_type'='code', 'client_id'=APP_ID, 'redirect_uri', urlencode, 'state', 'scope')
+	 * return array('errno', 'code', 'state');
+	 */
 	function auth_grant($rule)
 	{
 		$res['errno'] = CRErrorCode::SUCCESS;
-		$res['code'] = Random::randomString(64);
+		$code = Random::randomString(64);
+		$res['code'] = $code;
+		$redis = RedisDAO::instance();
+		if($redis===null){
+			$res['errno'] = CRErrorCode::UNABLE_TO_CONNECT_REDIS;
+			return $res;
+		}
+		$redis->set("access_code:$code", Session::get('username'), 'EX', 300);
+		$redis->disconnect();
 		$res['state'] = $rule->get('state');
 		return $res;
 	}
 
+	/* array('grant_type'=>'authorization_code', 'client_id'=>APP_ID, 'client_secret'=>APP_KEY, 'code', 'redirect_uri')
+	 * return array('errno', 'access_token', 'expires_in'=>3600);
+	 */
+	function get_access_token($rule)
+	{
+		$res['errno'] = CRErrorCode::SUCCESS;
+		$code = $rule->get('code');
+		$redis = RedisDAO::instance();
+		if($redis===null){
+			$res['errno'] = CRErrorCode::UNABLE_TO_CONNECT_REDIS;
+			return $res;
+		}
+		$uid = $redis->get("access_code:$code");
+		if($uid===null){
+			$res['errno'] = CRErrorCode::CODE_EXPIRED;
+			$redis->disconnect();
+			return $res;
+		}
+		$token = Random::randomString(64);
+		$redis->del("access_code:$code");
+		$arr = array('expires' => time() + 3600);
+		$data = json_encode($arr);
+		$redis->hset("token:$uid", $token, $data);
+		$code = Random::randomString(64);
+		$res['token'] = $token;
+		$redis->disconnect();
+		return $res;
+	}
+
+	/*
+	 * array('grant_type'=>'refresh_token', 'client_id', 'client_secret', 'refresh_token')
+	 * return array('errno', 'access_token', 'expires_in'=>3600, 'refresh_token');
+	 */
+	function refresh_access_token($rule)
+	{
+		$res['errno'] = CRErrorCode::SUCCESS;
+		$uid = $rule->get('uid');
+		$token = $rule->get('token');
+		$redis = RedisDAO::instance();
+		if($redis===null){
+			$res['errno'] = CRErrorCode::UNABLE_TO_CONNECT_REDIS;
+			return $res;
+		}
+		$data = $redis->hget("token:$uid", $token);
+		if($data===null){
+			$res['errno'] = CRErrorCode::TOKEN_EXPIRED;
+			$redis->disconnect();
+			return $res;
+		}
+		$vals = json_decode($data, true);
+		if($vals['expires'] < time()){
+			$res['errno'] = CRErrorCode::TOKEN_EXPIRED;
+			$redis->disconnect();
+			return $res;
+		}
+		$redis->hdel("token:$uid", $token);
+		$token = Random::randomString(64);
+		$arr = array('expires' => time() + 3600);
+		$data = json_encode($arr);
+		$redis->hset("token:$uid", $token, $data);
+		$code = Random::randomString(64);
+		$res['token'] = $token;
+		$redis->disconnect();
+		return $res;
+	}
+
+	/* SSO or OAuth */
 	function auth_get_site($rule)
 	{
 		$res['errno'] = 0;
