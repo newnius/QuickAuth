@@ -73,6 +73,7 @@
 				`key` CHAR(64) NOT NULL,
 				`owner` VARCHAR(12) NOT NULL,
 				 INDEX(`owner`),
+				`revoke_url` VARCHAR(64),
 				`level` INT NOT NULL DEFAULT 1 /* 0-removed, 1-normal, 99-self*/
 			)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci'
 		);

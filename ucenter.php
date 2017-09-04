@@ -41,6 +41,9 @@
 	}elseif(isset($_GET['logs'])){
 		$page_type='logs';
 
+	}elseif(isset($_GET['auth_list'])){
+		$page_type='auth_list';
+
 	}elseif(isset($_GET['logs_all'])){
 		$page_type='logs_all';
 
@@ -59,6 +62,7 @@
 		array('profile', '用户信息'),
 		array('changepwd', '修改密码'),
 		array('logs', '登录日志'),
+		array('auth_list', '授权记录'),
 		array('admin', '管理入口'),
 		array('signout', '退出登录')
 	);
@@ -307,6 +311,21 @@
 									<div class="table-responsive">
 										<div id="toolbar"></div>
 										<table id="table-log" data-toolbar="#toolbar" class="table table-striped">
+										</table> 
+										<span class="text-info">* 最多显示20条最近的记录</span>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<?php }elseif($page_type == 'auth_list'){ ?>
+						<div>
+							<div class="panel panel-default">
+								<div class="panel-heading">Auth Site</div> 
+								<div class="panel-body">
+									<div class="table-responsive">
+										<div id="toolbar"></div>
+										<table id="table-auth" data-toolbar="#toolbar" class="table table-striped">
 										</table> 
 										<span class="text-info">* 最多显示20条最近的记录</span>
 									</div>

@@ -36,9 +36,12 @@
 		const INVALID_COOKIE = 26;
 
 		const TOKEN_EXPIRED = 27;
+		const SITE_NOT_EXIST = 28;
+		const INVALID_URL = 29;
+		const INVALID_PARAM = 31;
 
 		/* rate limit */
-		const TOO_FAST = 26;
+		const TOO_FAST = 30;
 
 		public static function getErrorMsg($errno){
 			switch($errno){
@@ -128,6 +131,15 @@
 
 				case CRErrorCode::TOKEN_EXPIRED:
 					return 'Token已失效！';
+
+				case CRErrorCode::SITE_NOT_EXIST:
+					return '站点不存在！';
+
+				case CRErrorCode::INVALID_URL:
+					return '无效的URL！';
+
+				case CRErrorCode::INVALID_PARAM:
+					return '无效的参数！';
 
 				default:
 					return '未知错误！('.$errno.')';

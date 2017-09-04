@@ -1,9 +1,9 @@
 if(window.location.pathname.indexOf("auth") != -1){
-	var appid = getParameterByName('app_id');
+	var response_type = getParameterByName('response_type');
+	var client_id = getParameterByName('client_id');
+	var redirect_uri = getParameterByName('redirect_uri');
 	var state = getParameterByName('state');
 	var scope = getParameterByName('scope');
-	var response_type = getParameterByName('response_type');
-	var redirect_uri = getParameterByName('redirect_uri');
 	var array = scope.split(',');
 	$.each(array,function(i){
 		if(array[i]=='email')
@@ -19,7 +19,7 @@ if(window.location.pathname.indexOf("auth") != -1){
 		url: "ajax.php?action=auth_get_site",
 		type: 'POST',
 		data: {
-			app_id: appid
+			client_id: client_id
 		}
 	});
 		
@@ -159,11 +159,11 @@ if(window.location.pathname.indexOf("auth") != -1){
 	$('#form-auth-accept').click(function(e){
 		e.preventDefault();
 		$('#modal-msg').modal('show');
-		var appid = getParameterByName('app_id');
+		var response_type = getParameterByName('response_type');
+		var client_id = getParameterByName('client_id');
+		var redirect_uri = getParameterByName('redirect_uri');
 		var state = getParameterByName('state');
 		var scope = getParameterByName('scope');
-		var response_type = getParameterByName('response_type');
-		var redirect_uri = getParameterByName('redirect_uri');
 		var scope = [];
 		if($("#form-auth-email").prop("checked"))
 			scope.push('email');
@@ -175,9 +175,10 @@ if(window.location.pathname.indexOf("auth") != -1){
 			url: "ajax.php?action=auth_grant",
 			type: 'POST', 
 			data: {
-				appid: appid,
-				state: state,
+				response_type: response_type,
+				client_id: client_id,
 				redirect_uri: redirect_uri,
+				state: state,
 				scope: scope.join(',')
 			}
 		});
@@ -191,7 +192,7 @@ if(window.location.pathname.indexOf("auth") != -1){
 				else
 					redirect = redirect + "#code=" + res['code'] + "&state=" + res["state"] + "&scope=" + scope;
 				alert(redirect);
-				// redirect
+				// do redirect
 			}else{
 				$('#modal-msg-content').text(res["msg"]);
 			}
