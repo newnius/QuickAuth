@@ -132,14 +132,14 @@
 		/* oauth */
 		case 'auth_get_site':
 			$rule = new CRObject();
-			$rule->set('client_id', cr_get_POST('client_id'));
+			$rule->set('app_id', cr_get_POST('app_id'));
 			$res = auth_get_site($rule);
 			break;
 
 		case 'auth_grant':
 			$rule = new CRObject();
 			$rule->set('response_type', cr_get_POST('response_type'));
-			$rule->set('client_id', cr_get_POST('client_id'));
+			$rule->set('app_id', cr_get_POST('app_id'));
 			$rule->set('redirect_uri', cr_get_POST('redirect_uri'));
 			$rule->set('state', cr_get_POST('state'));
 			$rule->set('scope', cr_get_POST('scope'));
@@ -148,7 +148,7 @@
 
 		case 'auth_revoke':
 			$rule = new CRObject();
-			$rule->set('appid', cr_get_POST('appid'));
+			$rule->set('app_id', cr_get_POST('app_id'));
 			$res = auth_revoke($rule);
 			break;
 

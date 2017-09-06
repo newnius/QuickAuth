@@ -108,8 +108,7 @@
 				$token = Random::randomString(26).substr($user_arr['password'], strlen($user_arr['password']) - 6);
 				$redis = RedisDAO::instance();
 				if($redis!==null){
-					$redis->set('token:'.$user_arr['username'], $token);
-					$redis->expire('token:'.$user_arr['username'], 604800);
+					$redis->set('cookie:token:'.$user_arr['username'], $token, 'EX', 604800);
 					$redis->disconnect();
 					setcookie('username', $user_arr['username'], time() + 604800);// 7 days
 					setcookie('token', $token, time() + 604800);//7 days
@@ -137,6 +136,11 @@
 	{
 		setcookie('username', '', time() - 3600);
 		setcookie('token', '', time() - 3600);
+		$redis = RedisDAO::instance();
+		if($redis!==null){
+			$redis->del('cookie:token:'.Session::get('username'));
+			$redis->disconnect();
+		}
 		Session::clear();
 		$res['errno'] = CRErrorCode::SUCCESS;
 		return $res;
@@ -240,7 +244,7 @@
 				$res['errno'] = CRErrorCode::UNABLE_TO_CONNECT_REDIS;
 				return $res;
 			}
-			$token = $redis->get('token:'.$username);
+			$token = $redis->get('cookie:token:'.$username);
 			$redis->disconnect();
 			if($token!==null)
 			{

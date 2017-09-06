@@ -118,7 +118,7 @@ function load_auth_list()
 	$table = $("#table-auth");
 	$table.bootstrapTable({
 		url: 'ajax.php?action=auth_list',
-		responseHandler: signinLogResponseHandler,
+		responseHandler: authListResponseHandler,
 		cache: true,
 		striped: true,
 		pagination: false,
@@ -137,14 +137,8 @@ function load_auth_list()
 		mobileResponsive: true,
 		showExport: false,
 		columns: [{
-			field: 'appid',
+			field: 'app_id',
 			title: 'APP_ID',
-			align: 'center',
-			valign: 'middle',
-			sortable: false
-		}, {
-			field: 'tag',
-			title: '标签',
 			align: 'center',
 			valign: 'middle',
 			sortable: false
@@ -156,27 +150,58 @@ function load_auth_list()
 			sortable: false,
 			formatter: timeFormatter
 		}, {
-			field: 'ip',
-			title: 'IP',
-			align: 'center',
-			valign: 'middle',
-			sortable: true,
-			formatter: long2ip
-		}, {
-			field: 'content',
-			title: '内容',
+			field: 'scope',
+			title: 'Scope',
 			align: 'center',
 			valign: 'middle',
 			sortable: false
+		}, {
+			field: 'operate',
+			title: '操作',
+			align: 'center',
+			events: authOperateEvents,
+			formatter: authOperateFormatter
 		}]
 	});
 }
 
-function signinLogResponseHandler(res)
+function authListResponseHandler(res)
 {
 	if(res['errno'] == 0){
-		return res['logs'];
+		return res['list'];
 	}
 	alert(res['msg']);
 	return [];
 }
+
+function authOperateFormatter(value, row, index)
+{
+	return [
+		'<button class="btn btn-default revoke" href="javascript:void(0)">',
+		'<i class="glyphicon glyphicon-log-out"></i>&nbsp;撤销',
+		'</button>'
+	].join('');
+}
+
+window.authOperateEvents =
+{
+	'click .revoke': function (e, value, row, index) {
+		var ajax = $.ajax({
+			url: "ajax.php?action=auth_revoke",
+			type: 'POST',
+			data: {
+				app_id: row.app_id
+			}
+		});
+		ajax.done(function(json){
+			var res = JSON.parse(json);
+			if(res["errno"] == 0){
+				$('#table-auth').bootstrapTable("refresh");
+			}else{
+				$('#modal-msg').modal('show');
+				$('#modal-msg-content').text(res["msg"]);
+			}
+		});
+	}
+};
+

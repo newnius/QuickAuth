@@ -35,10 +35,12 @@
 		const EMAIL_ALREADY_VERIFIED = 25;
 		const INVALID_COOKIE = 26;
 
+		/* auth */
 		const TOKEN_EXPIRED = 27;
 		const SITE_NOT_EXIST = 28;
 		const INVALID_URL = 29;
 		const INVALID_PARAM = 31;
+		const DOMAIN_MISMATCH = 32;
 
 		/* rate limit */
 		const TOO_FAST = 30;
@@ -140,6 +142,9 @@
 
 				case CRErrorCode::INVALID_PARAM:
 					return '无效的参数！';
+
+				case CRErrorCode::DOMAIN_MISMATCH:
+					return '重定向网址不在允许的范围内！';
 
 				default:
 					return '未知错误！('.$errno.')';

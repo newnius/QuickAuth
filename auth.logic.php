@@ -18,26 +18,26 @@
 	function auth_get_site($rule)
 	{
 		$r = new CRObject();
-		$r->set('id', $rule->getInt('client_id'));
+		$r->set('id', $rule->getInt('app_id'));
 		$site = SiteManager::get($r);
 		if($site===null){
 			$res['errno'] = CRErrorCode::SITE_NOT_EXIST;
 			return $res;
 		}
 		$res['errno'] = CRErrorCode::SUCCESS;
-		$res['domain'] = $site['domain'];
 		$res['auto_grant'] = $site['level']==='99'?1:0;
 		return $res;
 	}
 
-	/* 
-	 * array('response_type'='code', 'client_id'=APP_ID, 'redirect_uri', 'state', 'scope')
+	/*
+	 * array('response_type'='code', 'app_id', 'redirect_uri', 'state', 'scope')
 	 * return array('errno', 'code', 'state');
 	 */
 	function auth_grant($rule)
 	{
+		$app_id = $rule->getInt('app_id');
 		$r = new CRObject();
-		$r->set('id', $rule->getInt('client_id'));
+		$r->set('id', $app_id);
 		$site = SiteManager::get($r);
 		if($site===null){
 			$res['errno'] = CRErrorCode::SITE_NOT_EXIST;
@@ -53,7 +53,7 @@
 		}
 		$arr = parse_url($rule->get('redirect_uri'));
 		if($arr['host'] !== $site['domain']){
-			$res['errno'] = CRErrorCode::INVALID_URL;
+			$res['errno'] = CRErrorCode::DOMAIN_MISMATCH;
 			return $res;
 		}
 		if($rule->get('state')===null){
@@ -69,10 +69,10 @@
 			return $res;
 		}
 		$data = array(
-			'client_id' => $rule->getInt('client_id'),
-			'client_secret' => $site['key'],
+			'app_id' => $app_id,
+			'app_key' => $site['key'],
 			'redirect_uri' => $rule->get('redirect_uri'),
-			'username' => Session::get('username'),
+			'uid' => Session::get('username'),
 			'scope' => $scope
 		);
 		$redis->set("auth:code:$code", json_encode($data), 'EX', 300);
@@ -81,19 +81,18 @@
 		$res['errno'] = CRErrorCode::SUCCESS;
 		$res['code'] = $code;
 		$res['state'] = $rule->get('state');
-		$res['uid'] = Session::get('username');
 		
 		$log = new CRObject();
 		$log->set('scope', Session::get('username'));
 		$log->set('tag', 'auth_grant');
-		$content = array('client_id' => $rule->getInt('client_id'), 'response' => $res['errno']);
+		$content = array('app_id' => $app_id, 'response' => $res['errno']);
 		$log->set('content', json_encode($content));
 		CRLogger::log2db($log);
 		return $res;
 	}
 
-	/* array('grant_type'=>'authorization_code', 'client_id'=>APP_ID, 'client_secret'=>APP_KEY, 'code', 'redirect_uri')
-	 * return array('errno', 'access_token', 'expires_in'=>3600);
+	/* array('grant_type'=>'authorization_code', 'app_id', 'app_key', 'code', 'redirect_uri')
+	 * return array('errno', 'token', 'expires_in'=>3600);
 	 */
 	function auth_get_token($rule)
 	{
@@ -101,8 +100,8 @@
 			$res['errno'] = CRErrorCode::INVALID_PARAM;
 			return $res;
 		}
-		$res['errno'] = CRErrorCode::SUCCESS;
-		$code = $rule->get('code');
+		$app_id = $rule->getInt('app_id', '');
+		$code = $rule->get('code', '');
 		$redis = RedisDAO::instance();
 		if($redis===null){
 			$res['errno'] = CRErrorCode::UNABLE_TO_CONNECT_REDIS;
@@ -115,25 +114,28 @@
 			return $res;
 		}
 		$data = json_decode($str, true);
-		if($rule->getInt('client_id')!==$data['client_id'] || $rule->get('redirect_uri')!==$data['redirect_uri'] || $rule->get('client_secret')!==$data['client_secret']){
+		if($app_id!==$data['app_id'] || $rule->get('redirect_uri')!==$data['redirect_uri'] || $rule->get('app_key')!==$data['app_key']){
 			$res['errno'] = CRErrorCode::INVALID_URL;
 			$redis->disconnect();
 			return $res;
 		}
 		$redis->del("auth:code:$code");
 		$token = Random::randomString(64);
-		$arr = array('expires' => time() + 3600*24*30, 'client_id' => $data['client_id'], 'client_secret' => $data['client_secret'], 'scope' => $data['scope']);
+		$token = $data['uid'].'$'.$token;
+		$arr = array('expires' => time() + 3600*24*30, 'app_id' => $data['app_id'], 'app_key' => $data['app_key'], 'scope' => $data['scope']);
 		$data2 = json_encode($arr);
-		$redis->hset("auth:token:{$data['username']}", $token, $data2);
+		$redis->hset("auth:token:{$data['uid']}", $token, $data2);
 		$code = Random::randomString(64);
+		$res['errno'] = CRErrorCode::SUCCESS;
 		$res['token'] = $token;
+		$res['expires_in'] = 3600*24*30;
 		$redis->disconnect();
 		return $res;
 	}
 
 	/*
-	 * array('grant_type'=>'refresh_token', 'client_id', 'client_secret', 'refresh_token', 'uid')
-	 * return array('errno', 'access_token', 'expires_in'=>3600, 'refresh_token');
+	 * array('grant_type'=>'refresh_token', 'app_id', 'app_key', 'token')
+	 * return array('errno', 'token', 'expires_in'=>3600);
 	 */
 	function auth_refresh_token($rule)
 	{
@@ -141,9 +143,13 @@
 			$res['errno'] = CRErrorCode::INVALID_PARAM;
 			return $res;
 		}
-		$res['errno'] = CRErrorCode::SUCCESS;
-		$uid = $rule->get('uid', '');
 		$token = $rule->get('token', '');
+		$vals = explode('$', $token);
+		if(count($vals)!==2){
+			$res['errno'] = CRErrorCode::TOKEN_EXPIRED;
+			return $res;
+		}
+		$uid = $vals[0];
 		$redis = RedisDAO::instance();
 		if($redis===null){
 			$res['errno'] = CRErrorCode::UNABLE_TO_CONNECT_REDIS;
@@ -163,10 +169,13 @@
 		}
 		$redis->hdel("auth:token:$uid", $token);
 		$token = Random::randomString(64);
-		$arr = array('expires' => time() + 3600*24*30, 'client_id' => $data['client_id'], 'client_secret' => $data['client_secret'], 'scope' => $data['scope']);
+		$token = $uid.'$'.$token;
+		$arr = array('expires' => time() + 3600*24*30, 'app_id' => $data['app_id'], 'app_key' => $data['app_key'], 'scope' => $data['scope']);
 		$data2 = json_encode($arr);
 		$redis->hset("auth:token:$uid", $token, $data2);
+		$res['errno'] = CRErrorCode::SUCCESS;
 		$res['token'] = $token;
+		$res['expires_in'] = 3600*24*30;
 		$redis->disconnect();
 		return $res;
 	}
@@ -175,8 +184,13 @@
 	/* query user info */
 	function auth_get_info($rule)
 	{
-		$uid = $rule->get('uid', '');
 		$token = $rule->get('token', '');
+		$vals = explode('$', $token);
+		if(count($vals)!==2){
+			$res['errno'] = CRErrorCode::TOKEN_EXPIRED;
+			return $res;
+		}
+		$uid = $vals[0];
 		$redis = RedisDAO::instance();
 		if($redis===null){
 			$res['errno'] = CRErrorCode::UNABLE_TO_CONNECT_REDIS;
@@ -206,5 +220,51 @@
 		}
 		$res['errno'] = CRErrorCode::SUCCESS;
 		$res['info'] = $info;
+		return $res;
+	}
+
+	/* */
+	function auth_revoke($rule)
+	{
+		$app_id = $rule->getInt('app_id', '');
+		$redis = RedisDAO::instance();
+		if($redis===null){
+			$res['errno'] = CRErrorCode::UNABLE_TO_CONNECT_REDIS;
+			return $res;
+		}
+		$success = $redis->hdel("auth:token:$uid", $app_id);
+		$res['errno'] = $success>0?CRErrorCode::SUCCESS:CRErrorCode::FAIL;
+
+		$log = new CRObject();
+		$log->set('scope', Session::get('username'));
+		$log->set('tag', 'auth_revoke');
+		$content = array('app_id' => $app_id, 'response' => $res['errno']);
+		$log->set('content', json_encode($content));
+		CRLogger::log2db($log);
+		return $res;
+	}
+
+	/* */
+	function auth_list($rule)
+	{
+		$uid = Session::get('username');
+		$redis = RedisDAO::instance();
+		if($redis===null){
+			$res['errno'] = CRErrorCode::UNABLE_TO_CONNECT_REDIS;
+			return $res;
+		}
+		$list = $redis->hgetall("auth:token:$uid");
+		$redis->disconnect();
+		$sites = array();
+		foreach($list as $key => $value){
+			$data = json_decode($value, true);
+			$sites[] = array(
+				'app_id' => $data['app_id'],
+				'expires' => $data['expires'],
+				'scope' => join(',', $data['scope'])
+			);
+		}
+		$res['errno'] = CRErrorCode::SUCCESS;
+		$res['list'] = $sites;
 		return $res;
 	}

@@ -1,6 +1,6 @@
 if(window.location.pathname.indexOf("auth") != -1){
 	var response_type = getParameterByName('response_type');
-	var client_id = getParameterByName('client_id');
+	var app_id = getParameterByName('client_id');
 	var redirect_uri = getParameterByName('redirect_uri');
 	var state = getParameterByName('state');
 	var scope = getParameterByName('scope');
@@ -8,10 +8,11 @@ if(window.location.pathname.indexOf("auth") != -1){
 	$.each(array,function(i){
 		if(array[i]=='email')
 			$("#form-auth-email").attr("checked", "checked");
-		if(array[i]=='verified')
-			$("#form-auth-verifid").attr("checked", "checked");
+		if(array[i]=='email_verified')
+			$("#form-auth-verified").attr("checked", "checked");
 		if(array[i]=='role')
 			$("#form-auth-role").attr("checked", "checked");
+			console.log(array[i]);
 	});
 
 	/* check auto accept */
@@ -19,7 +20,7 @@ if(window.location.pathname.indexOf("auth") != -1){
 		url: "ajax.php?action=auth_get_site",
 		type: 'POST',
 		data: {
-			client_id: client_id
+			app_id: app_id
 		}
 	});
 		
@@ -160,7 +161,7 @@ if(window.location.pathname.indexOf("auth") != -1){
 		e.preventDefault();
 		$('#modal-msg').modal('show');
 		var response_type = getParameterByName('response_type');
-		var client_id = getParameterByName('client_id');
+		var app_id = getParameterByName('client_id');
 		var redirect_uri = getParameterByName('redirect_uri');
 		var state = getParameterByName('state');
 		var scope = getParameterByName('scope');
@@ -168,7 +169,7 @@ if(window.location.pathname.indexOf("auth") != -1){
 		if($("#form-auth-email").prop("checked"))
 			scope.push('email');
 		if($("#form-auth-verified").prop("checked"))
-			scope.push('verified');
+			scope.push('email_verified');
 		if($("#form-auth-role").prop("checked"))
 			scope.push('role');
 		var ajax = $.ajax({
@@ -176,7 +177,7 @@ if(window.location.pathname.indexOf("auth") != -1){
 			type: 'POST', 
 			data: {
 				response_type: response_type,
-				client_id: client_id,
+				app_id: app_id,
 				redirect_uri: redirect_uri,
 				state: state,
 				scope: scope.join(',')
