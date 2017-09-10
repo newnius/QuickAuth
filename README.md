@@ -1,5 +1,5 @@
 # QuickAuth
-Another account system which supports OAuth & SSO [QuickAuth](https://quickauth.newnius.com)
+Account system which supports OAuth & SSO. Demo [QuickAuth](https://quickauth.newnius.com)
 
 ## Requirements
   - Redis
@@ -8,11 +8,11 @@ Another account system which supports OAuth & SSO [QuickAuth](https://quickauth.
   - SendGrid Account
 
 ## Setup
-  - rename `config-sample.inc.php` to `config.inc.php`
+  - Rename `config-sample.inc.php` to `config.inc.php`
   - Customize `config.inc.php`
 
 ## Features
-  - Support OAuth & SSO
+  - OAuth & SSO
   - Muiltiple Login
   - Block IP
   - Rate Limit
@@ -21,3 +21,4 @@ Another account system which supports OAuth & SSO [QuickAuth](https://quickauth.
   - Basic Admin Panel
   - Access Control Based on Role
   - Responsive Web Design
+  - I18N
