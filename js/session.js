@@ -31,7 +31,7 @@ function load_users_online()
 			title: '选择',
 			checkbox: true
 		}, {
-			field: 'username',
+			field: 'group',
 			title: '用户名',
 			align: 'center',
 			valign: 'middle',

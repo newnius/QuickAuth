@@ -3,6 +3,7 @@
 	require_once('util4p/CRObject.class.php');
 	require_once('util4p/CRErrorCode.class.php');
 	require_once('util4p/Validator.class.php');
+	require_once('util4p/RedisDAO.class.php');
 	//require_once('util4p/Session.class.php');
 	require_once('util4p/ReSession.class.php');
 	require_once('util4p/CRLogger.class.php');
@@ -37,7 +38,7 @@
     var_dump(Session::clearAll());
 */
 
-
+/*
 	require("sendgrid/sendgrid-php.php");
 	$from = new SendGrid\Email("Example User", "support@newnius.com");
 	$to = new SendGrid\Email("Example User", "me@newnius.com");
@@ -55,3 +56,28 @@
 		$msg = json_decode($json, true);
 		echo $msg['errors'][0]['message'];
 	}
+*/
+
+/*
+	setcookie('sid', 'sid', time()-1);	
+	if(isset($_COOKIE['sid'])){
+		var_dump($_COOKIE['sid']);
+	}
+	setcookie('sid', 'sid');	
+	var_dump($_COOKIE['sid']);
+*/
+
+/*
+session_start();
+var_dump(session_id());
+//$_SESSION['flag'] = '1';
+var_dump($_SESSION['flag']);
+*/
+
+//$redis = RedisDAO::instance();
+//var_dump($redis->exists('cookie:token:newnius'));
+
+$rule = new CRObject();
+//$rule->set('group', 'newnius');
+//var_dump(Session::listGroup($rule));
+var_dump(Session::get('username'));

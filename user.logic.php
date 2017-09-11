@@ -103,6 +103,7 @@
 		if(password_verify($password, $user_arr['password'])){
 			Session::put('username', $user_arr['username']);
 			Session::put('role', $user_arr['role']);
+			Session::attach($user_arr['username']);
 			if(ENABLE_COOKIE && $remember_me){
 				/* include part of password to make sure cookie expire after password updates */
 				$token = Random::randomString(26).substr($user_arr['password'], strlen($user_arr['password']) - 6);
@@ -489,32 +490,49 @@
 			return $res;
 		}
 		$res['errno'] = CRErrorCode::SUCCESS;
-		$res['users'] = Session::listOnline();
+		$res['users'] = Session::listGroup($rule);
+		return $res;
+	}
+
+	/**/
+	function user_sessions($rule)
+	{
+		if($rule->get('group')!==Session::get('username')){
+			if(!AccessController::hasAccess(Session::get('role', 'visitor'), 'get_online_users')){
+				$res['errno'] = CRErrorCode::NO_PRIVILEGE;
+				return $res;
+			}
+		}
+		$res['errno'] = CRErrorCode::SUCCESS;
+		$res['sessions'] = Session::listSession($rule);
 		return $res;
 	}
 
 	/**/
 	function tick_out($rule)
 	{
-		if(!AccessController::hasAccess(Session::get('role', 'visitor'), 'tick_out_user')){
-			$res['errno'] = CRErrorCode::NO_PRIVILEGE;
-			return $res;
-		}
-		$user_arr = UserManager::getByUsername($rule->get('username'));
-		if($user_arr===null){
-			$res['errno'] = CRErrorCode::USER_NOT_EXIST;
-			return $res;
-		}
-		if(!AccessController::hasAccess(Session::get('role', 'visitor'), "tick_out_{$user_arr['role']}")){
-			$res['errno'] = CRErrorCode::NO_PRIVILEGE;
-			return $res;
+		if(Session::get('username')!==$rule->get('username')){
+			if(!AccessController::hasAccess(Session::get('role', 'visitor'), 'tick_out_user')){
+				$res['errno'] = CRErrorCode::NO_PRIVILEGE;
+				return $res;
+			}
+			$user_arr = UserManager::getByUsername($rule->get('username'));
+			if($user_arr===null){
+				$res['errno'] = CRErrorCode::USER_NOT_EXIST;
+				return $res;
+			}
+			if(!AccessController::hasAccess(Session::get('role', 'visitor'), "tick_out_{$user_arr['role']}")){
+				$res['errno'] = CRErrorCode::NO_PRIVILEGE;
+				return $res;
+			}
 		}
 		$res['errno'] = CRErrorCode::SUCCESS;
-		$log->set('scope', Session::get('username'));
+		Session::expireByGroup($rule->get('username'), $rule->getInt('_index'));
+
 		$log = new CRObject();
-		$log->set('scope', $user->get('username'));
+		$log->set('scope', Session::get('username'));
 		$log->set('tag', 'tickout');
-		$content = array('username' => $user_arr['username'], 'response' => $res['errno']);
+		$content = array('username' => $rule->get('username'), 'response' => $res['errno']);
 		$log->set('content', json_encode($content));
 		CRLogger::log2db($log);
 		return $res;

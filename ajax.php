@@ -197,9 +197,16 @@
 			$res = users_online($rule);
 			break;
 
+		case 'user_sessions':
+			$rule = new CRObject();
+			$rule->set('group', cr_get_GET('username', Session::get('username')));
+			$res = user_sessions($rule);
+			break;
+
 		case 'tick_out':
 			$rule = new CRObject();
-			$rule->set('username', cr_get_POST('username'));
+			$rule->set('username', cr_get_POST('username', Session::get('username')));
+			$rule->set('_index', cr_get_POST('_index'));
 			$res = tick_out($rule);
 			break;
 
