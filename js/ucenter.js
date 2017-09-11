@@ -11,8 +11,11 @@ $(function(){
 			break;
 		case "users_online":
 			load_users_online();
-			register_events_user();
+			register_events_session();
 			break;
+		case "user_sessions":
+			load_user_sessions();
+			register_events_session();
 		case "blocked_list":
 			load_list_blocked();
 			register_events_blocked();

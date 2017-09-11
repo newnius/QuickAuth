@@ -93,6 +93,7 @@
       'show_ucenter_changepwd' => array('root', 'admin', 'developer', 'normal'),
       'show_ucenter_logs' => array('root', 'admin', 'developer', 'normal'),
       'show_ucenter_auth_list' => array('root', 'admin', 'developer', 'normal'),
+      'show_ucenter_user_sessions' => array('root', 'admin', 'developer', 'normal'),
       'show_ucenter_admin' => array('root', 'admin'),
       'show_ucenter_signout' => array('root', 'admin', 'developer', 'normal'),
 

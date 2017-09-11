@@ -35,6 +35,9 @@
 	}elseif(isset($_GET['users_online'])){
 		$page_type='users_online';
 
+	}elseif(isset($_GET['user_sessions'])){
+		$page_type='user_sessions';
+
 	}elseif(isset($_GET['blocked_list'])){
 		$page_type='blocked_list';
 
@@ -63,6 +66,7 @@
 		array('changepwd', '修改密码'),
 		array('logs', '登录日志'),
 		array('auth_list', '授权记录'),
+		array('user_sessions', '登录状态'),
 		array('admin', '管理入口'),
 		array('signout', '退出登录')
 	);
@@ -279,6 +283,21 @@
 										<div id="toolbar">
 										</div>
 										<table id="table-user" data-toolbar="#toolbar" class="table table-striped">
+										</table> 
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<?php }elseif($page_type == 'user_sessions'){ ?>
+						<div id="user_sessions">
+							<div class="panel panel-default">
+								<div class="panel-heading">会话</div> 
+								<div class="panel-body">
+									<div class="table-responsive">
+										<div id="toolbar">
+										</div>
+										<table id="table-session" data-toolbar="#toolbar" class="table table-striped">
 										</table> 
 									</div>
 								</div>
