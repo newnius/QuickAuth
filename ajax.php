@@ -5,11 +5,10 @@
 	require_once('util4p/ReSession.class.php');
 	require_once('util4p/RateLimiter.class.php');
 
+	require_once('config.inc.php');
 	require_once('user.logic.php');
 	require_once('auth.logic.php');
 	require_once('site.logic.php');
-
-	require_once('config.inc.php');
 
 
 	function print_response($res)
@@ -24,7 +23,7 @@
 		echo $json;
 	}
 
-	if(RateLimiter::getFreezeTime() > 0)
+	if(ENABLE_RATE_LIMIT && RateLimiter::getFreezeTime() > 0)
 	{
 		$res['errno'] = CRErrorCode::TOO_FAST;
 		print_response($res);

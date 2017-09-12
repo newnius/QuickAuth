@@ -6,7 +6,7 @@
 	require_once('util4p/AccessController.class.php');
 	require_once('util4p/Random.class.php');
 	
-	require("sendgrid/sendgrid-php.php");
+	require_once("sendgrid/sendgrid-php.php");
 
 	require_once('config.inc.php');
 	require_once('init.inc.php');
