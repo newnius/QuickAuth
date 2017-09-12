@@ -101,6 +101,9 @@
 			return $res;
 		}
 		if(password_verify($password, $user_arr['password'])){
+			if(!ENABLE_MULTIPLE_LOGIN){
+				Session::expireByGroup($user_arr['username']);
+			}
 			Session::put('username', $user_arr['username']);
 			Session::put('role', $user_arr['role']);
 			Session::attach($user_arr['username']);
@@ -127,14 +130,7 @@
 	 */
 	function signout()
 	{
-		setcookie('username', '', time() - 3600);
-		setcookie('token', '', time() - 3600);
-		$redis = RedisDAO::instance();
-		if($redis!==null){
-			$redis->del('cookie:token:'.Session::get('username'));
-			$redis->disconnect();
-		}
-		Session::clear();
+		Session::expire();
 		$res['errno'] = CRErrorCode::SUCCESS;
 		return $res;
 	}

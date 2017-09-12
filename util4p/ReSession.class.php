@@ -129,11 +129,9 @@
 				return $default;
 			}
 			self::$cache = $list;
-			$expire = self::$time_out;
-			if(isset($list['_expire']) && (int)$list['_expire'] > self::$time_out){
-				$expire = (int)$list['_expire'];
+			if($redis->ttl($redis_key) < self::$time_out){
+				$redis->expire($redis_key, self::$time_out);
 			}
-			$redis->expire($redis_key, $expire);
 			$redis->disconnect();
 			if(isset($list[$key])){
 				return $list[$key];
@@ -152,8 +150,8 @@
 			$redis_key = 'session:'.self::$sid;
 			$redis->del($redis_key);
 			$redis->disconnect();
+			setcookie(self::$guid_key, self::$sid, time()-3600);
 			return true;
-			//setcookie(self::$guid_key, self::$sid, time()-3600);
 		}
 
 
@@ -168,6 +166,7 @@
 			foreach($keys as $i => $key){
 				if($index===null || $i===$index){
 					$redis->srem($group_key, $key);
+					$redis->del($key);
 				}
 			}
 			$redis->disconnect();
