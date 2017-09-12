@@ -73,9 +73,10 @@
 			'app_key' => $site['key'],
 			'redirect_uri' => $rule->get('redirect_uri'),
 			'uid' => Session::get('username'),
-			'scope' => $scope
+			'scope' => json_encode($scope)
 		);
-		$redis->set("auth:code:$code", json_encode($data), 'EX', 300);
+		$redis->hmset("auth:code:$code", $data);
+		$redis->expire("auth:code:$code", 300);
 		$redis->disconnect();
 
 		$res['errno'] = CRErrorCode::SUCCESS;
@@ -100,20 +101,21 @@
 			$res['errno'] = CRErrorCode::INVALID_PARAM;
 			return $res;
 		}
-		$app_id = $rule->getInt('app_id', '');
+		$app_id = $rule->get('app_id', '');
 		$code = $rule->get('code', '');
 		$redis = RedisDAO::instance();
 		if($redis===null){
 			$res['errno'] = CRErrorCode::UNABLE_TO_CONNECT_REDIS;
 			return $res;
 		}
-		$str = $redis->get("auth:code:$code");
-		if($str===null){
+		$data = $redis->hgetall("auth:code:$code");
+		if(count($data)===null){
 			$res['errno'] = CRErrorCode::CODE_EXPIRED;
 			$redis->disconnect();
 			return $res;
 		}
-		$data = json_decode($str, true);
+		var_dump($rule);
+		var_dump($data);
 		if($app_id!==$data['app_id'] || $rule->get('redirect_uri')!==$data['redirect_uri'] || $rule->get('app_key')!==$data['app_key']){
 			$res['errno'] = CRErrorCode::INVALID_URL;
 			$redis->disconnect();
@@ -121,10 +123,16 @@
 		}
 		$redis->del("auth:code:$code");
 		$token = Random::randomString(64);
-		$token = $data['uid'].'$'.$token;
-		$arr = array('expires' => time() + 3600*24*30, 'app_id' => $data['app_id'], 'app_key' => $data['app_key'], 'scope' => $data['scope']);
-		$data2 = json_encode($arr);
-		$redis->hset("auth:token:{$data['uid']}", $token, $data2);
+		$data2 = array(
+			'expires' => time() + 3600*24*30,
+			'app_id' => $data['app_id'],
+			'app_key' => $data['app_key'],
+			'uid' => $data['uid'],
+			'scope' => $data['scope']
+		);
+		$redis->hmset("auth:token:$token", $data2);
+		$redis->expire("auth:token:$token", 3600*24*30);
+		$redis->hset("auth:group:".Session::get('username'), $app_id, $token);
 		$code = Random::randomString(64);
 		$res['errno'] = CRErrorCode::SUCCESS;
 		$res['token'] = $token;
@@ -144,35 +152,43 @@
 			return $res;
 		}
 		$token = $rule->get('token', '');
-		$vals = explode('$', $token);
-		if(count($vals)!==2){
-			$res['errno'] = CRErrorCode::TOKEN_EXPIRED;
-			return $res;
-		}
-		$uid = $vals[0];
 		$redis = RedisDAO::instance();
 		if($redis===null){
 			$res['errno'] = CRErrorCode::UNABLE_TO_CONNECT_REDIS;
 			return $res;
 		}
-		$str = $redis->hget("auth:token:$uid", $token);
-		if($str===null){
+		$data = $redis->hgetall("auth:token:$token");
+		var_dump($data);
+		if(count($data)===0){
 			$res['errno'] = CRErrorCode::TOKEN_EXPIRED;
 			$redis->disconnect();
 			return $res;
 		}
-		$data = json_decode($str, true);
 		if($data['expires'] < time()){
 			$res['errno'] = CRErrorCode::TOKEN_EXPIRED;
 			$redis->disconnect();
 			return $res;
 		}
-		$redis->hdel("auth:token:$uid", $token);
+		echo "aha\n";
+		$t = $redis->hget("auth:group:{$data['uid']}", $data['app_id']);
+		$redis->del("auth:token:$token");
+		if($t !== $token){
+			$res['errno'] = CRErrorCode::TOKEN_EXPIRED;
+			$redis->disconnect();
+			return $res;
+		}
 		$token = Random::randomString(64);
-		$token = $uid.'$'.$token;
-		$arr = array('expires' => time() + 3600*24*30, 'app_id' => $data['app_id'], 'app_key' => $data['app_key'], 'scope' => $data['scope']);
-		$data2 = json_encode($arr);
-		$redis->hset("auth:token:$uid", $token, $data2);
+		$redis->hset("auth:group:{$data['uid']}", $data['app_id'], $token);
+		$data2 = array(
+			'expires' => time() + 3600*24*30,
+			'app_id' => $data['app_id'],
+			'app_key' => $data['app_key'],
+			'uid' => $data['uid'],
+			'scope' => $data['scope']
+		);
+		$redis->hmset("auth:token:$token", $data2);
+		$redis->expire("auth:token:$token", 3600*24*30);
+		$redis->hset("auth:group:".Session::get('username'), $app_id, $token);
 		$res['errno'] = CRErrorCode::SUCCESS;
 		$res['token'] = $token;
 		$res['expires_in'] = 3600*24*30;
@@ -185,31 +201,32 @@
 	function auth_get_info($rule)
 	{
 		$token = $rule->get('token', '');
-		$vals = explode('$', $token);
-		if(count($vals)!==2){
-			$res['errno'] = CRErrorCode::TOKEN_EXPIRED;
-			return $res;
-		}
-		$uid = $vals[0];
 		$redis = RedisDAO::instance();
 		if($redis===null){
 			$res['errno'] = CRErrorCode::UNABLE_TO_CONNECT_REDIS;
 			return $res;
 		}
-		$str = $redis->hget("auth:token:$uid", $token);
-		if($str===null){
+		$data = $redis->hgetall("auth:token:$token");
+		var_dump($data);
+		if(count($token)===0){
 			$res['errno'] = CRErrorCode::TOKEN_EXPIRED;
 			$redis->disconnect();
 			return $res;
 		}
-		$data = json_decode($str, true);
 		if($data['expires'] < time()){
 			$res['errno'] = CRErrorCode::TOKEN_EXPIRED;
 			$redis->disconnect();
 			return $res;
 		}
-		$scope = $data['scope'];
-		$user = UserManager::getByUsername($uid);
+		$t = $redis->hget("auth:group:{$data['uid']}", $data['app_id']);
+		if($t !== $token){
+			$res['errno'] = CRErrorCode::TOKEN_EXPIRED;
+			$redis->disconnect();
+			return $res;
+		}
+		$scope = json_decode($data['scope']);
+		$user = UserManager::getByUsername($data['uid']);
+		//TODO: add user not exist check
 		$info = array();
 		$info['uid'] = $user['username'];
 		$allowed_scopes = array('email', 'email_verified', 'role', 'nickname');
