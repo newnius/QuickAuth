@@ -4,7 +4,6 @@
 	require_once('util4p/ReSession.class.php');
 	require_once('init.inc.php');
 	require_once('secure.php');
-	require_once('cookie.php');
 
 	if(Session::get('username')==null){
 		header('location:login.php?a=notloged');

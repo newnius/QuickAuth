@@ -10,7 +10,6 @@
 	require_once('site.logic.php');
 
 	require_once('config.inc.php');
-	require_once('cookie.php');
 
 
 	function print_response($res)

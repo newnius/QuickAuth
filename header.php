@@ -5,7 +5,6 @@
   require_once('config.inc.php');
   require_once('init.inc.php');
   require_once('secure.php');
-  require_once('cookie.php');
 ?>
 <nav class="navbar navbar-default">
   <div class="container">

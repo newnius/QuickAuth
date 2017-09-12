@@ -38,6 +38,20 @@
 			}
 		}
 
+		/* Ask browser to save session_id, so that can continue after restart browser */
+		public static function persist($duration)
+		{
+			$redis = RedisDAO::instance();
+			if($redis===null){
+				return false;
+			}
+			$redis_key = 'session:'.self::$sid;
+			$redis->hset($redis_key, '_expire', $duration);
+			$redis->expire($redis_key, $duration);
+			$redis->disconnect();
+			setcookie(self::$guid_key, self::$sid, time()+$duration);
+			return true;
+		}
 
 		/* attach session to $group */
 		public static function attach($group)
@@ -82,7 +96,7 @@
 			$redis_key = 'session:'.self::$sid;
 			$redis->hset($redis_key, $key, $value);
 			$redis->hset($redis_key, '_ip', cr_get_client_ip());
-			$redis->expire($redis_key, self::$time_out);
+			self::get('_expire');//renew expire
 			$redis->disconnect();
 			return true;
 		}
@@ -103,22 +117,23 @@
 			$list = $redis->hgetall($redis_key);
 			if(self::$bind_ip){
 				if(!(isset($list['_ip']) && $list['_ip']===cr_get_client_ip())){
-					self::expire();
 					return $default;
 				}
 			}
 			if(isset($list['_group'])){
 				$group_key = 'session-group:'.$list['_group'];
 				if($redis->sismember($group_key, $redis_key)!==1){
-					self::expire();
 					return $default;
 				}
 			}else{
-				self::expire();
 				return $default;
 			}
 			self::$cache = $list;
-			$redis->expire($redis_key, self::$time_out);
+			$expire = self::$time_out;
+			if(isset($list['_expire']) && (int)$list['_expire'] > self::$time_out){
+				$expire = (int)$list['_expire'];
+			}
+			$redis->expire($redis_key, $expire);
 			$redis->disconnect();
 			if(isset($list[$key])){
 				return $list[$key];

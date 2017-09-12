@@ -6,7 +6,6 @@
 	require_once('config.inc.php');
 	require_once('init.inc.php');
 	require_once('secure.php');
-	require_once('cookie.php');
 
 	require_once('user.logic.php');
 
