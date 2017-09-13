@@ -17,8 +17,9 @@
 	/**/
 	function validate_username($username)
 	{
-		if($username===null || !is_string($username))
+		if($username===null || !is_string($username)){
 			return false;
+		}
 		$reserved_names = array('system', '管理员', 'admin');
 		if(in_array(strtolower($username), $reserved_names)){
 			return false;
@@ -31,15 +32,19 @@
 		return mb_strlen($username, 'utf8') > 0 && mb_strlen($username, 'utf8') <= 12;
 	}
 
+
 	/**/
-	function validate_email($email){
-		if($email===null || !is_string($email))
+	function validate_email($email)
+	{
+		if($email===null || !is_string($email)){
 			return false;
+		}
 		if(strlen($email) > 45){
 			return false;
 		}
 		return Validator::isEmail($email);
 	}
+
 
 	/**/
 	function user_register($user)
@@ -49,25 +54,18 @@
 		$user->set('role', 'normal');
 		if(!validate_username($username)){
 			$res['errno'] = CRErrorCode::INVALID_USERNAME;
-			return $res;
-		}
-		if(!validate_email($email)){
+		}else if(!validate_email($email)){
 			$res['errno'] = CRErrorCode::INVALID_EMAIL;
-			return $res;
-		}
-		if(UserManager::getByUsername($username) !== null){ 
+		}else if(UserManager::getByUsername($username) !== null){ 
 			$res['errno'] = CRErrorCode::USERNAME_OCCUPIED;
-			return $res;
-		}
-		if(UserManager::getByEmail($email) !== null){ 
+		}else if(UserManager::getByEmail($email) !== null){ 
 			$res['errno'] = CRErrorCode::EMAIL_OCCUPIED;
-			return $res;
+		}else{
+			$password = password_hash($user->get('password'), PASSWORD_DEFAULT);
+			$user->set('password', $password);
+			$success = UserManager::add($user);
+			$res['errno'] = $success?CRErrorCode::SUCCESS:CRErrorCode::UNKNOWN_ERROR;
 		}
-		$password = password_hash($user->get('password'), PASSWORD_DEFAULT);
-		$user->set('password', $password);
-		$success = UserManager::add($user);
-		$res['errno'] = $success?CRErrorCode::SUCCESS:CRErrorCode::UNKNOWN_ERROR;
-
 		$log = new CRObject();
 		$log->set('scope', $username);
 		$log->set('tag', 'signup');
@@ -77,10 +75,11 @@
 		return $res;
 	}
 
+
 	/**/
 	function user_login($user)
 	{
-		$account = $user->get('account');// may be username, email etc.
+		$account = $user->get('account', '');// can be username, email etc.
 		$password = $user->get('password');
 		$remember_me = $user->getBool('remember_me', false);
 		if(strpos($account, '@') !== false){
@@ -90,35 +89,36 @@
 		}
 		if($user_arr === null){
 			$res['errno'] = CRErrorCode::USER_NOT_EXIST;
-			return $res;
-		}
-		if($user_arr['role']==='removed'){ //removed
+		}else if($user_arr['role']==='removed'){ //removed
 			$res['errno'] = CRErrorCode::USER_IS_REMOVED;
-			return $res;
-		}
-		if($user_arr['role']==='blocked'){ //blocked
+		}else if($user_arr['role']==='blocked'){ //blocked
 			$res['errno'] = CRErrorCode::USER_IS_BLOCKED;
-			return $res;
-		}
-		if(password_verify($password, $user_arr['password'])){
-			if(!ENABLE_MULTIPLE_LOGIN){
-				Session::expireByGroup($user_arr['username']);
-			}
-			Session::put('username', $user_arr['username']);
-			Session::put('role', $user_arr['role']);
-			Session::attach($user_arr['username']);
-			if(ENABLE_COOKIE && $remember_me){
-				Session::persist(604800);// 7 days
-			}
-			$res['errno'] = CRErrorCode::SUCCESS;
+		}else if(FORCE_VERIFY && $user_arr['email_verified']==='0'){
+			$res['errno'] = CRErrorCode::EMAIL_IS_NOT_VERIFIED;
 		}else{
-			$res['errno'] = CRErrorCode::WRONG_PASSWORD;
+			if(password_verify($password, $user_arr['password'])){
+				if(!ENABLE_MULTIPLE_LOGIN){
+					Session::expireByGroup($user_arr['username']);
+				}
+				Session::put('username', $user_arr['username']);
+				Session::put('role', $user_arr['role']);
+				Session::attach($user_arr['username']);
+				if(ENABLE_COOKIE && $remember_me){
+					Session::persist(604800);// 7 days
+				}
+				$res['errno'] = CRErrorCode::SUCCESS;
+			}else{
+				$res['errno'] = CRErrorCode::WRONG_PASSWORD;
+			}
 		}
-
 		$log = new CRObject();
-		$log->set('scope', $user_arr['username']);
+		if(isset($user_arr['username'])){
+			$log->set('scope', $user_arr['username']);
+		}else{
+			$log->set('scope', '[nobody]');
+		}
 		$log->set('tag', 'signin');
-		$content = array('account' => $account, 'method' => 'password', 'response' => $res['errno']);
+		$content = array('account' => $account, 'response' => $res['errno']);
 		$log->set('content', json_encode($content));
 		CRLogger::log2db($log);
 		return $res;
@@ -135,51 +135,45 @@
 		return $res;
 	}
 
+
 	/**/
-	function user_update($user_new)
+	function user_update($user)
 	{
-		$user_arr = UserManager::getByUsername($user_new->get('username'));
+		$user_arr = UserManager::getByUsername($user->get('username'));
 		if($user_arr === null){
 			$res['errno'] = CRErrorCode::USER_NOT_EXIST;
-			return $res; 
+			return $res;
 		}
-		if($user_new->get('email') !== null){
-			if(!validate_email($user_new->get('email'))){
+		if($user->get('email') !== null){
+			if(!validate_email($user->get('email'))){
 				$res['errno'] = CRErrorCode::INVALID_EMAIL;
-				return $res;
-			}
-			if($user_arr['email'] !== $user_new->get('email')){
-				if(UserManager::getByEmail($user_new->get('email')) !== null){
+			}else if($user_arr['email'] !== $user->get('email')){
+				if(UserManager::getByEmail($user->get('email')) !== null){
 					$res['errno'] = CRErrorCode::EMAIL_OCCUPIED;
 					return $res;
 				}
+				$user_arr['email'] = $user->get('email');
 				$user_arr['email_verified'] = 0;
 			}
-			$user_arr['email'] = $user_new->get('email');
 		}
-		if($user_new->get('password')!==null){
-			$user_arr['password'] = password_hash($user_new->get('password'), PASSWORD_DEFAULT);
+		if($user->get('password')!==null){
+			$user_arr['password'] = password_hash($user->get('password'), PASSWORD_DEFAULT);
 		}
-		if($user_arr['username']!==Session::get('username')) { //update self is not allowed
-			if(!AccessController::hasAccess(Session::get('role'), 'user_update_'.$user_arr['role'])){// can update
-				$res['errno'] = CRErrorCode::NO_PRIVILEGE;
-				return $res;
+		if($user_arr['username']!==Session::get('username')){ //update self is not allowed
+			if(AccessController::hasAccess(Session::get('role'), 'user_update_'.$user_arr['role'])){// can update role
+				if(AccessController::hasAccess(Session::get('role'), 'user_update_'.$user->get('role', ''))){// can update to role
+					$user_arr['role'] = $user->get('role');
+					$success = UserManager::update(new CRObject($user_arr));
+					$res['errno'] = $success?CRErrorCode::SUCCESS:CRErrorCode::UNKNOWN_ERROR;
+				}
 			}
-			if(!AccessController::hasAccess(Session::get('role'), 'user_update_'.$user_new->get('role', ''))){// can update to role
-				$res['errno'] = CRErrorCode::NO_PRIVILEGE;
-				return $res;
-			}
-			$user_arr['role'] = $user_new->get('role');
-		}else{
+		}
+		if(!isset($res)){
 			$res['errno'] = CRErrorCode::NO_PRIVILEGE;
-			return $res;
 		}
-
-		$success = UserManager::update(new CRObject($user_arr));
-		$res['errno'] = $success?CRErrorCode::SUCCESS:CRErrorCode::UNKNOWN_ERROR;
 		$log = new CRObject();
 		$log->set('scope', Session::get('username'));
-		$log->set('tag', 'update');
+		$log->set('tag', 'update_user');
 		$content = array(
 			'username' => $user_arr['username'],
 			'email' => $user_arr['email'],
@@ -191,10 +185,44 @@
 		return $res;
 	}
 
+
+	/* */
+	function user_update_email($user)
+	{
+		$user_arr = UserManager::getByUsername(Session::get('username'));
+		if($user_arr === null){
+			$res['errno'] = CRErrorCode::USER_NOT_EXIST;
+			return $res;
+		}
+		if(!validate_email($user->get('email'))){
+			$res['errno'] = CRErrorCode::INVALID_EMAIL;
+			return $res;
+		}
+		if(UserManager::getByEmail($user->get('email')) !== null){
+			$res['errno'] = CRErrorCode::EMAIL_OCCUPIED;
+			return $res;
+		}
+		$user_arr['email'] = $user->get('email');
+		$user_arr['email_verified'] = 0;
+		$success = UserManager::update(new CRObject($user_arr));
+		$res['errno'] = $success?CRErrorCode::SUCCESS:CRErrorCode::UNKNOWN_ERROR;
+
+		$log = new CRObject();
+		$log->set('scope', Session::get('username'));
+		$log->set('tag', 'update_email');
+		$content = array(
+			'email' => $user_arr['email'],
+			'response' => $res['errno']
+		);
+		$log->set('content', json_encode($content));
+		CRLogger::log2db($log);
+	}
+
+
 	/**/
 	function user_update_pwd($user)
 	{
-		$user_arr = UserManager::getByUsername($user->get('username'));
+		$user_arr = UserManager::getByUsername(Session::get('username'));
 		if($user_arr === null){
 			$res['errno'] = CRErrorCode::USER_NOT_EXIST;
 			return $res; 
@@ -210,9 +238,9 @@
 		$res['errno'] = $success?CRErrorCode::SUCCESS:CRErrorCode::UNKNOWN_ERROR;
 		$log = new CRObject();
 		$log->set('scope', Session::get('username'));
-		$log->set('tag', 'updatepwd');
+		$log->set('tag', 'update_pwd');
 		$content = array(
-			'username' => $user_arr['username'],
+			'password' => '******',
 			'response' => $res['errno']
 		);
 		$log->set('content', json_encode($content));
@@ -220,28 +248,30 @@
 		return $res;
 	}
 
+
 	/**/
 	function user_get($rule)
 	{
-		if(Session::get('username') === $rule->get('username') || AccessController::hasAccess(Session::get('role', 'visitor'), 'user_get_others')){ //access control. potential BUG: admin can view root
+		if(Session::get('username') === $rule->get('username') || AccessController::hasAccess(Session::get('role', 'visitor'), 'user_get_others')){
 			$res['errno'] = CRErrorCode::SUCCESS;
 			$user = UserManager::getByUsername($rule->get('username'));
 			if($user === null){
 				$res['errno'] = CRErrorCode::USER_NOT_EXIST;
 			}else{
 				unset($user['password']);
+				$res['user'] = $user;
 			}
-			$res['user'] = $user;
 			return $res;
 		}
 		$res['errno'] = CRErrorCode::NO_PRIVILEGE;
 		return $res;
 	}
 
+
 	/**/
 	function users_get($rule)
 	{
-		if(!AccessController::hasAccess(Session::get('role', 'visitor'), 'user_get_others')){ //access control
+		if(!AccessController::hasAccess(Session::get('role', 'visitor'), 'user_get_others')){
 			$res['errno'] = CRErrorCode::NO_PRIVILEGE;
 			return $res;
 		}
@@ -251,19 +281,16 @@
 		return $res;
 	}
 
+
 	/**/
 	function user_get_log($rule)
 	{
-		if(is_null($rule->get('username')) || $rule->get('username') !== Session::get('username')){
+		if($rule->get('username')===null || $rule->get('username') !== Session::get('username')){
 			if(!AccessController::hasAccess(Session::get('role', 'visitor'), 'get_logs_others')){
 				$res['errno'] = CRErrorCode::NO_PRIVILEGE;
 				return $res;
 			}
-		}else{ // get self signin log
-			if(!AccessController::hasAccess(Session::get('role', 'visitor'), 'get_logs_self')){
-				$res['errno'] = CRErrorCode::NO_PRIVILEGE;
-				return $res;
-			}
+		}else{// view self log
 			$rule->set('scope', $rule->get('username'));
 			$rule->set('tag', 'signin');
 		}
@@ -293,7 +320,7 @@
 			$res['errno'] = CRErrorCode::UNABLE_TO_CONNECT_REDIS;
 			return $res;
 		}
-		$redis->set('code:'.$user_arr['username'], $code, 'EX', 300);
+		$redis->set('resetpwd:code:'.$user_arr['username'], $code, 'EX', 300);
 		$redis->disconnect();
 
 		$email = new CRObject();
@@ -308,9 +335,9 @@
 		$res = email_send($email);
 
 		$log = new CRObject();
-		$log->set('scope', $user->get('username'));
+		$log->set('scope', '[SYSTEM]');
 		$log->set('tag', 'send_email');
-		$content = array('type' => 'reset_pwd', 'email' => $user->get('email'), 'response' => $res['errno']);
+		$content = array('username' => $user->get('username'), 'type' => 'reset_pwd', 'email' => $user->get('email'), 'response' => $res['errno']);
 		$log->set('content', json_encode($content));
 		CRLogger::log2db($log);
 		return $res;
@@ -329,16 +356,15 @@
 			$res['errno'] = CRErrorCode::EMAIL_ALREADY_VERIFIED;
 			return $res;
 		}
-		
 		$code = Random::randomInt(100000, 999999);
 		$redis = RedisDAO::instance();
 		if($redis===null){
 			$res['errno'] = CRErrorCode::UNABLE_TO_CONNECT_REDIS;
 			return $res;
 		}
-		$redis->set('code:'.$user_arr['username'], $code, 'EX', 300);
+		$redis->set('verify:code:'.$user_arr['username'], $code, 'EX', 300);
 		$redis->disconnect();
-		
+
 		$email = new CRObject();
 		$email->set('email', $user_arr['email']);
 		$email->set('username', $user_arr['username']);
@@ -352,9 +378,9 @@
 		$res = email_send($email);
 
 		$log = new CRObject();
-		$log->set('scope', $user->get('username'));
+		$log->set('scope', '[SYSTEM]');
 		$log->set('tag', 'send_email');
-		$content = array('type' => 'verify_email', 'email' => $user_arr['email'], 'response' => $res['errno']);
+		$content = array('username' => $user_arr['username'], 'type' => 'verify_email', 'email' => $user_arr['email'], 'response' => $res['errno']);
 		$log->set('content', json_encode($content));
 		CRLogger::log2db($log);
 		return $res;
@@ -374,22 +400,22 @@
 			$res['errno'] = CRErrorCode::UNABLE_TO_CONNECT_REDIS;
 			return $res;
 		}
-		$code = $redis->get('code:'.$user_arr['username']);
-		$redis->del('code:'.$user_arr['username']);
-		$redis->disconnect();
-		if($code !== $user->get('code')){
+		$code = $redis->get('resetpwd:code:'.$user_arr['username']);
+		if($code === $user->get('code')){
+			$redis->del('resetpwd:code:'.$user_arr['username']);
+			$password = password_hash($user->get('password'), PASSWORD_DEFAULT);
+			$user_arr['password'] = $password;
+			$success = UserManager::update(new CRObject($user_arr));
+			$res['errno'] = $success?CRErrorCode::SUCCESS:CRErrorCode::UNKNOWN_ERROR;
+		}else{
 			$res['errno'] = CRErrorCode::CODE_EXPIRED;
-			return $res;
 		}
-		$password = password_hash($user->get('password'), PASSWORD_DEFAULT);
-		$user_arr['password'] = $password;
-		$success = UserManager::update(new CRObject($user_arr));
+		$redis->disconnect();
 
-		$res['errno'] = $success?CRErrorCode::SUCCESS:CRErrorCode::UNKNOWN_ERROR;
 		$log = new CRObject();
-		$log->set('scope', $user->get('username'));
+		$log->set('scope', '[SYSTEM]');
 		$log->set('tag', 'resetpwd');
-		$content = array('code' => $code, 'response' => $res['errno']);
+		$content = array('username' => $user_arr['username'], 'code' => $code, 'response' => $res['errno']);
 		$log->set('content', json_encode($content));
 		CRLogger::log2db($log);
 		return $res;
@@ -409,143 +435,20 @@
 			$res['errno'] = CRErrorCode::UNABLE_TO_CONNECT_REDIS;
 			return $res;
 		}
-		$code = $redis->get('code:'.$user_arr['username']);
-		$redis->del('code:'.$user_arr['username']);
-		$redis->disconnect();
-		if($code !== $user->get('code')){
+		$code = $redis->get('verify:code:'.$user_arr['username']);
+		if($code === $user->get('code')){
+			$redis->del('verify:code:'.$user_arr['username']);
+			$user_arr['email_verified'] = 1;
+			$success = UserManager::update(new CRObject($user_arr));
+			$res['errno'] = $success?CRErrorCode::SUCCESS:CRErrorCode::UNKNOWN_ERROR;
+		}else{
 			$res['errno'] = CRErrorCode::CODE_EXPIRED;
-			return $res;
 		}
-		$user_arr['email_verified'] = 1;
-		$success = UserManager::update(new CRObject($user_arr));
-		$res['errno'] = $success?CRErrorCode::SUCCESS:CRErrorCode::UNKNOWN_ERROR;
+		$redis->disconnect();
 		$log = new CRObject();
-		$log->set('scope', $user->get('username'));
+		$log->set('scope', '[SYSTEM]');
 		$log->set('tag', 'verify_email');
-		$content = array('code' => $code, 'response' => $res['errno']);
-		$log->set('content', json_encode($content));
-		CRLogger::log2db($log);
-		return $res;
-	}
-
-	/**/
-	function users_online($rule)
-	{
-		if(!AccessController::hasAccess(Session::get('role', 'visitor'), 'get_online_users')){
-			$res['errno'] = CRErrorCode::NO_PRIVILEGE;
-			return $res;
-		}
-		$res['errno'] = CRErrorCode::SUCCESS;
-		$res['users'] = Session::listGroup($rule);
-		return $res;
-	}
-
-	/**/
-	function user_sessions($rule)
-	{
-		if($rule->get('group')!==Session::get('username')){
-			if(!AccessController::hasAccess(Session::get('role', 'visitor'), 'get_online_users')){
-				$res['errno'] = CRErrorCode::NO_PRIVILEGE;
-				return $res;
-			}
-		}
-		$res['errno'] = CRErrorCode::SUCCESS;
-		$res['sessions'] = Session::listSession($rule);
-		return $res;
-	}
-
-	/**/
-	function tick_out($rule)
-	{
-		if(Session::get('username')!==$rule->get('username')){
-			if(!AccessController::hasAccess(Session::get('role', 'visitor'), 'tick_out_user')){
-				$res['errno'] = CRErrorCode::NO_PRIVILEGE;
-				return $res;
-			}
-			$user_arr = UserManager::getByUsername($rule->get('username'));
-			if($user_arr===null){
-				$res['errno'] = CRErrorCode::USER_NOT_EXIST;
-				return $res;
-			}
-			if(!AccessController::hasAccess(Session::get('role', 'visitor'), "tick_out_{$user_arr['role']}")){
-				$res['errno'] = CRErrorCode::NO_PRIVILEGE;
-				return $res;
-			}
-		}
-		$res['errno'] = CRErrorCode::SUCCESS;
-		Session::expireByGroup($rule->get('username'), $rule->getInt('_index'));
-
-		$log = new CRObject();
-		$log->set('scope', Session::get('username'));
-		$log->set('tag', 'tickout');
-		$content = array('username' => $rule->get('username'), 'response' => $res['errno']);
-		$log->set('content', json_encode($content));
-		CRLogger::log2db($log);
-		return $res;
-	}
-
-
-	/* list IPs being blocked */
-	function list_blocked()
-	{
-		if(!AccessController::hasAccess(Session::get('role', 'visitor'), 'rc_list')){
-			$res['errno'] = CRErrorCode::NO_PRIVILEGE;
-			return $res;
-		}
-		$res['errno'] = CRErrorCode::SUCCESS;
-		$res['list'] = RateLimiter::listPunished();
-		return $res;
-	}
-
-	/* */
-	function get_blocked_time($ip)
-	{
-		if(!AccessController::hasAccess(Session::get('role', 'visitor'), 'rc_list')){
-			$res['errno'] = CRErrorCode::NO_PRIVILEGE;
-			return $res;
-		}
-		$res['errno'] = CRErrorCode::SUCCESS;
-		$res['time'] = RateLimiter::getFreezeTime($ip);
-		return $res;
-	}
-
-	/**/
-	function block($rule)
-	{
-		if(!AccessController::hasAccess(Session::get('role', 'visitor'), 'rc_block')){
-			$res['errno'] = CRErrorCode::NO_PRIVILEGE;
-			return $res;
-		}
-		$res['errno'] = CRErrorCode::SUCCESS;
-		$ip = $rule->get('ip');
-		if($ip === null){
-			$res['errno'] = CRErrorCode::FAIL;
-			return $res;
-		}
-		$r = array('degree' => 9999, 'interval' => $rule->getInt('time', 3600));
-		RateLimiter::punish($r, $ip);
-		$log = new CRObject();
-		$log->set('scope', Session::get('username'));
-		$log->set('tag', 'block');
-		$content = array('ip' => $ip, 'time' => $rule->getInt('time', 3600), 'response' => $res['errno']);
-		$log->set('content', json_encode($content));
-		CRLogger::log2db($log);
-		return $res;
-	}
-
-	/**/
-	function unblock($rule)
-	{
-		if(!AccessController::hasAccess(Session::get('role', 'visitor'), 'rc_unblock')){
-			$res['errno'] = CRErrorCode::NO_PRIVILEGE;
-			return $res;
-		}
-		RateLimiter::clear($rule->get('ip'));
-		$res['errno'] = CRErrorCode::SUCCESS;
-		$log = new CRObject();
-		$log->set('scope', Session::get('username'));
-		$log->set('tag', 'unblock');
-		$content = array('ip' => $rule->get('ip'), 'response' => $res['errno']);
+		$content = array('username' => $user_arr['username'], 'code' => $code, 'response' => $res['errno']);
 		$log->set('content', json_encode($content));
 		CRLogger::log2db($log);
 		return $res;

@@ -7,6 +7,8 @@
 
 	require_once('config.inc.php');
 	require_once('user.logic.php');
+	require_once('session.logic.php');
+	require_once('secure.logic.php');
 	require_once('auth.logic.php');
 	require_once('site.logic.php');
 

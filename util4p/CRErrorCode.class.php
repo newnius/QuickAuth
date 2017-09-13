@@ -28,6 +28,7 @@
 		const USER_NOT_EXIST = 20;
 		const USER_IS_BLOCKED = 21;
 		const USER_IS_REMOVED = 22;
+		const EMAIL_IS_NOT_VERIFIED = 33;
 
 		const USERNAME_MISMATCH_EMAIL = 23;
 
@@ -145,6 +146,9 @@
 
 				case CRErrorCode::DOMAIN_MISMATCH:
 					return '重定向网址不在允许的范围内！';
+
+				case CRErrorCode::EMAIL_IS_NOT_VERIFIED:
+					return '邮箱尚未验证！';
 
 				default:
 					return '未知错误！('.$errno.')';
