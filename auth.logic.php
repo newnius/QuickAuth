@@ -169,7 +169,6 @@
 			$redis->disconnect();
 			return $res;
 		}
-		echo "aha\n";
 		$t = $redis->hget("auth:group:{$data['uid']}", $data['app_id']);
 		$redis->del("auth:token:$token");
 		if($t !== $token){
@@ -188,7 +187,6 @@
 		);
 		$redis->hmset("auth:token:$token", $data2);
 		$redis->expire("auth:token:$token", 3600*24*30);
-		$redis->hset("auth:group:".Session::get('username'), $app_id, $token);
 		$res['errno'] = CRErrorCode::SUCCESS;
 		$res['token'] = $token;
 		$res['expires_in'] = 3600*24*30;
@@ -249,7 +247,9 @@
 			$res['errno'] = CRErrorCode::UNABLE_TO_CONNECT_REDIS;
 			return $res;
 		}
-		$success = $redis->hdel("auth:token:$uid", $app_id);
+		$token = $redis->hget("auth:group:".Session::get('username'), $app_id);
+		$redis->hdel("auth:group:".Session::get('username'), $app_id);
+		$success = $redis->del("auth:token:$token");
 		$res['errno'] = $success>0?CRErrorCode::SUCCESS:CRErrorCode::FAIL;
 
 		$log = new CRObject();
@@ -270,15 +270,19 @@
 			$res['errno'] = CRErrorCode::UNABLE_TO_CONNECT_REDIS;
 			return $res;
 		}
-		$list = $redis->hgetall("auth:token:$uid");
+		$list = $redis->hgetall("auth:group:".Session::get('username'));
 		$redis->disconnect();
 		$sites = array();
-		foreach($list as $key => $value){
-			$data = json_decode($value, true);
+		foreach($list as $app_id => $token){
+			$data = $redis->hgetall("auth:token:$token");
+			if(count($data)===0){
+				$redis->hdel("auth:group:".Session::get('username'), $app_id);
+				continue;
+			}
 			$sites[] = array(
-				'app_id' => $data['app_id'],
+				'app_id' => $app_id,
 				'expires' => $data['expires'],
-				'scope' => join(',', $data['scope'])
+				'scope' => $data['scope']
 			);
 		}
 		$res['errno'] = CRErrorCode::SUCCESS;

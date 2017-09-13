@@ -46,7 +46,6 @@
 				return false;
 			}
 			$redis_key = 'session:'.self::$sid;
-			$redis->hset($redis_key, '_expire', $duration);
 			$redis->expire($redis_key, $duration);
 			$redis->disconnect();
 			setcookie(self::$guid_key, self::$sid, time()+$duration);
@@ -96,7 +95,7 @@
 			$redis_key = 'session:'.self::$sid;
 			$redis->hset($redis_key, $key, $value);
 			$redis->hset($redis_key, '_ip', cr_get_client_ip());
-			self::get('_expire');//renew expire
+			self::get('_ip');//renew expire
 			$redis->disconnect();
 			return true;
 		}
