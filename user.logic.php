@@ -398,19 +398,19 @@
 			return $res;
 		}
 		$code = $redis->get('verify:code:'.$user_arr['username']);
-		if($code === $user->get('code')){
-			$redis->del('verify:code:'.$user_arr['username']);
+		$redis->del('verify:code:'.$user_arr['username']);
+		$redis->disconnect();
+		if($code !== null && $code === $user->get('code')){
 			$user_arr['email_verified'] = 1;
 			$success = UserManager::update(new CRObject($user_arr));
 			$res['errno'] = $success?CRErrorCode::SUCCESS:CRErrorCode::UNKNOWN_ERROR;
 		}else{
 			$res['errno'] = CRErrorCode::CODE_EXPIRED;
 		}
-		$redis->disconnect();
 		$log = new CRObject();
-		$log->set('scope', '[SYSTEM]');
+		$log->set('scope', $user_arr['username']);
 		$log->set('tag', 'verify_email');
-		$content = array('username' => $user_arr['username'], 'code' => $code, 'response' => $res['errno']);
+		$content = array('username' => $user_arr['username'], 'response' => $res['errno']);
 		$log->set('content', json_encode($content));
 		CRLogger::log2db($log);
 		return $res;

@@ -10,7 +10,6 @@
 	require_once('session.logic.php');
 	require_once('secure.logic.php');
 	require_once('auth.logic.php');
-	require_once('site.logic.php');
 
 
 	function print_response($res)
@@ -158,7 +157,7 @@
 			break;
 
 		case 'site_add':
-			RateLimiter::increase(1);
+			RateLimiter::increase(5);
 			$site = new CRObject();
 			$site->set('domain', cr_get_POST('domain'));
 			$site->set('revoke_url', cr_get_POST('revoke_url'));
@@ -176,6 +175,7 @@
 			$res = site_update($site);
 			break;
 
+		/* TODO */
 		case 'site_remove':
 			RateLimiter::increase(1);
 			$site = new CRObject();
@@ -186,6 +186,9 @@
 		case 'sites_get':
 			RateLimiter::increase(1);
 			$rule = new CRObject();
+			if(cr_get_GET('who')!=='all'){
+				$rule->set('owner', cr_get_GET('owner', Session::get('username')));
+			}
 			$rule->set('offset', cr_get_GET('offset'));
 			$rule->set('limit', cr_get_GET('limit'));
 			$res = sites_get($rule);

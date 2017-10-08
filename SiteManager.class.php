@@ -14,7 +14,7 @@
 			$owner = $site->get('owner');
 			$key = $site->get('key');
 			$revoke_url = $site->get('revoke_url');
-			$level = $site->get('level');
+			$level = $site->getInt('level');
 
 			$key_values = array( 'domain' => '?', 'owner' => '?', 'key' => '?', 'revoke_url' => '?', 'level' => '?');
 			$builder = new SQLBuilder();

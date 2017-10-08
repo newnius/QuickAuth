@@ -65,7 +65,7 @@
 
 			/* site */
 			'sites_get_self' => array('root', 'admin', 'developer'),
-			'sites_get_all' => array('root', 'admin'),
+			'sites_get_others' => array('root', 'admin'),
 			'site_add_0' => array('root', 'admin', 'developer'),
 			'site_add_1' => array('root', 'admin'),
 			'site_add_99' => array('root', 'admin'),
