@@ -29,7 +29,7 @@
     <?php require_once('modals.php'); ?>
     <div class="container">
       <div id="register">
-        <form class="form-signup">
+        <form class="form-signup" action="javascript:void(0)">
           <h2>Sign up</h2>
           <div class="form-group">
             <label class="sr-only" for="inputUsername">Username</label>
@@ -58,7 +58,7 @@
               <input type="password" class="form-control" id="form-signup-password" placeholder="Password" required />
             </div>
           </div>
-          <button id="btn-register" class="btn btn-lg btn-primary btn-block" type="Register" >Register</button>
+          <button id="btn-register" class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
         </form>
       </div>
     </div> <!-- /container -->

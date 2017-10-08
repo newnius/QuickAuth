@@ -22,6 +22,7 @@
 			//$json = $_GET['callback'].'('.$json.')';
 		//else
 			//$json = 'Void('.$json.')';
+		header('Content-type: application/json');
 		echo $json;
 	}
 
@@ -75,7 +76,7 @@
 		case 'user_update':
 			RateLimiter::increase(1);
 			$user = new CRObject();
-			$user->set('username', cr_get_POST('username'));
+			$user->set('username', cr_get_POST('username', Session::get('username')));
 			$user->set('email', cr_get_POST('email'));
 			$user->set('password', cr_get_POST('password'));
 			$user->set('role', cr_get_POST('role'));
@@ -83,9 +84,8 @@
 			break;
 
 		case 'update_pwd':
-			RateLimiter::increase(1);
+			RateLimiter::increase(5);
 			$user = new CRObject();
-			$user->set('username', Session::get('username'));
 			$user->set('old_pwd', cr_get_POST('oldpwd'));
 			$user->set('password', cr_get_POST('password'));
 			$res = user_update_pwd($user);

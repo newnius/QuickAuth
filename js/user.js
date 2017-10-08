@@ -9,8 +9,7 @@ function register_events_user()
 			type: 'POST',
 			data: {}
 		});
-		ajax.done(function(json){
-			var res = JSON.parse(json);
+		ajax.done(function(res){
 			if(res["errno"] == 0){
 				$('#modal-msg-content').text("Email has been sent to your email box.");
 			}else{
@@ -40,8 +39,7 @@ function register_events_user()
 				password: newpwd
 			}
 		});
-		ajax.done(function(json){
-			var res = JSON.parse(json);
+		ajax.done(function(res){
 			if(res["errno"] == 0){
 				$('#modal-msg-content').text("Your password has been successfully reset.");
 			}else{
@@ -72,8 +70,7 @@ function register_events_user()
 				role: role
 			}
 		});
-		ajax.done(function(msg){
-			var res = JSON.parse(msg);
+		ajax.done(function(res){
 			if(res["errno"]==0){
 				$('#modal-user').modal('hide');
 				$('#table-user').bootstrapTable("refresh");
@@ -238,8 +235,7 @@ function load_profile()
 		type: 'GET',
 		data: { }
 	});
-	ajax.done(function(json){
-		var res = JSON.parse(json);
+	ajax.done(function(res){
 		if(res["errno"] == 0){
 			var user = res["user"];
 			$('#user-username').text(user.username);

@@ -22,7 +22,7 @@
 
 		public static function log2db($log)
 		{
-			$scope = $log->get('scope');
+			$scope = $log->get('scope', '');
 			$tag = $log->get('tag');
 			$level = $log->getInt('level', self::LEVEL_INFO);
 			$ip = $log->get('ip', cr_get_client_ip());

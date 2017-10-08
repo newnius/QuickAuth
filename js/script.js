@@ -58,8 +58,7 @@ if(window.location.pathname.indexOf("auth") != -1){
 			}
 		});
 		
-		ajax.done(function(json){
-			var res = JSON.parse(json);
+		ajax.done(function(res){
 			if(res["errno"] == 0){
 				$('#modal-msg-content').text("Verify email");
 			}else{
@@ -86,8 +85,7 @@ if(window.location.pathname.indexOf("auth") != -1){
 				rememberme: rememberme
 			}
 		});
-		ajax.done(function(json){
-			var res = JSON.parse(json);
+		ajax.done(function(res){
 			if(res["errno"] == 0){
 				window.location.href = "ucenter.php";
 			}else{
@@ -120,8 +118,7 @@ if(window.location.pathname.indexOf("auth") != -1){
 				email: email
 			}
 		});
-		ajax.done(function(json){
-			var res = JSON.parse(json);
+		ajax.done(function(res){
 			if(res["errno"] == 0){
 				$('#modal-msg-content').text("Email has been sent to your email box.");
 			}else{
@@ -147,8 +144,7 @@ if(window.location.pathname.indexOf("auth") != -1){
 				code: code
 			}
 		});
-		ajax.done(function(json){
-			var res = JSON.parse(json);
+		ajax.done(function(res){
 			if(res["errno"] == 0){
 				$('#modal-msg-content').text("Your password has been successfully reset.");
 			}else{
@@ -183,8 +179,7 @@ if(window.location.pathname.indexOf("auth") != -1){
 				scope: scope.join(',')
 			}
 		});
-		ajax.done(function(msg){
-			var res = JSON.parse(msg);
+		ajax.done(function(res){
 			if(res["errno"]==0){
 				$('#modal-msg-content').text("SUCCESS");
 				var redirect = decodeURI(redirect_uri);

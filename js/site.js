@@ -164,27 +164,3 @@ function show_modal_site(site)
 	$("#form-site-id-tr").removeClass("hidden");
 	$("#form-site-key-tr").removeClass("hidden");
 }
-
-function load_profile()
-{
-	var ajax = $.ajax({
-		url: "ajax.php?action=user_get",
-		type: 'GET',
-		data: { }
-	});
-	ajax.done(function(json){
-		var res = JSON.parse(json);
-		if(res["errno"] == 0){
-			var user = res["user"];
-			$('#user-username').text(user.username);
-			$('#user-email').text(user.email);
-			if(user.email_verified==1){
-				$('#btn-verify-email').text("Verified");
-				$('#btn-verify-email').addClass("disabled");
-			}
-			$('#user-role').text(user.role);
-		}else{
-			alert(res['msg']);
-		}
-	});
-}
