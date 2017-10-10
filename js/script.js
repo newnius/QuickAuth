@@ -24,8 +24,7 @@ if(window.location.pathname.indexOf("auth") != -1){
 		}
 	});
 		
-	ajax.done(function(json){
-		var res = JSON.parse(json);
+	ajax.done(function(res){
 		if(res["errno"] == 0){
 			
 		}else{
@@ -183,11 +182,12 @@ if(window.location.pathname.indexOf("auth") != -1){
 			if(res["errno"]==0){
 				$('#modal-msg-content').text("SUCCESS");
 				var redirect = decodeURI(redirect_uri);
-				if(redirect.indexOf("#")>-1)
+				if(redirect.indexOf("?")>-1)
 					redirect = redirect + "&code=" + res['code'] + "&state=" + res["state"] + "&scope=" + scope;
 				else
-					redirect = redirect + "#code=" + res['code'] + "&state=" + res["state"] + "&scope=" + scope;
-				alert(redirect);
+					redirect = redirect + "?code=" + res['code'] + "&state=" + res["state"] + "&scope=" + scope;
+				//alert(redirect);
+				window.location.href = redirect;
 				// do redirect
 			}else{
 				$('#modal-msg-content').text(res["msg"]);

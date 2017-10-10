@@ -75,6 +75,7 @@
 			$owner = $rule->get('owner');
 			$selected_rows = array('COUNT(1) AS `count`');
 			$where_arr = array();
+			$params = array();
 			if($owner){
 				$where_arr['owner'] = '?';
 				$params[] = $owner;
@@ -83,7 +84,6 @@
 			$builder->select('qa_site', $selected_rows);
 			$builder->where($where_arr);
 			$sql = $builder->build();
-			$params = array();
 			$res = (new MysqlPDO())->executeQuery($sql, $params);
 			return intval($res[0]['count']);
 		}

@@ -196,8 +196,7 @@ window.authOperateEvents =
 				app_id: row.app_id
 			}
 		});
-		ajax.done(function(json){
-			var res = JSON.parse(json);
+		ajax.done(function(res){
 			if(res["errno"] == 0){
 				$('#table-auth').bootstrapTable("refresh");
 			}else{
