@@ -95,11 +95,11 @@
 		<meta charset="utf-8"/>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
-		<meta name="keywords" content="吉林大学,数量经济研究中心,吉林大学数量经济研究中心,吉林大学商学院,教育部人文社会科学重点研究基地"/>
-		<meta name="description" content="吉林大学数量经济研究中心成立于1999年10月，2000年9月25日被教育部批准为普通高等学校人文社会科学重点研究基地。研究内容包括：经济增长、经济波动与经济政策、金融与投资、区域经济和产业经济、微观经济、经济系统模拟实验和经济权力范式、经济博弈论、数量经济分析方法等。" />
+		<meta name="keywords" content="QuickAuth, free, quick, OAuth"/>
+		<meta name="description" content="QuickAuth is an implement of authorization. By using QuickAuth, you can log in to some websites without sign up for another account, which most likely will be used only once. Also ,it is totally free!" />
 		<meta name="author" content="Newnius"/>
 		<link rel="icon" href="favicon.ico"/>
-		<title>个人中心 | 数量经济研究中心</title>
+		<title>User Center | QuickAuth</title>
 		<link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"/>
 		<link href="style.css" rel="stylesheet"/>
 		<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>

@@ -25,6 +25,7 @@
 			return $res;
 		}
 		$res['errno'] = CRErrorCode::SUCCESS;
+		$res['host'] = $site['domain'];
 		$res['auto_grant'] = $site['level']==='99'?1:0;
 		return $res;
 	}

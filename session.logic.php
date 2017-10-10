@@ -28,10 +28,10 @@
 	}
 
 
-	/**/
+	/* */
 	function user_sessions($rule)
 	{
-		if($rule->get('group')!==Session::get('username')){
+		if($rule->get('group') === null || $rule->get('group')!==Session::get('username')){
 			if(!AccessController::hasAccess(Session::get('role', 'visitor'), 'get_online_users')){
 				$res['errno'] = CRErrorCode::NO_PRIVILEGE;
 				return $res;
@@ -43,10 +43,10 @@
 	}
 
 
-	/**/
+	/* */
 	function tick_out($rule)
 	{
-		if(Session::get('username')!==$rule->get('username')){
+		if($rule->get('username')===null || Session::get('username')!==$rule->get('username')){
 			if(!AccessController::hasAccess(Session::get('role', 'visitor'), 'tick_out_user')){
 				$res['errno'] = CRErrorCode::NO_PRIVILEGE;
 				return $res;

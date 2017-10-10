@@ -141,7 +141,7 @@ LUA;
 			return null;
 		}
 
-		/* clear degree count and punishing stat */
+		/* clear degree count and punishing state */
 		public static function clear($id=null)
 		{
 			if($id === null){
