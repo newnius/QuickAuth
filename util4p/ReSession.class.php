@@ -1,8 +1,8 @@
 <?php
 	require_once('util.php');
+	require_once('CRObject.class.php');
 	require_once('RedisDAO.class.php');
 	require_once('Random.class.php');
-	require_once('CRObject.class.php');
 
 	class Session
 	{

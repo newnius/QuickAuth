@@ -1,8 +1,8 @@
 <?php
 	require_once('util.php');
 	require_once('CRObject.class.php');
-	require_once('MysqlPDO.class.php');
 	require_once('SQLBuilder.class.php');
+	require_once('MysqlPDO.class.php');
 
 	class CRLogger
 	{

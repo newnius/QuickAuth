@@ -1,0 +1,12 @@
+RewriteEngine on
+
+RewriteRule ^/service$ /ajax.php
+RewriteRule ^/login$ /login.php
+RewriteRule ^/register$ /register.php
+RewriteRule ^/auth$ /auth_grant.php
+RewriteRule ^/api$ /auth.php
+RewriteRule ^/lostpass$ /lostpass.php
+RewriteRule ^/resetpwd$ /resetpwd.php
+RewriteRule ^/ucenter$ /ucenter.php
+RewriteRule ^/verify$ /verify.php
+RewriteRule ^/help$ /help.php

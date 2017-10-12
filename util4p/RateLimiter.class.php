@@ -20,14 +20,13 @@
 	 */
 	class RateLimiter
 	{
-		private static $keyPrefix = 'rl:';
+		private static $keyPrefix = 'rl';
 		private static $id = '';
 		private static $rules = array();
 
 
 		/*
 		 * @param $key customize your own key, default is ip2long(ip)
-		 * TODO: validate $rules
 		 */
 		public static function configure($config)
 		{
@@ -55,13 +54,13 @@
 				return degree
 LUA;
 			$redis = RedisDAO::instance();
-			if($redis===null)
+			if($redis === null)
 			{
 				return false;
 			}
 			foreach(self::$rules as $rule){
 				$interval = $rule['interval'];
-				$key = self::$keyPrefix.'degree:'.self::$id.'-'.$interval;
+				$key = self::$keyPrefix.':degree:'.self::$id.'-'.$interval;
 				$redis->eval($lua_script, 1, $key, $degree, $interval);
 			}
 			$redis->disconnect();
@@ -85,15 +84,9 @@ LUA;
 			{
 				return false;
 			}
-			$lua_script = <<<LUA
-				local degree = redis.call('get', KEYS[1])
-				redis.call('set', KEYS[1], ARGV[1])
-				redis.call('expire', KEYS[1], ARGV[2])
-				return 1
-LUA;
-			$count = $redis->eval($lua_script, 1, self::$keyPrefix.'punishing:'.$id, $rule['degree'], $rule['interval']);
+			$redis->set(self::$keyPrefix.':punishing:'.$id, $rule['degree'], 'EX', $rule['interval']);
 			$redis->disconnect();
-			return $count === 1;
+			return true;
 		}
 
 
@@ -110,7 +103,7 @@ LUA;
 			{
 				return 0;
 			}
-			$freezeTime = (int)$redis->ttl(self::$keyPrefix.'punishing:'.$id);
+			$freezeTime = (int)$redis->ttl(self::$keyPrefix.':punishing:'.$id);
 			$redis->disconnect();
 			return $freezeTime;
 		}
@@ -129,7 +122,7 @@ LUA;
 			foreach(self::$rules as $rule)
 			{
 				$interval = $rule['interval'];
-				$key = self::$keyPrefix.'degree:'.self::$id.'-'.$interval;
+				$key = self::$keyPrefix.':degree:'.self::$id.'-'.$interval;
 				$degree = (int)$redis->get($key);
 				if($degree > $rule['degree'])
 				{
@@ -155,10 +148,10 @@ LUA;
 			foreach(self::$rules as $rule)
 			{
 				$interval = $rule['interval'];
-				$key = self::$keyPrefix.'degree:'.$id.'-'.$interval;
+				$key = self::$keyPrefix.':degree:'.$id.'-'.$interval;
 				$redis->del($key);
 			}
-			$redis->del(self::$keyPrefix.'punishing:'.$id);
+			$redis->del(self::$keyPrefix.':punishing:'.$id);
 			$redis->disconnect();
 			return true;
 		}
@@ -169,10 +162,10 @@ LUA;
 			if($redis===null){
 				return false;
 			}
-			$redis_key = self::$keyPrefix.'punishing:*';
+			$redis_key = self::$keyPrefix.':punishing:*';
 			$list = $redis->keys($redis_key);
 			$redis->disconnect();
-			$len = strlen(self::$keyPrefix.'punishing:');
+			$len = strlen(self::$keyPrefix.':punishing:');
 			$ids = array();
 			foreach($list as $item){
 				$ids[]['id'] = mb_substr($item, $len);
