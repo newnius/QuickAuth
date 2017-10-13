@@ -47,6 +47,10 @@
 			$res = user_login($user);
 			break;
 
+		case 'signout':
+			signout();
+			break;
+
 		case 'users_get':
 			$rule = new CRObject();
 			$rule->set('search', cr_get_GET('search'));
@@ -112,7 +116,7 @@
 			break;
 
 		case 'reset_pwd':
-			RateLimiter::increase(1);
+			RateLimiter::increase(5);
 			$user = new CRObject();
 			$user->set('username', cr_get_POST('username'));
 			$user->set('email', cr_get_POST('email'));
@@ -126,6 +130,14 @@
 			$user = new CRObject();
 			$user->set('username', Session::get('username'));
 			$res = verify_email_send_code($user);
+			break;
+
+		case 'verify_email':
+			RateLimiter::increase(5);
+			$user = new CRObject();
+			$user->set('username', Session::get('username'));
+			$user->set('code', cr_get_POST('code'));
+			$res = verify_email($user);
 			break;
 
 		/* oauth */

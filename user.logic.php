@@ -153,6 +153,7 @@
 			}else{
 				$user_arr['email'] = $user->get('email');
 				$user_arr['email_verified'] = 0;
+				verify_email($user);//expire verify_email code
 			}
 		}
 		if($user_arr['username']!==Session::get('username')){

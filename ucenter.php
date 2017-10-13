@@ -11,7 +11,7 @@
 	require_once('init.inc.php');
 
 	if(Session::get('username')==null){
-		header('location:login.php?a=notloged');
+		header('location:login?a=notloged');
 		exit;
 	}
 
@@ -54,7 +54,7 @@
 	}elseif(isset($_GET['signout'])){
 		$page_type='signout';
 		signout();
-		header('location:login.php?a=signout');
+		header('location:login?a=signout');
 		exit;
 	}
 
@@ -181,7 +181,10 @@
 										<tr>
 											<th>Email</th>
 											<td>
-												<span id="user-email">Loading...</span><a href="javascript:void(0)" id="btn-verify-email" class="btn">Verify</a>
+												<span id="user-email">Loading...</span>&nbsp;(
+													<a href="javascript:void(0)" id="btn-update-email">Edit</a>&nbsp;&nbsp;
+													<a href="javascript:void(0)" id="btn-verify-email">Verify</a>
+												)
 											</td>
 										</tr>
 										<tr>
@@ -193,7 +196,7 @@
 										<tr>
 											<th>Password</th>
 											<td>
-												<span>******</span><a href="?changepwd" class="btn">Update</a>
+												<a href="?changepwd">Edit</a>
 											</td>
 										</tr>
 									</table>

@@ -57,6 +57,7 @@
 			</div>
 		</div> <!-- /container -->
 		<?php require_once('footer.php'); ?>
+		<script src="js/util.js"></script>
 		<script src="js/script.js"></script>
 		<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 		<script src="//cdn.bootcss.com/jqueryui/1.11.4/jquery-ui.js"></script> 

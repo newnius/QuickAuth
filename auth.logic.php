@@ -131,6 +131,11 @@
 		);
 		$redis->hmset("auth:token:$token", $data2);
 		$redis->expire("auth:token:$token", 3600*24*30);
+		/* remove old token */
+		$t = $redis->hget("auth:group:{$data['uid']}", $app_id);
+		if($t !== null){
+			$redis->del("auth:token:$t");
+		}
 		$redis->hset("auth:group:{$data['uid']}", $app_id, $token);
 		$res['errno'] = CRErrorCode::SUCCESS;
 		$res['token'] = $token;

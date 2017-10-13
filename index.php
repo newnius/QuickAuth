@@ -30,7 +30,7 @@
 			<div class="jumbotron">
 				<h2>What is QuickAuth</h2>
 				<p><a href="<?=BASE_URL?>/">QuickAuth</a> is an implement of authorization(not a standard). By using QuickAuth, you can log in to some websites without sign up for another account, which most likely will be used only once. Frankly speaking, only my websites would use this platform.(hahah)</p>
-				<p><a class="btn btn-primary btn-lg" href="<?=BASE_URL?>/register.php?getstarted">Get started</a></p>
+				<p><a class="btn btn-primary btn-lg" href="<?=BASE_URL?>/register?getstarted">Get started</a></p>
 			</div>
 			<div class="jumbotron">
 				<h2>How does QuickAuth work</h2>
@@ -43,15 +43,15 @@
 						<p>As a user: All you need to do is when the websites you visit redirect you here, fill in your username and password. Done!</p>
 					</div>
 					<div id="how-developer">
-						<p>Here is a <a href="<?=BASE_URL?>/help.php#qid-3">demo</a>, help yourself.</p>
-						<a class="btn btn-primary btn-lg" href="<?=BASE_URL?>/register.php?tryitfree">Try it <strong>FREE</strong></a>
+						<p>Here is a <a href="<?=BASE_URL?>/help#qid-3">demo</a>, help yourself.</p>
+						<a class="btn btn-primary btn-lg" href="<?=BASE_URL?>/register?tryitfree">Try it <strong>FREE</strong></a>
 					</div>
 				</div>
 			</div>
 			<div class="jumbotron">
 				<h2>Why will I use QuickAuth</h2>
 				<p>&nbsp;&nbsp;You don't have to own a Google account, but when you access some Google products, you need one, right?</p>
-				<p><a class="btn btn-primary btn-lg" href="<?=BASE_URL?>/register.php?tryitnow">Try It Now</a></p>
+				<p><a class="btn btn-primary btn-lg" href="<?=BASE_URL?>/register?tryitnow">Try It Now</a></p>
 			</div>
 			<div class="jumbotron">
 				<h2>FAQs</h2>
@@ -61,12 +61,12 @@
 				</div>
 				<div>
 					<h4><span class="glyphicon glyphicon-question-sign"></span>I am a developer, how to garanteen the auth?</h4>
-					<p>&nbsp;&nbsp;It is hard to answer in short, you can have a look at <a href="<?=BASE_URL?>/help.php#qid-6">this</a>.</p>
+					<p>&nbsp;&nbsp;It is hard to answer in short, you can have a look at <a href="<?=BASE_URL?>/help#qid-6">this</a>.</p>
 				</div>
 				<div>
 					<h4><span class="glyphicon glyphicon-question-sign"></span>What the relationship with OAuth?</h4>
 					<p>&nbsp;&nbsp;If you leave state blank in OAuth, this is kind of an implement of OAuth (code), but do not following that standrd especially the format of data exchanged.</p>
-					<a href="<?=BASE_URL?>/help.php" class="btn btn-primary">Learn more</a>
+					<a href="<?=BASE_URL?>/help" class="btn btn-primary">Learn more</a>
 				</div>
 			</div>
 		</div> <!-- /container -->

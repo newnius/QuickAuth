@@ -159,6 +159,70 @@
 					<div>
 						<button id="form-block-submit" type="submit" class="btn btn-primary">&nbsp;Save&nbsp;</button>
 					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- modal update email -->
+<div class="modal fade" id="modal-email" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 id="modal-email-title" class="modal-title">Update Email</h4>
+			</div>
+			<div class="modal-body">
+				<form id="form-email" action="javascript:void(0)">
+					<table class="table">
+						<tr>
+							<th>Email</th>
+							<td>
+								<label for="email" class="sr-only">Email</label>
+								<input type="email" id="form-email-email" class="form-group form-control" placeholder="new email" required />
+							</td>
+						</tr>
+					</table>
+					<div>
+						<button id="form-email-submit" type="submit" class="btn btn-primary">&nbsp;Save&nbsp;</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- modal code -->
+<div class="modal fade" id="modal-verify" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 id="modal-verify-title" class="modal-title">Verify Email</h4>
+			</div>
+			<div class="modal-body">
+				<form id="form-verify" action="javascript:void(0)">
+					<table class="table">
+						<tr>
+							<th>Code</th>
+							<td>
+								<div class="form-group">
+									<label for="code" class="sr-only">Code</label>
+									<div class="input-group">
+										<input type="number" class="form-control" id="form-verify-code" placeholder="Code Received" required />
+										<div class="input-group-addon">
+											<a href="javascript:void(0)" id="btn-verify-send">Send</a>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+					</table>
+					<div>
+						<button id="form-verify-submit" type="submit" class="btn btn-primary">&nbsp;Save&nbsp;</button>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>

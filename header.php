@@ -24,23 +24,23 @@
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 			<?php if(!Session::get('username')){ ?>
-				<li><a href="<?=BASE_URL?>/register.php">Sign up</a></li>
-				<li><a href="<?=BASE_URL?>/login.php">Sign in</a></li>
+				<li><a href="<?=BASE_URL?>/register">Sign up</a></li>
+				<li><a href="<?=BASE_URL?>/login">Sign in</a></li>
 			<?php }else{ ?>
-				<li><a href="<?=BASE_URL?>/ucenter.php?profile"><?=htmlspecialchars(Session::get('username'))?></a></li>
-				<li><a href="<?=BASE_URL?>/ucenter.php">Explore</a></li>
+				<li><a href="<?=BASE_URL?>/ucenter?profile"><?=htmlspecialchars(Session::get('username'))?></a></li>
+				<li><a href="<?=BASE_URL?>/ucenter">Explore</a></li>
 			<?php } ?>
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">More<span class="caret"></span></a>
 					<ul class="dropdown-menu">
 					<?php if(Session::get('username')){ ?>
-						<li><a href="<?=BASE_URL?>/ucenter.php?notice">Notice&nbsp;<span class="badge">0</span></a></li>
-						<li><a href="<?=BASE_URL?>/ucenter.php?home">Settings</a></li>
-						<li><a href="<?=BASE_URL?>/ucenter.php?signout">Sign out</a></li>
+						<li><a href="<?=BASE_URL?>/ucenter?notice">Notice&nbsp;<span class="badge">0</span></a></li>
+						<li><a href="<?=BASE_URL?>/ucenter?home">Settings</a></li>
+						<li><a href="javascript:void(0)" id="btn-signout-header">Sign out</a></li>
 						<li role="separator" class="divider"></li>
 					<?php } ?>
-						<li><a href="<?=BASE_URL?>/help.php">Help</a></li>
-						<li><a href="<?=BASE_URL?>/help.php?about#qid-1">About</a></li>
+						<li><a href="<?=BASE_URL?>/help">Help</a></li>
+						<li><a href="<?=BASE_URL?>/help#qid-1">About</a></li>
 					</ul>
 				</li>
 			</ul>

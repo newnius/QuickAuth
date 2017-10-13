@@ -59,7 +59,11 @@ if(window.location.pathname.indexOf("auth") != -1){
 		
 		ajax.done(function(res){
 			if(res["errno"] == 0){
-				$('#modal-msg-content').text("Verify email");
+				if(window.location.href.indexOf("redirect_uri") != -1){
+					window.location.pathname = "/login";
+				}else{
+					$('#modal-msg-content').text("Verify email");
+				}
 			}else{
 				$('#modal-msg-content').text(res["msg"]);
 			}
@@ -85,8 +89,14 @@ if(window.location.pathname.indexOf("auth") != -1){
 			}
 		});
 		ajax.done(function(res){
+			var next = "/ucenter";
 			if(res["errno"] == 0){
-				window.location.href = "ucenter.php";
+				if(window.location.href.indexOf("redirect_uri") != -1){
+					var callback = getParameterByName('redirect_uri');
+					if(isURL(callback))
+						next = '/auth';
+				}
+				window.location.pathname = next;
 			}else{
 				$("#signin-error-msg").html(res["msg"]);
 				$("#signin-error").css("display","block");
@@ -102,6 +112,35 @@ if(window.location.pathname.indexOf("auth") != -1){
 			$("#btn-login").removeAttr("disabled");
 		});
 	});
+
+
+	$("#btn-login-continue").click(function(e){
+		var next = "/ucenter";
+		if(window.location.href.indexOf("redirect_uri") != -1){
+			var callback = getParameterByName('redirect_uri');
+			if(isURL(callback))
+				next = '/auth';
+		}
+		window.location.pathname = next;
+	});
+
+
+	$("#btn-signout, #btn-signout-header").click(function(e){
+		e.preventDefault();
+		$('#modal-msg').modal('show');
+		$('#modal-msg-content').text("Processing...");
+		var username = $("#form-lostpass-username").val();
+		var email = $("#form-lostpass-email").val();
+		var ajax = $.ajax({
+			url: "ajax.php?action=signout",
+			type: 'POST',
+			data: { }
+		});
+		ajax.done(function(res){
+			window.location.pathname = "/login";
+		});
+	});
+
 
 	$("#form-lostpass-submit").click(function(e){
 		e.preventDefault();
@@ -186,13 +225,24 @@ if(window.location.pathname.indexOf("auth") != -1){
 					redirect = redirect + "&code=" + res['code'] + "&state=" + res["state"] + "&scope=" + scope;
 				else
 					redirect = redirect + "?code=" + res['code'] + "&state=" + res["state"] + "&scope=" + scope;
-				//alert(redirect);
-				window.location.href = redirect;
-				// do redirect
+				if(isURL(redirect)){
+					window.location.href = redirect;
+				}
 			}else{
 				$('#modal-msg-content').text(res["msg"]);
 			}
 		});
+	});
+
+	$('#form-auth-decline').click(function(e){
+		e.preventDefault();
+		var redirect = decodeURI(redirect_uri);
+		if(redirect.indexOf("?")>-1)
+			redirect = redirect + "&cancel=1";
+		else
+			redirect = redirect + "?cancel=1";
+		if(isURL(redirect))
+			window.location.href = redirect;
 	});
 
 	function validateUsername(username)

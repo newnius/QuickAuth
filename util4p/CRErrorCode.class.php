@@ -121,7 +121,7 @@
 					return '用户名与邮箱不匹配！';
 
 				case CRErrorCode::CODE_EXPIRED:
-					return '链接已失效！';
+					return '错误或已失效！';
 
 				case CRErrorCode::EMAIL_ALREADY_VERIFIED:
 					return '邮箱已验证！';

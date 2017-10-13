@@ -2,17 +2,77 @@ function register_events_user()
 {
 	$("#btn-verify-email").click(function(e){
 		e.preventDefault();
-		$('#modal-msg').modal('show');
-		$('#modal-msg-content').text("Processing...");
+		$('#modal-verify').modal('show');
+	});
+
+
+	$("#btn-verify-send").click(function(e){
+		e.preventDefault();
+		$("#btn-verify-send").attr("disabled","disabled");
+		$('#btn-verify-send').text("Sent");
 		var ajax = $.ajax({
-			url: "ajax.php?action=verify_email_send_code",
+			url: "/service?action=verify_email_send_code",
 			type: 'POST',
 			data: {}
 		});
 		ajax.done(function(res){
-			if(res["errno"] == 0){
-				$('#modal-msg-content').text("Email has been sent to your email box.");
+			if(res["errno"] != 0){
 			}else{
+			}
+		});
+	});
+
+
+	$("#form-verify-submit").click(function(e){
+		e.preventDefault();
+		var code = $("#form-verify-code").val();
+		if(code.length < 6){
+			return false;
+		}
+		$('#modal-verify').modal("hide");
+		var ajax = $.ajax({
+			url: "service?action=verify_email",
+			type: 'POST',	
+			data: {
+				code: code
+			}
+		});
+		ajax.done(function(res){
+			if(res["errno"] == 0){
+				load_profile();
+			}else{
+				$('#modal-msg').modal("show");
+				$('#modal-msg-content').text(res["msg"]);
+			}
+		});
+	});
+
+
+	$("#btn-update-email").click(function(e){
+		e.preventDefault();
+		$('#modal-email').modal('show');
+	});
+
+
+	$("#form-email-submit").click(function(e){
+		e.preventDefault();
+		var email = $("#form-email-email").val();
+		if(email.length < 6){
+			return false;
+		}
+		$('#modal-email').modal("hide");
+		var ajax = $.ajax({
+			url: "service?action=user_update",
+			type: 'POST',	
+			data: {
+				email: email
+			}
+		});
+		ajax.done(function(res){
+			if(res["errno"] == 0){
+				load_profile();
+			}else{
+				$('#modal-msg').modal("show");
 				$('#modal-msg-content').text(res["msg"]);
 			}
 		});
@@ -242,11 +302,15 @@ function load_profile()
 			$('#user-email').text(user.email);
 			if(user.email_verified==1){
 				$('#btn-verify-email').text("Verified");
-				$('#btn-verify-email').addClass("disabled");
+				$('#btn-verify-email').addClass("hidden");
+			}else{
+				$('#btn-verify-email').text("verify");
+				$('#btn-verify-email').removeClass("hidden");
 			}
 			$('#user-role').text(user.role);
 		}else{
-			alert(res['msg']);
+			$('#modal-msg').modal("show");
+			$('#modal-msg-content').text(res["msg"]);
 		}
 	});
 }
