@@ -59,14 +59,14 @@
 	}
 
 	$entries = array(
-		array('home', '个人首页'),
-		array('profile', '用户信息'),
-		array('changepwd', '修改密码'),
-		array('logs', '登录日志'),
-		array('auth_list', '授权记录'),
-		array('user_sessions', '登录状态'),
-		array('admin', '管理入口'),
-		array('signout', '退出登录')
+		array('home', 'Home'),
+		array('profile', 'Profile'),
+		array('changepwd', 'Password'),
+		array('logs', 'Activities'),
+		array('auth_list', 'Apps'),
+		array('user_sessions', 'Sessions'),
+		array('admin', 'Admin'),
+		array('signout', 'Logout')
 	);
 	$visible_entries = array();
 	foreach($entries as $entry){
@@ -76,11 +76,11 @@
 	}
 
 	$admin_entries = array(
-		array('users', '用户管理'),
-		array('sites_all', '站点管理'),
-		array('users_online', '在线用户'),
-		array('blocked_list', '封禁列表'),
-		array('logs_all', '操作日志'),
+		array('users', 'Users'),
+		array('sites_all', 'Sites'),
+		array('users_online', 'Online'),
+		array('blocked_list', 'Blocks'),
+		array('logs_all', 'Activities'),
 	);
 	$visible_admin_entries = array();
 	foreach($admin_entries as $entry){
@@ -90,27 +90,24 @@
 	}
 ?>
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 	<head>
 		<meta charset="utf-8"/>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
-		<meta name="keywords" content="QuickAuth, free, quick, OAuth"/>
-		<meta name="description" content="QuickAuth is an implement of authorization. By using QuickAuth, you can log in to some websites without sign up for another account, which most likely will be used only once. Also ,it is totally free!" />
+		<meta name="keywords" content="QuickAuth, free, quick, OAuth, User System"/>
+		<meta name="description" content="QuickAuth is a user system and an implement of OAuth. By using QuickAuth, you can log in to some websites without sign up for another account, which most likely will be used only once. Also ,it is totally free!" />
 		<meta name="author" content="Newnius"/>
 		<link rel="icon" href="favicon.ico"/>
 		<title>User Center | QuickAuth</title>
 		<link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"/>
 		<link href="style.css" rel="stylesheet"/>
-		<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
-
 		<link href="//cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.css" rel="stylesheet">
-
+		<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
 		<script type="text/javascript">
 			var page_type = "<?=$page_type?>";
 		</script>
 	</head>
-
 	<body>
 		<div class="wrapper">
 			<?php require_once('header.php'); ?>
@@ -120,7 +117,7 @@
 
 					<div class="hidden-xs hidden-sm col-md-2 col-lg-2">
 						<div class="panel panel-default">
-							<div class="panel-heading">功能列表</div>
+							<div class="panel-heading">Options</div>
 							<ul class="nav nav-pills nav-stacked panel-body">
 								<?php foreach($visible_entries as $entry){ ?>
 								<li role="presentation" <?php if($page_type==$entry[0])echo 'class="disabled"'; ?> >
@@ -134,7 +131,7 @@
 					<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
 						<div class="visible-xs visible-sm">
 							<div class=" panel panel-default">
-								<div class="panel-heading">功能列表</div>
+								<div class="panel-heading">Options</div>
 								<ul class="nav nav-pills panel-body">
 									<?php foreach($visible_entries as $entry){ ?>
 									<li role="presentation" <?php if($page_type==$entry[0])echo 'class="disabled"'; ?> >
@@ -150,18 +147,15 @@
 							<div class="panel panel-default">
 								<div class="panel-heading">Welcome</div> 
 								<div class="panel-body">
-									欢迎回来, <?php echo htmlspecialchars($username) ?>.<br/>
-									当前IP: &nbsp; <?=cr_get_client_ip() ?>.<br/>
-									现在时间: &nbsp; <?php echo date('H:i:s',time()) ?>
+									Welcome back, <?=htmlspecialchars($username)?>.<br/>
+									Current IP: &nbsp; <?=cr_get_client_ip()?>.<br/>
+									Now: &nbsp; <?=date('H:i:s',time())?>
 								</div>
 							</div>
 							<div class="panel panel-default">
-								<div class="panel-heading">通知</div> 
+								<div class="panel-heading">Notices</div> 
 								<div class="panel-body">
-									<h4 class="text-info">提示</h4>
-									<ul>
-										<li>建议及时修改初始密码，不要将密码设置为简单密码</li>
-									</ul>
+									No new notices.
 								</div>
 							</div>
 						</div>
@@ -169,11 +163,11 @@
 						<?php }elseif($page_type == 'profile'){ ?>
 						<div id="profile">
 							<div class="panel panel-default">
-								<div class="panel-heading">基本信息</div> 
+								<div class="panel-heading">Profile</div> 
 								<div class="panel-body">
 									<table class="table">
 										<tr>
-											<th>用户名</th>
+											<th>Username</th>
 											<td>
 												<span id="user-username">Loading...</span>
 											</td>
@@ -207,10 +201,10 @@
 						<?php }elseif($page_type == 'changepwd'){ ?>
 						<div id="changepwd">
 							<div class="panel panel-default">
-								<div class="panel-heading">修改密码</div> 
+								<div class="panel-heading">Password</div> 
 								<div class="panel-body">
 									<div id="resetpwd">
-										<h2>修改密码</h2>
+										<h2>Update Password</h2>
 										<form>
 											<div class="form-group">
 												<label class="sr-only" for="inputOldpwd">Old password</label>
@@ -218,7 +212,7 @@
 													<div class="input-group-addon">
 														<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
 													</div>
-													<input type="password" class="form-control" id="form-updatepwd-oldpwd" placeholder="原来的密码" required />
+													<input type="password" class="form-control" id="form-updatepwd-oldpwd" placeholder="current password" required />
 												</div>
 											</div>
 											<div class="form-group">
@@ -227,10 +221,10 @@
 													<div class="input-group-addon">
 														<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
 													</div>
-													<input type="password" class="form-control" id="form-updatepwd-password" placeholder="新的密码" required />
+													<input type="password" class="form-control" id="form-updatepwd-password" placeholder="new password" required />
 												</div>
 											</div>
-											<button id="btn-updatepwd" class="btn btn-md btn-primary " type="submit" >确认修改</button>
+											<button id="btn-updatepwd" class="btn btn-md btn-primary " type="submit" >Update</button>
 										</form>
 									</div>
 								</div>
@@ -240,17 +234,17 @@
 						<?php }elseif($page_type == 'users'){ ?>
 						<div id="users">
 							<div class="panel panel-default">
-								<div class="panel-heading">用户管理</div> 
+								<div class="panel-heading">Users</div>
 								<div class="panel-body">
 									<div class="table-responsive">
 										<div id="toolbar">
 											<button id="btn-user-add" class="btn btn-primary">
-												<i class="glyphicon glyphicon-plus"></i> 添加用户
+												<i class="glyphicon glyphicon-plus"></i> Add
 											</button>
 										</div>
 										<table id="table-user" data-toolbar="#toolbar" class="table table-striped">
 										</table> 
-										<span class="text-info">* 不支持修改自己</span>
+										<span class="text-info">* It is not allowd to update yourself</span>
 									</div>
 								</div>
 							</div>
@@ -259,17 +253,17 @@
 						<?php }elseif($page_type == 'sites_all'){ ?>
 						<div id="sites_all">
 							<div class="panel panel-default">
-								<div class="panel-heading">站点管理</div> 
+								<div class="panel-heading">Sites</div>
 								<div class="panel-body">
 									<div class="table-responsive">
 										<div id="toolbar">
 											<button id="btn-site-add" class="btn btn-primary">
-												<i class="glyphicon glyphicon-plus"></i> 添加站点
+												<i class="glyphicon glyphicon-plus"></i> Add
 											</button>
 										</div>
 										<table id="table-site" data-toolbar="#toolbar" class="table table-striped">
 										</table> 
-										<span class="text-info">* 不支持</span>
+										<span class="text-info">* hi</span>
 									</div>
 								</div>
 							</div>
@@ -278,7 +272,7 @@
 						<?php }elseif($page_type == 'users_online'){ ?>
 						<div id="users_online">
 							<div class="panel panel-default">
-								<div class="panel-heading">在线用户</div> 
+								<div class="panel-heading">Online Users</div> 
 								<div class="panel-body">
 									<div class="table-responsive">
 										<div id="toolbar">
@@ -293,7 +287,7 @@
 						<?php }elseif($page_type == 'user_sessions'){ ?>
 						<div id="user_sessions">
 							<div class="panel panel-default">
-								<div class="panel-heading">会话</div> 
+								<div class="panel-heading">Sessions</div>
 								<div class="panel-body">
 									<div class="table-responsive">
 										<div id="toolbar">
@@ -308,7 +302,7 @@
 						<?php }elseif($page_type == 'blocked_list'){ ?>
 						<div id="blocked">
 							<div class="panel panel-default">
-								<div class="panel-heading">封禁列表</div>
+								<div class="panel-heading">Block States</div>
 								<div class="panel-body">
 									<div class="table-responsive">
 										<div id="toolbar">
@@ -332,7 +326,7 @@
 										<div id="toolbar"></div>
 										<table id="table-log" data-toolbar="#toolbar" class="table table-striped">
 										</table> 
-										<span class="text-info">* 最多显示20条最近的记录</span>
+										<span class="text-info">* Only activities of last 7 days are shown</span>
 									</div>
 								</div>
 							</div>
@@ -341,13 +335,13 @@
 						<?php }elseif($page_type == 'auth_list'){ ?>
 						<div>
 							<div class="panel panel-default">
-								<div class="panel-heading">Auth Site</div> 
+								<div class="panel-heading">Auth Site</div>
 								<div class="panel-body">
 									<div class="table-responsive">
 										<div id="toolbar"></div>
 										<table id="table-auth" data-toolbar="#toolbar" class="table table-striped">
 										</table> 
-										<span class="text-info">* 最多显示20条最近的记录</span>
+										<span class="text-info">* Only activities of last 7 days are shown</span>
 									</div>
 								</div>
 							</div>
@@ -362,8 +356,7 @@
 										<div id="toolbar"></div>
 										<table id="table-log" data-toolbar="#toolbar" class="table table-striped">
 										</table> 
-										<span class="text-info">* 只显示7天内的登录日志</span><br />
-										<span class="text-info">* 标签最后一个单词表示操作人</span>
+										<span class="text-info">* Only activities of last 7 days are shown</span>
 									</div>
 								</div>
 							</div>
@@ -371,8 +364,8 @@
 
 						<?php }elseif($page_type == 'admin'){ ?>
 						<div class=" panel panel-default">
-							<div class="panel-heading">管理入口</div>
-							<h4 style="text-align:center">中英文统一管理后台</h4>
+							<div class="panel-heading">Admin Panel</div>
+							<h4 style="text-align:center">Admin Panel</h4>
 							<ul class="nav nav-pills panel-body">
 								<?php foreach($visible_admin_entries as $entry){ ?>
 								<li role="presentation" <?php if($page_type==$entry[0])echo 'class="disabled"'; ?> >

@@ -174,36 +174,36 @@ function load_users()
 		showExport: false,
 		columns: [{
 			field: 'nobody',
-			title: '选择',
+			title: 'Select',
 			checkbox: true
 		}, {
 			field: 'username',
-			title: '用户名',
+			title: 'Username',
 			align: 'center',
 			valign: 'middle',
 			sortable: true
 		}, {
 			field: 'email',
-			title: '邮箱',
+			title: 'Email',
 			align: 'center',
 			valign: 'middle',
 			sortable: true
 		}, {
 			field: 'email_verified',
-			title: '邮箱已验证',
+			title: 'Verified',
 			align: 'center',
 			valign: 'middle',
 			sortable: false
 		}, {
 			field: 'role',
-			title: '角色',
+			title: 'Role',
 			align: 'center',
 			valign: 'middle',
 			sortable: true,
 			formatter: roleFormatter
 		}, {
 			field: 'reg_time',
-			title: '注册时间',
+			title: 'create time',
 			align: 'center',
 			valign: 'middle',
 			sortable: true,
@@ -211,7 +211,7 @@ function load_users()
 			formatter: timeFormatter
 		}, {
 			field: 'reg_ip',
-			title: '注册IP',
+			title: 'create IP',
 			align: 'center',
 			valign: 'middle',
 			sortable: true,
@@ -219,7 +219,7 @@ function load_users()
 			formatter: long2ip
 		}, {
 			field: 'operate',
-			title: '操作',
+			title: 'Operation',
 			align: 'center',
 			events: userOperateEvents,
 			formatter: userOperateFormatter
@@ -231,19 +231,19 @@ function roleFormatter(role)
 {
 	switch(role){
 		case "root":
-			return "超级管理员";
+			return "Root";
 		case "admin":
-			return "管理员";
+			return "Admin";
 		case "developer":
-			return "开发者";
+			return "Developer";
 		case "normal":
-			return "普通用户";
+			return "Normal";
 		case "blocked":
-			return "已封禁";
+			return "Blocked";
 		case "removed":
-			return "已注销";
+			return "Removed";
 	}
-	return "未知角色";
+	return "Unknown";
 }
 
 function userResponseHandler(res)
@@ -263,7 +263,7 @@ function userOperateFormatter(value, row, index)
 {
 	return [
 		'<button class="btn btn-default edit" href="javascript:void(0)">',
-		'<i class="glyphicon glyphicon-edit"></i>&nbsp;编辑',
+		'<i class="glyphicon glyphicon-edit"></i>&nbsp;Edit',
 		'</button>'
 	].join('');
 }
@@ -278,8 +278,8 @@ window.userOperateEvents =
 function show_modal_user(user)
 {
 	$('#modal-user').modal('show');
-	$('#modal-user-title').html('编辑用户信息');
-	$('#form-user-submit').html('更新信息');
+	$('#modal-user-title').html('Edit');
+	$('#form-user-submit').html('Save');
 	$('#form-user-submit-type').val('update');
 	$('#form-user-username').val(user.username);
 	$('#form-user-password').val("");

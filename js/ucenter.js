@@ -65,19 +65,19 @@ function load_logs(who)
 		showExport: false,
 		columns: [{
 			field: 'scope',
-			title: '操作者',
+			title: 'Operator',
 			align: 'center',
 			valign: 'middle',
 			sortable: false
 		}, {
 			field: 'tag',
-			title: '标签',
+			title: 'Tag',
 			align: 'center',
 			valign: 'middle',
 			sortable: false
 		}, {
 			field: 'time',
-			title: '时间',
+			title: 'Time',
 			align: 'center',
 			valign: 'middle',
 			sortable: false,
@@ -91,7 +91,7 @@ function load_logs(who)
 			formatter: long2ip
 		}, {
 			field: 'content',
-			title: '内容',
+			title: 'Content',
 			align: 'center',
 			valign: 'middle',
 			sortable: false
@@ -147,7 +147,7 @@ function load_auth_list()
 			sortable: false
 		}, {
 			field: 'expires',
-			title: '过期',
+			title: 'Valid',
 			align: 'center',
 			valign: 'middle',
 			sortable: false,
@@ -160,7 +160,7 @@ function load_auth_list()
 			sortable: false
 		}, {
 			field: 'operate',
-			title: '操作',
+			title: 'Operations',
 			align: 'center',
 			events: authOperateEvents,
 			formatter: authOperateFormatter
@@ -181,7 +181,7 @@ function authOperateFormatter(value, row, index)
 {
 	return [
 		'<button class="btn btn-default revoke" href="javascript:void(0)">',
-		'<i class="glyphicon glyphicon-log-out"></i>&nbsp;撤销',
+		'<i class="glyphicon glyphicon-log-out"></i>&nbsp;Revoke',
 		'</button>'
 	].join('');
 }

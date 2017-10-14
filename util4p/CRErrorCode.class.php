@@ -49,109 +49,109 @@
 		public static function getErrorMsg($errno){
 			switch($errno){
 				case CRErrorCode::SUCCESS:
-					return '成功';
+					return 'Success';
 
 				case CRErrorCode::USERNAME_OCCUPIED:
-					return '用户名已存在！';
+					return 'Username exists !';
 
 				case CRErrorCode::EMAIL_OCCUPIED:
-					return '邮箱已存在！';
+					return 'Email exists !';
 
 				case CRErrorCode::NO_PRIVILEGE:
-					return '您没有权限执行此项操作（可能是由于会话超时，需要重新登录）！';
+					return 'You dont\' have permission to do this !';
 
 				case CRErrorCode::INVALID_USERNAME:
-					return '无效的用户名！';
+					return 'Invalid username !';
 
 				case CRErrorCode::INVALID_EMAIL:
-					return '无效的邮箱！';
+					return 'Invalid email !';
 
 				case CRErrorCode::UNKNOWN_ERROR:
-					return '未知错误！';
+					return 'Unknown error !';
 
 				case CRErrorCode::WRONG_PASSWORD:
-					return '密码错误！';
+					return 'Wrong password !';
 
 				case CRErrorCode::IN_DEVELOP:
-					return '功能开发中！';
+					return 'In develop ^_^ !';
 
 				case CRErrorCode::UNABLE_TO_CONNECT_REDIS:
-					return '连接Redis数据库错误！';
+					return 'Unable to connect Redis !';
 
 				case CRErrorCode::UNABLE_TO_CONNECT_MYSQL:
-					return '连接Mysql数据库错误！';
+					return 'Unable to connect Mysql !';
 
 				case CRErrorCode::NOT_LOGED:
-					return '您尚未登录！';
+					return 'You haven\'t loged !';
 
 				case CRErrorCode::USER_NOT_EXIST:
-					return '用户不存在！';
+					return 'User not exist !';
 
 				case CRErrorCode::INVALID_REQUEST:
-					return '不合理的请求！';
+					return 'Invalid request !';
 
 				case CRErrorCode::UNKNOWN_REQUEST:
-					return '未知的请求！';
+					return 'Unknown request !';
 
 				case CRErrorCode::CAN_NOT_BE_EMPTY:
-					return '不能为空！';
+					return 'Input is empty !';
 
 				case CRErrorCode::FAIL:
-					return '操作失败！';
+					return 'Failed !';
 
 				case CRErrorCode::INCOMPLETE_CONTENT:
-					return '内容不完整，存在未填项！';
+					return 'Cannot be empty !';
 
 				case CRErrorCode::FILE_NOT_UPLOADED:
-					return '文件上传失败！';
+					return 'Upload failed !';
 
 				case CRErrorCode::RECORD_NOT_EXIST:
-					return '该条记录未找到！';
+					return 'Record not found !';
 
 				case CRErrorCode::USER_IS_BLOCKED:
-					return '账户已被封禁！';
+					return 'Account is blocked !';
 
 				case CRErrorCode::USER_IS_REMOVED:
-					return '账户已被注销！';
+					return 'Account is removed !';
 
 				case CRErrorCode::INVALID_PASSWORD:
-					return '无效的密码！';
+					return 'Invalid password !';
 
 				case CRErrorCode::USERNAME_MISMATCH_EMAIL:
-					return '用户名与邮箱不匹配！';
+					return 'Username or email not match !';
 
 				case CRErrorCode::CODE_EXPIRED:
-					return '错误或已失效！';
+					return 'Code is wrong or expires !';
 
 				case CRErrorCode::EMAIL_ALREADY_VERIFIED:
-					return '邮箱已验证！';
+					return 'Email is already verified !';
 
 				case CRErrorCode::TOO_FAST:
-					return '服务器繁忙！';
+					return 'System busy !';
 
 				case CRErrorCode::INVALID_COOKIE:
-					return '无效的COOKIE！';
+					return 'Invalid Cookie !';
 
 				case CRErrorCode::TOKEN_EXPIRED:
-					return 'Token已失效！';
+					return 'Token expired !';
 
 				case CRErrorCode::SITE_NOT_EXIST:
-					return '站点不存在！';
+					return 'Site not exist !';
 
 				case CRErrorCode::INVALID_URL:
-					return '无效的URL！';
+					return 'Invalid url !';
 
 				case CRErrorCode::INVALID_PARAM:
-					return '无效的参数！';
+					return 'Invalid param !';
 
 				case CRErrorCode::DOMAIN_MISMATCH:
-					return '重定向网址不在允许的范围内！';
+					return 'redirect_uri not in allowed hosts !';
 
 				case CRErrorCode::EMAIL_IS_NOT_VERIFIED:
-					return '邮箱尚未验证！';
+					return 'Verify your email first !';
 
 				default:
-					return '未知错误！('.$errno.')';
+					return 'Unknown error('.$errno.')';
 			}
 		}
 	}

@@ -2,8 +2,10 @@ if(window.location.pathname.indexOf("auth") != -1){
 	var response_type = getParameterByName('response_type');
 	var app_id = getParameterByName('client_id');
 	var redirect_uri = getParameterByName('redirect_uri');
+	if(redirect_uri==null)redirect_uri='javascript:void(0)';
 	var state = getParameterByName('state');
 	var scope = getParameterByName('scope');
+	if(scope==null)scope='';
 	var array = scope.split(',');
 	$.each(array,function(i){
 		if(array[i]=='email')
@@ -243,6 +245,8 @@ if(window.location.pathname.indexOf("auth") != -1){
 			redirect = redirect + "?cancel=1";
 		if(isURL(redirect))
 			window.location.href = redirect;
+		else
+			window.location.pathname = '/ucenter';
 	});
 
 	function validateUsername(username)

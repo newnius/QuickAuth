@@ -60,7 +60,7 @@ function load_list_blocked()
 		showExport: false,
 		columns: [{
 			field: 'nobody',
-			title: '选择',
+			title: 'Select',
 			checkbox: true
 		}, {
 			field: 'id',
@@ -70,7 +70,7 @@ function load_list_blocked()
 			sortable: true
 		}, {
 			field: 'operate',
-			title: '操作',
+			title: 'Operations',
 			align: 'center',
 			events: blockedOperateEvents,
 			formatter: blockedOperateFormatter
@@ -92,7 +92,7 @@ function blockedOperateFormatter(value, row, index)
 {
 	return [
 		'<button class="btn btn-default view" href="javascript:void(0)">',
-		'<i class="glyphicon glyphicon-eye-open"></i>&nbsp;查看',
+		'<i class="glyphicon glyphicon-eye-open"></i>&nbsp;View',
 		'</button>'
 	].join('');
 }

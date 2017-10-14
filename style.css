@@ -189,3 +189,20 @@ body {
   margin:0 auto;
 	padding: 25px;
 }
+
+body, html{
+	height: 100%;
+}
+
+footer, .push{
+	height: 35px;
+}
+
+footer .breadcrumb{
+	margin-bottom: 0px;
+}
+
+.wrapper{
+	min-height: 100%;
+	margin: 0 auto -35px; /* the bottom margin is the negative value of the footer's height */
+}

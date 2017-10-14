@@ -75,31 +75,31 @@ function load_sites()
 		showExport: false,
 		columns: [{
 			field: 'nobody',
-			title: '选择',
+			title: 'Select',
 			checkbox: true
 		}, {
 			field: 'owner',
-			title: '用户名',
+			title: 'Username',
 			align: 'center',
 			valign: 'middle',
 			sortable: true,
 			visible: false
 		}, {
 			field: 'domain',
-			title: '域名',
+			title: 'Domain',
 			align: 'center',
 			valign: 'middle',
 			sortable: true
 		}, {
 			field: 'level',
-			title: '类型',
+			title: 'Type',
 			align: 'center',
 			valign: 'middle',
 			sortable: true,
 			formatter: siteLevelFormatter
 		}, {
 			field: 'operate',
-			title: '操作',
+			title: 'Operation',
 			align: 'center',
 			events: siteOperateEvents,
 			formatter: siteOperateFormatter
@@ -111,13 +111,13 @@ function siteLevelFormatter(level)
 {
 	switch(level){
 		case "99":
-			return "合作站点";
+			return "Partners";
 		case "1":
-			return "普通站点";
+			return "Normal";
 		case "0":
-			return "已删除";
+			return "Removed";
 	}
-	return "未知";
+	return "Unknown";
 }
 
 function siteResponseHandler(res)
@@ -136,7 +136,7 @@ function siteOperateFormatter(value, row, index)
 {
 	return [
 		'<button class="btn btn-default edit" href="javascript:void(0)">',
-		'<i class="glyphicon glyphicon-edit"></i>&nbsp;查看',
+		'<i class="glyphicon glyphicon-edit"></i>&nbsp;View',
 		'</button>'
 	].join('');
 }
@@ -151,8 +151,8 @@ window.siteOperateEvents =
 function show_modal_site(site)
 {
 	$('#modal-site').modal('show');
-	$('#modal-site-title').html('编辑站点');
-	$('#form-site-submit').html('更新信息');
+	$('#modal-site-title').html('Edit');
+	$('#form-site-submit').html('Save');
 	$('#form-site-submit-type').val('site_update');
 	$('#form-site-id').val(site.id);
 	$('#form-site-domain').val(site.domain);

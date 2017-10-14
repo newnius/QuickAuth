@@ -28,17 +28,17 @@ function load_users_online()
 		showExport: false,
 		columns: [{
 			field: 'nobody',
-			title: '选择',
+			title: 'Select',
 			checkbox: true
 		}, {
 			field: 'group',
-			title: '用户名',
+			title: 'Username',
 			align: 'center',
 			valign: 'middle',
 			sortable: true
 		}, {
 			field: 'operate',
-			title: '操作',
+			title: 'Operation',
 			align: 'center',
 			events: usersOnlineOperateEvents,
 			formatter: usersOnlineOperateFormatter
@@ -60,7 +60,7 @@ function usersOnlineOperateFormatter(value, row, index)
 {
 	return [
 		'<button class="btn btn-default view" href="javascript:void(0)">',
-		'<i class="glyphicon glyphicon-eye-open"></i>&nbsp;查看',
+		'<i class="glyphicon glyphicon-eye-open"></i>&nbsp;View',
 		'</button>'
 	].join('');
 }
@@ -101,7 +101,7 @@ function load_user_sessions()
 		showExport: false,
 		columns: [{
 			field: 'nobody',
-			title: '选择',
+			title: 'Select',
 			checkbox: true
 		}, {
 			field: '_index',
@@ -117,13 +117,13 @@ function load_user_sessions()
 			sortable: true
 		}, {
 			field: '_current',
-			title: '当前会话',
+			title: 'Current',
 			align: 'center',
 			valign: 'middle',
 			sortable: true
 		}, {
 			field: 'operate',
-			title: '操作',
+			title: 'Operation',
 			align: 'center',
 			events: sessionsOperateEvents,
 			formatter: sessionsOperateFormatter
@@ -145,7 +145,7 @@ function sessionsOperateFormatter(value, row, index)
 {
 	return [
 		'<button class="btn btn-default tickout" href="javascript:void(0)">',
-		'<i class="glyphicon glyphicon-log-out"></i>&nbsp;登出',
+		'<i class="glyphicon glyphicon-log-out"></i>&nbsp;Log out',
 		'</button>'
 	].join('');
 }
