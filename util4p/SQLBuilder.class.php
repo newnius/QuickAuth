@@ -11,8 +11,7 @@
 	{
 		private $sql = '';
 
-		/*
-		 */
+		/**/
 		public function insert($table, $key_values)
 		{
 			$this->sql = "INSERT INTO `$table`";
@@ -41,9 +40,7 @@
 			$this->sql .= ")";
 		}
 
-
-		/*
-		 */
+		/**/
 		public function select($table, $selected_rows=array())
 		{
 			$this->sql = 'SELECT ';
@@ -63,9 +60,7 @@
 			$this->sql .= " FROM `$table` ";
 		}
 
-
-		/*
-		 */
+		/**/
 		public function update($table, $key_values)
 		{
 			if($key_values===null || count($key_values) === 0){
@@ -85,21 +80,17 @@
 			$this->sql = substr($this->sql, 0, strlen($this->sql)-2);
 		}
 
-
-		/*
-		 */
+		/**/
 		public function delete($table)
 		{
 			$this->sql = "DELETE FROM `$table` ";
 		}
 
-
-		/*
-		 */
-		public function where($arr, $opts=array())
+		/* currently, can only represent AND */
+		public function where($key_values, $opts=array())
 		{
 			$where_clause_cnt = 0;
-			$keys = array_keys($arr);
+			$keys = array_keys($key_values);
 
 			foreach($keys as $key)
 			{
@@ -113,7 +104,7 @@
 				}else{
 					$this->sql .= ' AND ';
 				}
-				if($arr[$key] === null){
+				if($key_values[$key] === null){
 					if($opts[$key] === '=')
 					{
 						$this->sql .= " `$key` is null ";
@@ -121,19 +112,17 @@
 						$this->sql .= " `$key` is not null ";
 					}
 					$where_clause_cnt++;
-				}else if($arr[$key] === '?' || in_array(strtoupper($opts[$key]), array('IN', 'BETWEEN', 'LIKE')) ){
-					$this->sql .= " `$key` {$opts[$key]} {$arr[$key]} ";
+				}else if($key_values[$key] === '?' || in_array(strtoupper($opts[$key]), array('IN', 'BETWEEN', 'LIKE')) ){
+					$this->sql .= " `$key` {$opts[$key]} {$key_values[$key]} ";
 					$where_clause_cnt++;
-				}else{//FIXME: $arr[$key] may contain '
-					$this->sql .= " `$key` {$opts[$key]} '{$arr[$key]}' ";
+				}else{//FIXME: $key_values[$key] may contain '
+					$this->sql .= " `$key` {$opts[$key]} '{$key_values[$key]}' ";
 					$where_clause_cnt++;
 				}
 			}
 		}
 
-
-		/*
-		 */
+		/**/
 		public function group($by_arr)
 		{
 			if($by_arr===null || count($by_arr) === 0){
@@ -147,9 +136,7 @@
 			$this->sql = substr($this->sql, 0, strlen($this->sql)-2);
 		}
 
-
-		/*
-		 */
+		/**/
 		public function order($by_arr)
 		{
 			if($by_arr===null || count($by_arr) === 0){
@@ -158,25 +145,25 @@
 			$this->sql .= ' ORDER BY ';
 			foreach( $by_arr as $by => $order )
 			{
+				if(strtoupper($order) !== 'DESC'){
+					$order = 'ASC';
+				}
 				$this->sql .= "`$by` $order, ";
 			}
 			$this->sql = substr($this->sql, 0, strlen($this->sql)-2);
 		}
 
-
-		/*
-		 */
+		/**/
 		public function limit($offset, $cnt)
 		{
 			if($cnt < 0){// support LIMIT 0 ,-1 to get all records
-				return $this->sql;
+				$this->sql .= " LIMIT $offset, 18446744073709551615";
+			}else{
+				$this->sql .= " LIMIT $offset, $cnt";
 			}
-			$this->sql .= " LIMIT $offset, $cnt";
 		}
 
-
-		/*
-		 */
+		/**/
 		public function build()
 		{
 			return $this->sql;

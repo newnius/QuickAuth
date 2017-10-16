@@ -5,7 +5,7 @@
 	require_once('util4p/CRLogger.class.php');
 	require_once('util4p/AccessController.class.php');
 	require_once('util4p/Random.class.php');
-	
+
 	require_once("sendgrid/sendgrid-php.php");
 
 	require_once('config.inc.php');
@@ -34,10 +34,21 @@
 			$res['errno'] = CRErrorCode::FAIL;
 			$res['msg'] = $msg['errors'][0]['message'];
 		}
+		$res['errno'] = CRErrorCode::SUCCESS;
 		return $res;
 	}
 
+
 	/* count send stats and reduce spam */
-	function can_send($email){
-		return true;
+	function can_send($email)
+	{
+		/* here we only check by username(email) and leave ip check to RateLimiter */
+		$rule = new CRObject();
+		$rule->set('time_begin', time()-86400);//last 24 hours
+		$rule->set('scope', $email->get('username'));
+		$rule->set('tag', 'send_email');
+		$res['errno'] = CRErrorCode::SUCCESS;
+		//TODO: use getCount
+		$logs = CRLogger::search($rule);
+		return count($logs) < MAXIMUM_EMAIL_PER_EMAIL;
 	}

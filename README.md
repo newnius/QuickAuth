@@ -8,11 +8,13 @@ Account system which supports OAuth & SSO. Demo [QuickAuth](https://quickauth.ne
   - SendGrid Account
 
 ## Setup
+  - Install requirements
   - Rename `config-sample.inc.php` to `config.inc.php`
   - Customize `config.inc.php`
+  - Run `install.php`
 
 ## Features
-  - OAuth & SSO
+  - OAuth (& SSO, TBD)
   - Muiltiple Login
   - Block IP
   - Rate Limit
@@ -21,6 +23,10 @@ Account system which supports OAuth & SSO. Demo [QuickAuth](https://quickauth.ne
   - Basic Admin Panel
   - Access Control Based on Role
   - Responsive Web Design
-  - I18N
+  - I18N (TBD)
 
 ## TODOs
+  - New UI
+  - Divide front-end to template
+  - SSO
+  - Security Improvements

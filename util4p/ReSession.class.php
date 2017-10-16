@@ -10,27 +10,26 @@
 		private static $bind_ip = false; // bind session with ip, when client ip changes, previous session will be unavailable
 		private static $sid = '';
 		private static $guid_key = '_session_id';
+		private static $allow_wild = false; // allow wild sessions
 		private static $cache = array();
 
-		/*
-		 */
+		/* configuration && initialization */
 		public static function configure($config)
 		{
 			self::$time_out = $config->get('time_out', self::$time_out);
 			self::$bind_ip = $config->getBool('bind_ip', self::$bind_ip);
 			self::$guid_key = $config->get('guid_key', self::$guid_key);
+			self::$allow_wild = $config->getBool('allow_wild', self::$allow_wild);
+			/* assign id from new sessions */
 			if(!isset($_COOKIE[self::$guid_key]))
 			{
 				$redis = RedisDAO::instance();
 				if($redis===null){
 					return false;
 				}
-				while(true){// generate a unque session id
+				do { // generate a unque session id
 					self::$sid = Random::randomString(64);
-					if($redis->exists('session:'.self::$sid)!==1){
-						break;
-					}
-				}
+				} while ($redis->exists('session:'.self::$sid)===1);
 				$redis->disconnect();
 				setcookie(self::$guid_key, self::$sid);
 			}else{
@@ -38,7 +37,7 @@
 			}
 		}
 
-		/* Ask browser to save session_id, so that can continue after restart browser */
+		/* Ask browser to remember session id even if browser restarts */
 		public static function persist($duration)
 		{
 			$redis = RedisDAO::instance();
@@ -52,7 +51,7 @@
 			return true;
 		}
 
-		/* attach session to $group */
+		/* attach session to $group to avoid wild sessions */
 		public static function attach($group)
 		{
 			$redis = RedisDAO::instance();
@@ -67,8 +66,7 @@
 			return true;
 		}
 
-
-		/* detach session to $group */
+		/* detach session from $group */
 		public static function detach($group)
 		{
 			$redis = RedisDAO::instance();
@@ -83,9 +81,7 @@
 			return true;
 		}
 
-
-		/*
-		 */
+		/**/
 		public static function put($key, $value)
 		{
 			$redis = RedisDAO::instance();
@@ -95,14 +91,13 @@
 			$redis_key = 'session:'.self::$sid;
 			$redis->hset($redis_key, $key, $value);
 			$redis->hset($redis_key, '_ip', cr_get_client_ip());
-			self::get('_ip');//renew expire
+			self::$cache[$key] = $value;//update cache
+			self::get('_ip');//renew expiration
 			$redis->disconnect();
 			return true;
 		}
 
-
-		/*
-		 */
+		/**/
 		public static function get($key, $default=null)
 		{
 			if(isset(self::$cache[$key])){
@@ -119,13 +114,14 @@
 					return $default;
 				}
 			}
-			if(isset($list['_group'])){
+			if(!self::$allow_wild){
+				if(!isset($list['_group'])
+					$list['_group'] = '_NOT_EXIST_'.time();
 				$group_key = 'session-group:'.$list['_group'];
 				if($redis->sismember($group_key, $redis_key)!==1){
+					self::expire();
 					return $default;
 				}
-			}else{
-				return $default;
 			}
 			self::$cache = $list;
 			if($redis->ttl($redis_key) < self::$time_out){
@@ -153,7 +149,7 @@
 			return true;
 		}
 
-
+		/**/
 		public static function expireByGroup($group, $index=null)
 		{
 			$redis = RedisDAO::instance();
@@ -172,7 +168,6 @@
 			return true;
 		}
 
-
 		/* Low Performance, Not recommended */
 		public static function listGroup($rule)
 		{
@@ -190,7 +185,7 @@
 				if($index < $offset){
 					continue;
 				}
-				if($limit !== -1 && $offset+$limit<=$index){
+				if($limit !== -1 && $offset + $limit <= $index){
 					break;
 				}
 				$groups[] = array('index' => $index, 'group' => substr($key, $len));
@@ -198,7 +193,6 @@
 			$redis->disconnect();
 			return $groups;
 		}
-
 
 		/* Low Performance, Not recommended */
 		public static function listSession($rule)

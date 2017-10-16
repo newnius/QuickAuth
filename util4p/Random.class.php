@@ -1,4 +1,5 @@
 <?php
+
 	class Random
 	{
 		const LEVEL_LOW = 1;

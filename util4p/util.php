@@ -91,6 +91,7 @@
 	}
 
 	/**
+	 * @deprecated
 	 * curl (support https)
 	 * origin: http://blog.csdn.net/linvo/article/details/8816079
 	 * 

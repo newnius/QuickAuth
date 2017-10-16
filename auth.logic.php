@@ -7,6 +7,7 @@
 	require_once('util4p/CRLogger.class.php');
 	require_once('util4p/AccessController.class.php');
 	require_once('util4p/Random.class.php');
+	require_once('guzzle/autoloader.php');
 
 	require_once('UserManager.class.php');
 	require_once('SiteManager.class.php');
@@ -209,7 +210,7 @@
 			return $res;
 		}
 		$data = $redis->hgetall("auth:token:$token");
-		if(count($token)===0){
+		if(count($data)===0){
 			$res['errno'] = CRErrorCode::TOKEN_EXPIRED;
 			$redis->disconnect();
 			return $res;
@@ -261,10 +262,29 @@
 		}
 		$token = $redis->hget('auth:group:'.Session::get('username'), $app_id);
 		$redis->hdel("auth:group:".Session::get('username'), $app_id);
+		$data = $redis->hgetall("auth:token:$token");
+		if(count($data)===0){
+			$res['errno'] = CRErrorCode::TOKEN_EXPIRED;
+			$redis->disconnect();
+			return $res;
+		}
 		$success = $redis->del("auth:token:$token");
 		$res['errno'] = $success>0?CRErrorCode::SUCCESS:CRErrorCode::FAIL;
 
-		/* TODO: notify site if revoke_url is set */
+		/* notify site if revoke_url is set */
+		$url = $data['revoke_url'];
+		if($url !== null && strlen($url)>10){
+			$form_params = array(
+				'uid' => $data['uid'],
+				'token' => $token
+			);
+			$post_data = array('form_params' => $form_params);
+			$client = new \GuzzleHttp\Client(['timeout' => 3, 'headers' => ['User-Agent' => 'QuickAuth Bot']]);
+			try{
+				$client->request('POST', $url, $post_data);
+			}catch(Exception $e){//pass
+			}
+		}
 
 		$log = new CRObject();
 		$log->set('scope', Session::get('username'));

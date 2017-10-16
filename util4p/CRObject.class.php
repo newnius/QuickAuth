@@ -3,6 +3,9 @@
 	{
 		private $map;
 
+		/*
+		 * @param $map: key-value array
+		 */
 		public function CRObject($map=array())
 		{
 			$this->map = $map;
@@ -32,6 +35,8 @@
 			return $default;
 		}
 
+		/*
+		 */
 		public function getBool($key, $default=false)
 		{
 			if(isset($this->map[$key]) && !is_null($this->map[$key]))
@@ -46,7 +51,11 @@
 			return $this->map;
 		}
 
-		/* set $this[$key] if isset($obj[$key])&&!isset($this[$key]) */
+		/*
+		 * set $this[$key] if isset($obj[$key])&&!isset($this[$key])
+		 * (new CRObject(['k1' => 'v1'])).union(new CRObject(['k1' => 'v1.1', 'k2' => 'v2']))
+		 *   = new CRObject(['k1' => 'v1', 'k2' => 'v2'])
+		 */
 		public function union($obj)
 		{
 			$keys = array_keys($obj->toArray());

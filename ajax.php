@@ -108,7 +108,7 @@
 			break;
 
 		case 'reset_pwd_send_code':
-			RateLimiter::increase(1);
+			RateLimiter::increase(5);
 			$user = new CRObject();
 			$user->set('username', cr_get_POST('username'));
 			$user->set('email', cr_get_POST('email'));
@@ -126,7 +126,7 @@
 			break;
 
 		case 'verify_email_send_code':
-			RateLimiter::increase(1);
+			RateLimiter::increase(5);
 			$user = new CRObject();
 			$user->set('username', Session::get('username'));
 			$res = verify_email_send_code($user);

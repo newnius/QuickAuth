@@ -13,8 +13,7 @@
 		private static $show_error = false;
 		private $dbh;
 
-		/*
-		 */
+		/**/
 		public static function configure($config)
 		{
 			self::$host = $config->get('host', self::$host);
@@ -26,17 +25,13 @@
 			self::$show_error = $config->getBool('show_error', self::$show_error);
 		}
 
-
-		/*
-		 */
+		/**/
 		public function MysqlPDO()
 		{
 			$this->connect();
 		}
 
-
-		/*
-		 */
+		/**/
 		private function connect()
 		{
 			try {
@@ -51,9 +46,7 @@
 			}
 		}
 
-
-		/*
-		 */
+		/**/
 		public function execute($sql, $a_params, $need_inserted_id=false)
 		{
 			if($this->dbh === null){
@@ -75,8 +68,8 @@
 			}
 		}
 
-
 		/*
+		 * @param $a_params: key-value array
 		 */
 		function executeQuery($sql, $a_params)
 		{

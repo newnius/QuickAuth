@@ -112,4 +112,9 @@
 			return $logs;
 		}
 
+		public static function getCount($filter)
+		{
+			return -1;
+		}
+
   }
