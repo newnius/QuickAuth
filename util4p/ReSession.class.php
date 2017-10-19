@@ -115,7 +115,7 @@
 				}
 			}
 			if(!self::$allow_wild){
-				if(!isset($list['_group'])
+				if(!isset($list['_group']))
 					$list['_group'] = '_NOT_EXIST_'.time();
 				$group_key = 'session-group:'.$list['_group'];
 				if($redis->sismember($group_key, $redis_key)!==1){

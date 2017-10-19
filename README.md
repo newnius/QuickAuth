@@ -11,7 +11,7 @@ Account system which supports OAuth & SSO. Demo [QuickAuth](https://quickauth.ne
   - Install requirements
   - Rename `config-sample.inc.php` to `config.inc.php`
   - Customize `config.inc.php`
-  - Run `install.php`
+  - Run `install.php` & __Remove `install.php`__
 
 ## Features
   - OAuth (& SSO, TBD)

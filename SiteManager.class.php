@@ -34,15 +34,16 @@
 			$offset = $rule->getInt('offset', 0);
 			$limit = $rule->getInt('limit', -1);
 			$selected_rows = array();
-			$where_arr = array();
-			$params = array();
+			$where_arr = array('level' => '?');
+			$opts_arr = array('level' => '!=');
+			$params = array('0');
 			if($owner){
 				$where_arr['owner'] = '?';
 				$params[] = $owner;
 			}
 			$builder = new SQLBuilder();
 			$builder->select('qa_site', $selected_rows);
-			$builder->where($where_arr);
+			$builder->where($where_arr, $opts_arr);
 			$builder->limit($offset, $limit);
 			$sql = $builder->build();
 			$sites = (new MysqlPDO())->executeQuery($sql, $params);
@@ -56,11 +57,12 @@
 		{
 			$id = $rule->getInt('id');
 			$selected_rows = array();
-			$where_arr = array('id' => '?');
-			$params = array($id);
+			$where_arr = array('id' => '?', 'level' => '?');
+			$opts_arr = array('level' => '!=');
+			$params = array($id, '0');
 			$builder = new SQLBuilder();
 			$builder->select('qa_site', $selected_rows);
-			$builder->where($where_arr);
+			$builder->where($where_arr, $opts_arr);
 			$sql = $builder->build();
 			$sites = (new MysqlPDO())->executeQuery($sql, $params);
 			return count($sites)>0?$sites[0]:null;
@@ -74,15 +76,16 @@
 		{
 			$owner = $rule->get('owner');
 			$selected_rows = array('COUNT(1) AS `count`');
-			$where_arr = array();
-			$params = array();
+			$where_arr = array('level' => '?');
+			$opts_arr = array('level' => '!=');
+			$params = array('0');
 			if($owner){
 				$where_arr['owner'] = '?';
 				$params[] = $owner;
 			}
 			$builder = new SQLBuilder();
 			$builder->select('qa_site', $selected_rows);
-			$builder->where($where_arr);
+			$builder->where($where_arr, $opts_arr);
 			$sql = $builder->build();
 			$res = (new MysqlPDO())->executeQuery($sql, $params);
 			return intval($res[0]['count']);

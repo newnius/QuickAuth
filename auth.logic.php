@@ -31,7 +31,6 @@
 		return $res;
 	}
 
-
 	/*
 	 * array('response_type'='code', 'app_id', 'redirect_uri', 'state', 'scope')
 	 * return array('errno', 'code', 'state');
@@ -92,8 +91,8 @@
 		return $res;
 	}
 
-
-	/* array('grant_type'=>'authorization_code', 'app_id', 'app_key', 'code', 'redirect_uri')
+	/*
+	 * array('grant_type'=>'authorization_code', 'app_id', 'app_key', 'code', 'redirect_uri')
 	 * return array('errno', 'token', 'expires_in'=>3600);
 	 */
 	function auth_get_token($rule)
