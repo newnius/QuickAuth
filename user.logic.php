@@ -35,7 +35,6 @@
 		return mb_strlen($username, 'utf8') > 0 && mb_strlen($username, 'utf8') <= 12;
 	}
 
-
 	/**/
 	function validate_email($email)
 	{
@@ -47,7 +46,6 @@
 		}
 		return Validator::isEmail($email);
 	}
-
 
 	/**/
 	function user_register($user)
@@ -77,7 +75,6 @@
 		CRLogger::log2db($log);
 		return $res;
 	}
-
 
 	/**/
 	function user_login($user)
@@ -125,7 +122,6 @@
 		return $res;
 	}
 
-
 	/*
 	 * clear session and cookie
 	 */
@@ -135,7 +131,6 @@
 		$res['errno'] = CRErrorCode::SUCCESS;
 		return $res;
 	}
-
 
 	/**/
 	function user_update($user)
@@ -186,7 +181,6 @@
 		return $res;
 	}
 
-
 	/**/
 	function user_update_pwd($user)
 	{
@@ -213,7 +207,6 @@
 		return $res;
 	}
 
-
 	/**/
 	function user_get($rule)
 	{
@@ -232,7 +225,6 @@
 		return $res;
 	}
 
-
 	/**/
 	function users_get($rule)
 	{
@@ -245,7 +237,6 @@
 		$res['users'] = UserManager::gets($rule);
 		return $res;
 	}
-
 
 	/**/
 	function user_get_log($rule)
@@ -264,7 +255,6 @@
 		$res['logs'] = CRLogger::search($rule);
 		return $res;
 	}
-
 
 	/**/
 	function reset_pwd_send_code($user)
@@ -308,7 +298,6 @@
 		return $res;
 	}
 
-
 	/**/
 	function verify_email_send_code($user)
 	{
@@ -350,7 +339,6 @@
 		return $res;
 	}
 
-
 	/**/
 	function reset_pwd($user)
 	{
@@ -383,7 +371,6 @@
 		CRLogger::log2db($log);
 		return $res;
 	}
-
 
 	/**/
 	function verify_email($user)

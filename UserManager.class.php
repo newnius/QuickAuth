@@ -8,9 +8,7 @@
 	class UserManager
 	{
 
-		/*
-		 * do add user
-		 */
+		/**/
 		public static function add($user)
 		{
 			$username = $user->get('username');
@@ -32,11 +30,8 @@
 			$count = (new MysqlPDO())->execute($sql, $params);
 			return $count===1;
 		}
-  
-    
-		/*
-		 * do update user
-		 */
+
+		/**/
 		public static function update($user)
 		{
 			$username = $user->get('username');
@@ -59,10 +54,7 @@
 			return $count===1;
 		}
 
-
-		/*
-		 * get user by username
-		 */
+		/**/
 		public static function getByUsername( $username )
 		{
 			$selected_rows = array();
@@ -76,10 +68,7 @@
 			return count($users)===1?$users[0]:null;
 		}
 
-
-		/*
-		 * search user by email
-		 */
+		/**/
 		public static function getByEmail( $email )
 		{
 			$selected_rows = array();
@@ -93,10 +82,7 @@
 			return count($users)===1?$users[0]:null;
 		}
 
-
-		/*
-		 * search users
-		 */
+		/**/
 		public static function gets($rule)
 		{
 			$offset = $rule->getInt('offset', 0);
@@ -113,10 +99,7 @@
 			return $users;
 		}
 
-
-		/*
-		 * count users
-		 */
+		/**/
 		public static function getCount($rule)
 		{
 			$selected_rows = array('COUNT(1) AS `count`');

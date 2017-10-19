@@ -7,7 +7,7 @@ function load_users_online()
 {
 	$table = $("#table-user");
 	$table.bootstrapTable({
-		url: 'ajax.php?action=users_online',
+		url: '/service?action=users_online',
 		responseHandler: usersOnlineResponseHandler,
 		cache: true,
 		striped: true,
@@ -80,7 +80,7 @@ function load_user_sessions()
 		username = "";
 	$table = $("#table-session");
 	$table.bootstrapTable({
-		url: 'ajax.php?action=user_sessions&username='+username,
+		url: '/service?action=user_sessions&username='+username,
 		responseHandler: sessionsResponseHandler,
 		cache: true,
 		striped: true,
@@ -154,7 +154,7 @@ window.sessionsOperateEvents =
 {
 	'click .tickout': function (e, value, row, index) {
 		var ajax = $.ajax({
-			url: "ajax.php?action=tick_out",
+			url: "/service?action=tick_out",
 			type: 'POST',
 			data: {
 				username: row.username,

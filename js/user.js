@@ -18,6 +18,8 @@ function register_events_user()
 		ajax.done(function(res){
 			if(res["errno"] != 0){
 			}else{
+				$('#modal-msg').modal("show");
+				$('#modal-msg-content').text(res["msg"]);
 			}
 		});
 	});
@@ -92,7 +94,7 @@ function register_events_user()
 		var oldpwd = cryptPwd(oldpwd);
 		var newpwd = cryptPwd(password);
 		var ajax = $.ajax({
-			url: "ajax.php?action=update_pwd",
+			url: "/service?action=update_pwd",
 			type: 'POST',	
 			data: {
 				oldpwd: oldpwd,
@@ -121,7 +123,7 @@ function register_events_user()
 			password=cryptPwd(password);
 		$("#form-user-submit").attr("disabled","disabled");
 		var ajax = $.ajax({
-			url: "ajax.php?action=user_update",
+			url: "/service?action=user_update",
 			type: 'POST', 
 			data: {
 				username: username,
@@ -152,7 +154,7 @@ function load_users()
 {
 	$table = $("#table-user");
 	$table.bootstrapTable({
-		url: 'ajax.php?action=users_get',
+		url: '/service?action=users_get',
 		responseHandler: userResponseHandler,
     sidePagination: 'server',
 		cache: true,
@@ -291,7 +293,7 @@ function show_modal_user(user)
 function load_profile()
 {
 	var ajax = $.ajax({
-		url: "ajax.php?action=user_get",
+		url: "/service?action=user_get",
 		type: 'GET',
 		data: { }
 	});

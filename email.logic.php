@@ -11,6 +11,7 @@
 	require_once('config.inc.php');
 	require_once('init.inc.php');
 
+	/**/
 	function email_send($email)
 	{
 		if(!can_send($email)){
@@ -18,7 +19,7 @@
 			return $res;
 		}
 		$res['errno'] = CRErrorCode::SUCCESS;
-		$from = new SendGrid\Email('QuickAuth', 'support@newnius.com');
+		$from = new SendGrid\Email('QuickAuth', EMAIL_FROM);
 		$to = new SendGrid\Email($email->get('username'), $email->get('email'));
 		$subject = $email->get('subject');
 		$content = new SendGrid\Content("text/html", $email->get('content'));
@@ -37,7 +38,6 @@
 		$res['errno'] = CRErrorCode::SUCCESS;
 		return $res;
 	}
-
 
 	/* count send stats and reduce spam */
 	function can_send($email)

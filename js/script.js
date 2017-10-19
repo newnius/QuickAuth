@@ -19,7 +19,7 @@ if(window.location.pathname.indexOf("auth") != -1){
 
 	/* check auto accept */
 	var ajax = $.ajax({
-		url: "ajax.php?action=auth_get_site",
+		url: "/service?action=auth_get_site",
 		type: 'POST',
 		data: {
 			app_id: app_id
@@ -28,7 +28,10 @@ if(window.location.pathname.indexOf("auth") != -1){
 		
 	ajax.done(function(res){
 		if(res["errno"] == 0){
-			
+			$('#auth-grant-host').text(res['host']);
+			if(res['auto_grant']==1){
+				$('#form-auth-accept').click();
+			}
 		}else{
 			$('#modal-msg').modal('show');
 			$('#modal-msg-content').text(res["msg"]);
@@ -50,7 +53,7 @@ if(window.location.pathname.indexOf("auth") != -1){
 		var password = $("#form-signup-password").val();
 		var pass = cryptPwd(password);
 		var ajax = $.ajax({
-			url: "ajax.php?action=user_register",
+			url: "/service?action=user_register",
 			type: 'POST',
 			data: {
 				username: username,
@@ -82,7 +85,7 @@ if(window.location.pathname.indexOf("auth") != -1){
 		$("#btn-login").html("submiting");
 		$("#btn-login").attr("disabled","disabled");
 		var ajax = $.ajax({
-			url: "ajax.php?action=login",
+			url: "/service?action=login",
 			type: 'POST',	
 			data: {
 				account: account,
@@ -134,7 +137,7 @@ if(window.location.pathname.indexOf("auth") != -1){
 		var username = $("#form-lostpass-username").val();
 		var email = $("#form-lostpass-email").val();
 		var ajax = $.ajax({
-			url: "ajax.php?action=signout",
+			url: "/service?action=signout",
 			type: 'POST',
 			data: { }
 		});
@@ -151,7 +154,7 @@ if(window.location.pathname.indexOf("auth") != -1){
 		var username = $("#form-lostpass-username").val();
 		var email = $("#form-lostpass-email").val();
 		var ajax = $.ajax({
-			url: "ajax.php?action=reset_pwd_send_code",
+			url: "/service?action=reset_pwd_send_code",
 			type: 'POST',	
 			data: {
 				username: username,
@@ -176,7 +179,7 @@ if(window.location.pathname.indexOf("auth") != -1){
 		password = cryptPwd(password);
 		var code = getParameterByName("code");
 		var ajax = $.ajax({
-			url: "ajax.php?action=reset_pwd",
+			url: "/service?action=reset_pwd",
 			type: 'POST',	
 			data: {
 				username: username,
@@ -209,7 +212,7 @@ if(window.location.pathname.indexOf("auth") != -1){
 		if($("#form-auth-role").prop("checked"))
 			scope.push('role');
 		var ajax = $.ajax({
-			url: "ajax.php?action=auth_grant",
+			url: "/service?action=auth_grant",
 			type: 'POST', 
 			data: {
 				response_type: response_type,
@@ -272,7 +275,7 @@ if(window.location.pathname.indexOf("auth") != -1){
 
 	function cryptPwd(password)
 	{
-		password = window.md5(password + "account");
+		password = window.md5(password + "QuickAuth");
 		password = window.md5(password + "newnius");
 		password = window.md5(password + "com");
 		return password;

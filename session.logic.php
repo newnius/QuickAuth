@@ -27,8 +27,7 @@
 		return $res;
 	}
 
-
-	/* */
+	/**/
 	function user_sessions($rule)
 	{
 		if($rule->get('group') === null || $rule->get('group')!==Session::get('username')){
@@ -42,8 +41,7 @@
 		return $res;
 	}
 
-
-	/* */
+	/**/
 	function tick_out($rule)
 	{
 		if($rule->get('username')===null || Session::get('username')!==$rule->get('username')){

@@ -109,7 +109,7 @@
 			return $res;
 		}
 		$data = $redis->hgetall("auth:code:$code");
-		if(count($data)===null){
+		if(count($data)===0){
 			$res['errno'] = CRErrorCode::CODE_EXPIRED;
 			$redis->disconnect();
 			return $res;
@@ -130,7 +130,7 @@
 			'scope' => $data['scope']
 		);
 		$redis->hmset("auth:token:$token", $data2);
-		$redis->expire("auth:token:$token", 3600*24*30);
+		$redis->expire("auth:token:$token", AUTH_TOKEN_TIMEOUT);
 		/* remove old token */
 		$t = $redis->hget("auth:group:{$data['uid']}", $app_id);
 		if($t !== null){
@@ -139,11 +139,10 @@
 		$redis->hset("auth:group:{$data['uid']}", $app_id, $token);
 		$res['errno'] = CRErrorCode::SUCCESS;
 		$res['token'] = $token;
-		$res['expires_in'] = 3600*24*30;
+		$res['expires_in'] = AUTH_TOKEN_TIMEOUT;
 		$redis->disconnect();
 		return $res;
 	}
-
 
 	/*
 	 * array('grant_type'=>'refresh_token', 'app_id', 'app_key', 'token')
@@ -190,14 +189,13 @@
 			'scope' => $data['scope']
 		);
 		$redis->hmset("auth:token:$token", $data2);
-		$redis->expire("auth:token:$token", 3600*24*30);
+		$redis->expire("auth:token:$token", AUTH_TOKEN_TIMEOUT);
 		$res['errno'] = CRErrorCode::SUCCESS;
 		$res['token'] = $token;
-		$res['expires_in'] = 3600*24*30;
+		$res['expires_in'] = AUTH_TOKEN_TIMEOUT;
 		$redis->disconnect();
 		return $res;
 	}
-
 
 	/* query user info */
 	function auth_get_info($rule)
@@ -245,8 +243,7 @@
 		return $res;
 	}
 
-
-	/* */
+	/**/
 	function auth_revoke($rule)
 	{
 		if(Session::get('username')===null){
@@ -294,8 +291,7 @@
 		return $res;
 	}
 
-
-	/* */
+	/**/
 	function auth_list($rule)
 	{
 		$redis = RedisDAO::instance();
@@ -323,7 +319,6 @@
 		return $res;
 	}
 
-
 	/**/
 	function site_add($site)
 	{
@@ -331,6 +326,16 @@
 			$res['errno'] = CRErrorCode::NO_PRIVILEGE;
 			return $res;
 		}
+		
+		$revoke_url = $site->get('revoke_url');
+		if($revoke_url !== null && strlen($revoke_url)>0){
+			$arr = parse_url($revoke_url);
+			if($arr['host'] !== $site->get('domain')){
+				$res['errno'] = CRErrorCode::DOMAIN_MISMATCH;
+				return $res;
+			}
+		}
+
 		$site->set('owner', Session::get('username'));
 		$site->set('key', Random::randomString(64));
 		$site->set('level', $site->getInt('level', 1));
@@ -346,7 +351,6 @@
 		return $res;
 	}
 
-
 	/**/
 	function site_update($site)
 	{
@@ -358,6 +362,15 @@
 		}else if(!AccessController::hasAccess(Session::get('role'), 'site_add_'.$site->getInt('level', 1))){// can update to level
 			$res['errno'] = CRErrorCode::NO_PRIVILEGE;
 		}else{
+			$revoke_url = $site->get('revoke_url');
+			if($revoke_url !== null && strlen($revoke_url)>0){
+				$arr = parse_url($revoke_url);
+				if($arr['host'] !== $site->get('domain')){
+					$res['errno'] = CRErrorCode::DOMAIN_MISMATCH;
+					return $res;
+				}
+			}
+
 			$site_arr['level'] = $site->getInt('level', 1);
 			$site_arr['domain'] = $site->get('domain');
 			$site_arr['revoke_url'] = $site->get('revoke_url');
@@ -380,7 +393,7 @@
 		return $res;
 	}
 
-	/* */
+	/**/
 	function sites_get($rule)
 	{
 		if($rule->get('owner') === null || $rule->get('owner') !== Session::get('username')){

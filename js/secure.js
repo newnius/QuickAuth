@@ -13,7 +13,7 @@ function register_events_blocked()
 		var time = $("#form-block-time").val();
 		var type = !time||time>0?"block":"unblock";
 		var ajax = $.ajax({
-			url: "ajax.php?action=" + type,
+			url: "/service?action=" + type,
 			type: 'POST', 
 			data: {
 				ip: ip,
@@ -39,7 +39,7 @@ function load_list_blocked()
 {
 	$table = $("#table-block");
 	$table.bootstrapTable({
-		url: 'ajax.php?action=list_blocked',
+		url: '/service?action=list_blocked',
 		responseHandler: blockedResponseHandler,
 		cache: true,
 		striped: true,
@@ -101,7 +101,7 @@ window.blockedOperateEvents =
 {
 	'click .view': function (e, value, row, index) {
 		var ajax = $.ajax({
-			url: "ajax.php?action=get_blocked_time",
+			url: "/service?action=get_blocked_time",
 			type: 'POST',
 			data: {
 				ip: row.id

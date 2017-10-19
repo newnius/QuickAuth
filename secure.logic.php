@@ -27,8 +27,7 @@
 		return $res;
 	}
 
-
-	/* */
+	/**/
 	function get_blocked_time($ip)
 	{
 		if(!AccessController::hasAccess(Session::get('role', 'visitor'), 'rc_list')){
@@ -39,7 +38,6 @@
 		$res['time'] = RateLimiter::getFreezeTime($ip);
 		return $res;
 	}
-
 
 	/**/
 	function block($rule)

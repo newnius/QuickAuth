@@ -5,8 +5,12 @@ $(function(){
 			load_users();
 			register_events_user();
 			break;
+		case "sites":
+			load_sites('self');
+			register_events_site();
+			break;
 		case "sites_all":
-			load_sites();
+			load_sites('all');
 			register_events_site();
 			break;
 		case "users_online":
@@ -44,7 +48,7 @@ function load_logs(who)
 {
 	$table = $("#table-log");
 	$table.bootstrapTable({
-		url: 'ajax.php?action=get_logs&who='+who,
+		url: '/service?action=get_logs&who='+who,
 		responseHandler: signinLogResponseHandler,
 		cache: true,
 		striped: true,
@@ -120,7 +124,7 @@ function load_auth_list()
 {
 	$table = $("#table-auth");
 	$table.bootstrapTable({
-		url: 'ajax.php?action=auth_list',
+		url: '/service?action=auth_list',
 		responseHandler: authListResponseHandler,
 		cache: true,
 		striped: true,
@@ -190,7 +194,7 @@ window.authOperateEvents =
 {
 	'click .revoke': function (e, value, row, index) {
 		var ajax = $.ajax({
-			url: "ajax.php?action=auth_revoke",
+			url: "/service?action=auth_revoke",
 			type: 'POST',
 			data: {
 				app_id: row.app_id

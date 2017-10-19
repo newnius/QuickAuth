@@ -5,9 +5,8 @@
 
 	class SiteManager
 	{
-		/*
-		 * do add site 
-		 */
+
+		/**/
 		public static function add($site)
 		{
 			$domain = $site->get('domain');
@@ -25,9 +24,7 @@
 			return $count===1;
 		}
 
-
-		/*
-		 */
+		/**/
 		public static function gets($rule)
 		{
 			$owner = $rule->get('owner');
@@ -37,7 +34,7 @@
 			$where_arr = array('level' => '?');
 			$opts_arr = array('level' => '!=');
 			$params = array('0');
-			if($owner){
+			if($owner!==null){
 				$where_arr['owner'] = '?';
 				$params[] = $owner;
 			}
@@ -50,9 +47,7 @@
 			return $sites;
 		}
 
-
-		/*
-		 */
+		/**/
 		public static function get($rule)
 		{
 			$id = $rule->getInt('id');
@@ -68,10 +63,7 @@
 			return count($sites)>0?$sites[0]:null;
 		}
 
-
-		/*
-		 * count sites
-		 */
+		/**/
 		public static function getCount($rule)
 		{
 			$owner = $rule->get('owner');
@@ -79,7 +71,7 @@
 			$where_arr = array('level' => '?');
 			$opts_arr = array('level' => '!=');
 			$params = array('0');
-			if($owner){
+			if($owner!==null){
 				$where_arr['owner'] = '?';
 				$params[] = $owner;
 			}
@@ -91,9 +83,7 @@
 			return intval($res[0]['count']);
 		}
 
-
-		/*
-		 */
+		/**/
 		public function update($site)
 		{
 			$id = $site->getInt('id');

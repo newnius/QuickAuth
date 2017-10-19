@@ -21,7 +21,7 @@ function register_events_site()
 		var method = $("#form-site-submit-type").val();
 		$("#form-site-submit").attr("disabled","disabled");
 		var ajax = $.ajax({
-			url: "ajax.php?action=" + method,
+			url: "/service?action=" + method,
 			type: 'POST', 
 			data: {
 				id: id,
@@ -49,11 +49,11 @@ function register_events_site()
 
 }
 
-function load_sites()
+function load_sites(who)
 {
 	$table = $("#table-site");
 	$table.bootstrapTable({
-		url: 'ajax.php?action=sites_get',
+		url: '/service?action=sites_get?who='+who,
 		responseHandler: siteResponseHandler,
     sidePagination: 'server',
 		cache: true,
