@@ -66,7 +66,7 @@
 						<div id="qid-1" class="panel panel-default">
 							<div class="panel-heading">What is QuickAuth</div> 
 							<div class="panel-body">
-								<p><a href="<?=BASE_URL?>">QuickAuth</a> is a open-source ser system which supports OAuth. By using QuickAuth, you can log in to some websites without sign up for another account, which most likely will be used only once. Frankly speaking, only my websites would use this platform.(hahah)</p>
+								<p><a href="<?=BASE_URL?>">QuickAuth</a> is a open-source user system which supports OAuth. By using QuickAuth, you can log in to some websites without sign up for another account, which most likely will be used only once. Frankly speaking, only my websites would use this platform.(hahah)</p>
 							</div>
 						</div>
 						<div id="qid-2" class="panel panel-default">
@@ -102,7 +102,7 @@
 						<div id="qid-7" class="panel panel-default">
 							<div class="panel-heading">How long will the auth be valid</div> 
 							<div class="panel-body">
-								<p>The access token is valid for 30 days, but it is good practice to refresh token timely in case user revokes.</p>
+								<p>The access token is valid for 30 days, but it is recommanded to refresh token timely in case user revokes.</p>
 							</div>
 						</div>
 						<div id="qid-8" class="panel panel-default">
@@ -114,7 +114,7 @@
 						<div id="qid-9" class="panel panel-default">
 							<div class="panel-heading">Why it says unable to deliver email to my email address</div> 
 							<div class="panel-body">
-								<p>Possible reasons<br/>1. Email address not exist.<br/>2. Your email address provider refused that email.<br/>3. Our email service provider is busy now, please try again later.<br/>4. In order to avoid abuse, maximum request exceeded from your request, please try another day.<br/>5. If neither of them can solve your problem, please contact us (At the buttom)</p>
+								<p>Possible reasons<br/>1. Email address not exist.<br/>2. Your email address provider refused that email.<br/>3. Our email service provider is busy now, please try again later.<br/>4. In order to avoid abuse, maximum request exceeded from your request, please try another day.<br/>5. If neither of them can solve your problem, please contact us.</p>
 							</div>
 						</div>
 						<div id="qid-999" class="panel panel-default">

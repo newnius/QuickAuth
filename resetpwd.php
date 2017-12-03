@@ -40,7 +40,7 @@
 								<div class="input-group-addon">
 									<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
 								</div>
-								<input type="password" class="form-control" id="form-resetpwd-password" placeholder="Password" required />
+								<input type="password" class="form-control" id="form-resetpwd-password" placeholder="New Password" required />
 							</div>
 						</div>
 						<div class="form-group">
@@ -49,7 +49,7 @@
 								<div class="input-group-addon">
 									<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
 								</div>
-								<input type="password" class="form-control" id="form-resetpwd-repeat" placeholder="Repeat password" required />
+								<input type="password" class="form-control" id="form-resetpwd-repeat" placeholder="Repeat new password" required />
 							</div>
 						</div>
 						<button id="form-resetpwd-submit" class="btn btn-lg btn-primary btn-block" type="submita">Reset</button>

@@ -53,7 +53,7 @@ function load_sites(who)
 {
 	$table = $("#table-site");
 	$table.bootstrapTable({
-		url: '/service?action=sites_get?who='+who,
+		url: '/service?action=sites_get&who='+who,
 		responseHandler: siteResponseHandler,
     sidePagination: 'server',
 		cache: true,

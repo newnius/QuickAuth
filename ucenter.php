@@ -149,7 +149,6 @@
 								<div class="panel-body">
 									Welcome back, <?=htmlspecialchars($username)?>.<br/>
 									Current IP: &nbsp; <?=cr_get_client_ip()?>.<br/>
-									Now: &nbsp; <?=date('H:i:s',time())?>
 								</div>
 							</div>
 							<div class="panel panel-default">
@@ -393,7 +392,6 @@
 		<script src="js/site.js"></script>
 		<script src="js/ucenter.js"></script>
 
-		<script src="//cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table-locale-all.min.js"></script>
 		<script src="//cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
 		<script src="//cdn.bootcss.com/bootstrap-table/1.11.1/extensions/mobile/bootstrap-table-mobile.min.js"></script>
 		<script src="//cdn.bootcss.com/bootstrap-table/1.11.1/extensions/export/bootstrap-table-export.min.js"></script>

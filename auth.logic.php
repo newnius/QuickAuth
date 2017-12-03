@@ -407,3 +407,10 @@
 		$res['sites'] = SiteManager::gets($rule);
 		return $res;
 	}
+
+	/**/
+	function site_remove($site)
+	{
+		$res['errno'] = CRErrorCode::IN_DEVELOP;
+		return $res;
+	}
