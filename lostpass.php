@@ -51,6 +51,7 @@
 		</div>
 		<?php require_once('footer.php')?>
 
+		<script src="js/util.js"></script>
 		<script src="js/script.js"></script>
 		<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 		<script src="//cdn.bootcss.com/blueimp-md5/1.1.1/js/md5.min.js"></script>

@@ -9,6 +9,7 @@
 
 	require_once('config.inc.php');
 	require_once('init.inc.php');
+	require_once('global.inc.php');
 
 	if(Session::get('username')==null){
 		header('location:login?a=notloged');

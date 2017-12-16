@@ -29,7 +29,7 @@
 		$password = Random::randomString(12);
 		echo "Adding user: (root, $password) \n";
 		
-		$password = md5($password.'account');
+		$password = md5($password.'QuickAuth');
 		$password = md5($password.'newnius');
 		$password = md5($password.'com');
 

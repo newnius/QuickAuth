@@ -11,6 +11,40 @@
 	require_once('secure.logic.php');
 	require_once('auth.logic.php');
 
+	function csrf_check($action){
+		/* check referer, just in case I forget to add method to $post_methods */
+		$referer = $_SERVER['HTTP_REFERER'];
+		$url = parse_url($referer);
+		if(isset($url['host']) && $url['host']!=$_SERVER['HTTP_HOST'])
+		{
+			return false;
+		}
+
+		$post_methods = array(
+				'login',
+				'signout',
+				'user_register',
+				'user_update',
+				'update_pwd',
+				'reset_pwd_send_code',
+				'reset_pwd',
+				'verify_email_send_code',
+				'verify_email',
+				'auth_grant',
+				'auth_revoke',
+				'site_add',
+				'site_update',
+				'site_remove',
+				'tick_out',
+				'block',
+				'unblock'
+		);
+		$csrf_token = $_SERVER['HTTP_X_CSRF_TOKEN'];
+		if(in_array($action, $post_methods)){
+			return $csrf_token!==null && isset($_COOKIE['csrf_token']) && $csrf_token===$_COOKIE['csrf_token'];
+		}
+		return true;
+	}
 
 	function print_response($res)
 	{
@@ -29,12 +63,20 @@
 	{
 		$res['errno'] = CRErrorCode::TOO_FAST;
 		print_response($res);
-		exit;
+		exit(0);
 	}
 
 
 	$res['errno'] = CRErrorCode::UNKNOWN_REQUEST;
 	$action = cr_get_GET('action');
+
+	if(!csrf_check($action))
+	{
+		$res['errno'] = 99;
+		$res['msg'] = 'invalid csrf_token';
+		print_response($res);
+		exit(0);
+	}
 
 	switch($action){
 		/* account */
