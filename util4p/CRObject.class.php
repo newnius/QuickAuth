@@ -35,8 +35,6 @@
 			return $default;
 		}
 
-		/*
-		 */
 		public function getBool($key, $default=false)
 		{
 			if(isset($this->map[$key]) && !is_null($this->map[$key]))
@@ -66,4 +64,4 @@
 			return $this;
 		}
 
-  }
+	}

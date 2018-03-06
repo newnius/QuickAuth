@@ -87,11 +87,11 @@
 			}else if(!is_null($time_begin)){
 				$where_arr['time'] = '?';
 				$opt_arr['time'] = '>=';
-				$params[] = $time_begin;	
+				$params[] = $time_begin;
 			}else if(!is_null($time_end)){
 				$where_arr['time'] = '?';
 				$opt_arr['time'] = '<=';
-				$params[] = $time_end;	
+				$params[] = $time_end;
 			}
 
 			switch($order){

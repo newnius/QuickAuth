@@ -16,7 +16,9 @@
 		public static function setMap($map)
 		{
 			if(is_array($map))
+			{
 				self::$rules_array = $map;
+			}
 		}
 
 		/*
@@ -31,4 +33,4 @@
 			return false;
 		}
 
-  }
+	}

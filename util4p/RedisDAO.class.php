@@ -1,12 +1,12 @@
 <?php
-	
+
 	require_once('CRObject.class.php');
-	if(!class_exists('Predis\Client')){
+	if(!class_exists('Predis\Client'))
+	{
 		header('HTTP/1.1 500 Internal Server Error');
 		var_dump('predis (github.com/nrk/predis.git) required');
 		exit;
 	}
-
 
 	class RedisDAO
 	{
@@ -25,7 +25,7 @@
 
 		public static function instance()
 		{
-			try{
+			try {
 				$redis = new Predis\Client(
 					array(
 						'scheme' => RedisDAO::$scheme,

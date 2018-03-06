@@ -10,7 +10,6 @@
 		private static $bind_ip = false; // bind session with ip, when client ip changes, previous session will be unavailable
 		private static $sid = '';
 		private static $guid_key = '_session_id';
-		private static $allow_wild = false; // allow wild sessions
 		private static $cache = array();
 
 		/* configuration && initialization */
@@ -19,7 +18,6 @@
 			self::$time_out = $config->get('time_out', self::$time_out);
 			self::$bind_ip = $config->getBool('bind_ip', self::$bind_ip);
 			self::$guid_key = $config->get('guid_key', self::$guid_key);
-			self::$allow_wild = $config->getBool('allow_wild', self::$allow_wild);
 			/* assign id from new sessions */
 			if(!isset($_COOKIE[self::$guid_key]))
 			{
@@ -27,7 +25,7 @@
 				if($redis===null){
 					return false;
 				}
-				do { // generate a unque session id
+				do { // generate an unique session id
 					self::$sid = Random::randomString(64);
 				} while ($redis->exists('session:'.self::$sid)===1);
 				$redis->disconnect();
@@ -61,7 +59,6 @@
 			$redis_key = 'session:'.self::$sid;
 			$key = 'session-group:'.$group;
 			$redis->sadd($key, $redis_key);
-			$redis->hset($redis_key, '_group', $group);
 			$redis->disconnect();
 			return true;
 		}
@@ -76,7 +73,6 @@
 			$key = 'session-group:'.$group;
 			$redis_key = 'session:'.self::$sid;
 			$redis->srem($key, $redis_key);
-			$redis->hdel($redis_key, '_group');
 			$redis->disconnect();
 			return true;
 		}
@@ -114,15 +110,6 @@
 					return $default;
 				}
 			}
-			if(!self::$allow_wild){
-				if(!isset($list['_group']))
-					$list['_group'] = '_NOT_EXIST_'.time();
-				$group_key = 'session-group:'.$list['_group'];
-				if($redis->sismember($group_key, $redis_key)!==1){
-					self::expire();
-					return $default;
-				}
-			}
 			self::$cache = $list;
 			if($redis->ttl($redis_key) < self::$time_out){
 				$redis->expire($redis_key, self::$time_out);
@@ -133,7 +120,6 @@
 			}
 			return $default;
 		}
-
 
 		/* expire current session */
 		public static function expire()
