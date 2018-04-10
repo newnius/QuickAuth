@@ -107,8 +107,7 @@ window.blockedOperateEvents =
 				ip: row.id
 			}
 		});
-		ajax.done(function(json){
-			var res = JSON.parse(json);
+		ajax.done(function(res){
 			if(res["errno"] == 0){
 				$('#modal-block').modal('show');
 				$('#form-block-ip').val(row.id);

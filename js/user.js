@@ -9,7 +9,7 @@ function register_events_user()
 	$("#btn-verify-send").click(function(e){
 		e.preventDefault();
 		$("#btn-verify-send").attr("disabled","disabled");
-		$('#btn-verify-send').text("Sent");
+		$('#btn-verify-send').text("Sending...");
 		var ajax = $.ajax({
 			url: "/service?action=verify_email_send_code",
 			type: 'POST',
@@ -17,9 +17,11 @@ function register_events_user()
 		});
 		ajax.done(function(res){
 			if(res["errno"] != 0){
-			}else{
+				$('#modal-verify').modal('hide');
 				$('#modal-msg').modal("show");
 				$('#modal-msg-content').text(res["msg"]);
+			}else{
+				$('#btn-verify-send').text("Sent");
 			}
 		});
 	});

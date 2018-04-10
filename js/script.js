@@ -64,11 +64,12 @@ if(window.location.pathname.indexOf("auth") != -1){
 		
 		ajax.done(function(res){
 			if(res["errno"] == 0){
-				if(window.location.href.indexOf("redirect_uri") != -1){
-					window.location.pathname = "/login";
-				}else{
-					$('#modal-msg-content').text("Verify email");
-				}
+				window.location.pathname = "/login";
+				//if(window.location.href.indexOf("redirect_uri") != -1){
+				//window.location.pathname = "/login";
+				//}else{
+				//$('#modal-msg-content').text("Verify email");
+				//}
 			}else{
 				$('#modal-msg-content').text(res["msg"]);
 			}

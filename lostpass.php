@@ -1,3 +1,6 @@
+<?php
+	require_once('global.inc.php');
+?>
 <!DOCTYPE html>
 <html lang="en-US">
 	<head>

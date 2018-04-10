@@ -1,9 +1,5 @@
 <?php
-	require_once('util4p/util.php');
-	require_once('predis/autoload.php');
-	require_once('util4p/ReSession.class.php');
-	require_once('config.inc.php');
-	require_once('init.inc.php');
+	require_once('global.inc.php');
 ?>
 <!DOCTYPE html>
 <html lang="en-US">

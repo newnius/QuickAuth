@@ -1,15 +1,7 @@
 <?php
-	require_once('predis/autoload.php');
-	require_once('util4p/util.php');
-	require_once('util4p/ReSession.class.php');
-	require_once('util4p/AccessController.class.php');
-
+	require_once('global.inc.php');
 	require_once('user.logic.php');
 	require_once('UserManager.class.php');
-
-	require_once('config.inc.php');
-	require_once('init.inc.php');
-	require_once('global.inc.php');
 
 	if(Session::get('username')==null){
 		header('location:login?a=notloged');
@@ -64,7 +56,7 @@
 		array('profile', 'Profile'),
 		array('changepwd', 'Password'),
 		array('logs', 'Activities'),
-		array('auth_list', 'Apps'),
+		array('auth_list', 'Auths'),
 		array('user_sessions', 'Sessions'),
 		array('admin', 'Admin'),
 		array('signout', 'Logout')

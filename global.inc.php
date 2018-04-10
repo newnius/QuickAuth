@@ -1,5 +1,12 @@
 <?php
+	require_once('predis/autoload.php');
+	require_once('util4p/util.php');
 	require_once('util4p/Random.class.php');
+	require_once('util4p/ReSession.class.php');
+	require_once('util4p/CRErrorCode.class.php');
+	require_once('util4p/AccessController.class.php');
+	require_once('config.inc.php');
+	require_once('init.inc.php');
 
 	/* set csrf token */
 	if(!isset($_COOKIE['csrf_token'])){

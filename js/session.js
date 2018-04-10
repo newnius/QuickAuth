@@ -161,8 +161,7 @@ window.sessionsOperateEvents =
 				_index: row._index
 			}
 		});
-		ajax.done(function(json){
-			var res = JSON.parse(json);
+		ajax.done(function(res){
 			if(res["errno"] == 0){
 				$('#table-session').bootstrapTable("refresh");
 			}else{
