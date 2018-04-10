@@ -1,5 +1,5 @@
 # QuickAuth
-Account system which supports OAuth & SSO. Demo [QuickAuth](https://quickauth.newnius.com)
+Account system which supports OAuth & SSO.
 
 ## Requirements
   - Redis
@@ -14,7 +14,7 @@ Account system which supports OAuth & SSO. Demo [QuickAuth](https://quickauth.ne
   - Run `install.php` & __Remove `install.php`__
 
 ## Features
-  - OAuth (& SSO, TBD)
+  - OAuth
   - Muiltiple Login
   - Block IP
   - Rate Limit
