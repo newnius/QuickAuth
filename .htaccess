@@ -11,4 +11,4 @@ RewriteRule ^ucenter$ /ucenter.php
 RewriteRule ^verify$ /verify.php
 RewriteRule ^help$ /help.php
 
-#ErrorDocument 404 404.html
+ErrorDocument 404 /404.html
