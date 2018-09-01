@@ -152,7 +152,7 @@ function register_events_user() {
 }
 
 function load_users() {
-	$table = $("#table-user");
+    var $table = $("#table-user");
 	$table.bootstrapTable({
 		url: '/service?action=users_get',
 		responseHandler: userResponseHandler,
@@ -161,7 +161,7 @@ function load_users() {
 		striped: true,
 		pagination: true,
 		pageSize: 25,
-		pageList: [25, 50, 100, 200],
+		pageList: [10, 25, 50, 100, 200],
 		search: true,
 		showColumns: true,
 		showRefresh: true,
@@ -169,7 +169,7 @@ function load_users() {
 		showPaginationSwitch: true,
 		minimumCountColumns: 2,
 		clickToSelect: false,
-		sortName: 'nobody',
+		sortName: 'username',
 		sortOrder: 'desc',
 		smartDisplay: true,
 		mobileResponsive: true,

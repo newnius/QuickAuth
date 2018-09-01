@@ -10,7 +10,7 @@ class UserManager
 {
 
 	/**/
-	public static function add($user)
+	public static function add(CRObject $user)
 	{
 		$username = $user->get('username');
 		$email = $user->get('email');
@@ -35,7 +35,7 @@ class UserManager
 	}
 
 	/**/
-	public static function update($user)
+	public static function update(CRObject $user)
 	{
 		$username = $user->get('username');
 		$email = $user->get('email');
@@ -88,7 +88,7 @@ class UserManager
 	}
 
 	/**/
-	public static function gets($rule)
+	public static function gets(CRObject $rule)
 	{
 		$offset = $rule->getInt('offset', 0);
 		$limit = $rule->getInt('limit', -1);
@@ -105,7 +105,7 @@ class UserManager
 	}
 
 	/**/
-	public static function getCount($rule)
+	public static function getCount(CRObject $rule)
 	{
 		$selected_rows = array('COUNT(1) AS `count`');
 		$where_arr = array();

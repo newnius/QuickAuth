@@ -14,7 +14,7 @@ class Session
 	private static $cache = array();
 
 	/* configuration && initialization */
-	public static function configure($config)
+	public static function configure(CRObject $config)
 	{
 		self::$time_out = $config->get('time_out', self::$time_out);
 		self::$bind_ip = $config->getBool('bind_ip', self::$bind_ip);
@@ -58,7 +58,7 @@ class Session
 		}
 		$redis_key = 'session:' . self::$sid;
 		$key = 'session-group:' . $group;
-		$redis->sadd($key, $redis_key);
+		$redis->sadd($key, array($redis_key));
 		$redis->disconnect();
 		return true;
 	}
@@ -129,7 +129,7 @@ class Session
 			return false;
 		}
 		$redis_key = 'session:' . self::$sid;
-		$redis->del($redis_key);
+		$redis->del(array($redis_key));
 		$redis->disconnect();
 		setcookie(self::$guid_key, self::$sid, time() - 3600);
 		return true;
@@ -155,7 +155,7 @@ class Session
 	}
 
 	/* Low Performance, Not recommended */
-	public static function listGroup($rule)
+	public static function listGroup(CRObject $rule)
 	{
 		$redis = RedisDAO::instance();
 		if ($redis === null) {
@@ -181,7 +181,7 @@ class Session
 	}
 
 	/* Low Performance, Not recommended */
-	public static function listSession($rule)
+	public static function listSession(CRObject $rule)
 	{
 		$redis = RedisDAO::instance();
 		if ($redis === null) {

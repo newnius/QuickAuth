@@ -4,7 +4,7 @@
  * Replace long SQL string with several functions
  * Fixed SQL string is hard to migrate to another DB whose syntax may differ.
  * Using a high level abstract interface makes code clean and easy to migrate.
- * Is is strongly recommended to use prepared statment in order to avoid SQL-injection
+ * Is is strongly recommended to use prepared statement in order to avoid SQL-injection
  */
 
 class SQLBuilder
@@ -12,7 +12,7 @@ class SQLBuilder
 	private $sql = '';
 
 	/**/
-	public function insert($table, $key_values)
+	public function insert($table, array $key_values)
 	{
 		$this->sql = "INSERT INTO `$table`";
 		$keys = array_keys($key_values);
@@ -39,7 +39,7 @@ class SQLBuilder
 	}
 
 	/**/
-	public function select($table, $selected_rows = array())
+	public function select($table, array $selected_rows = array())
 	{
 		$this->sql = 'SELECT ';
 		foreach ($selected_rows as $row) {
@@ -58,7 +58,7 @@ class SQLBuilder
 	}
 
 	/**/
-	public function update($table, $key_values)
+	public function update($table, array $key_values)
 	{
 		if ($key_values === null || count($key_values) === 0) {
 			return;
@@ -115,7 +115,7 @@ class SQLBuilder
 	}
 
 	/**/
-	public function group($by_arr)
+	public function group(array $by_arr)
 	{
 		if ($by_arr === null || count($by_arr) === 0) {
 			return;
@@ -128,7 +128,7 @@ class SQLBuilder
 	}
 
 	/**/
-	public function order($by_arr)
+	public function order(array $by_arr)
 	{
 		if ($by_arr === null || count($by_arr) === 0) {
 			return;

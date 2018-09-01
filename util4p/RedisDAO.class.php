@@ -14,7 +14,7 @@ class RedisDAO
 	private static $port = 6379;
 	private static $show_error = false;
 
-	public static function configure($config)
+	public static function configure(CRObject $config)
 	{
 		self::$scheme = $config->get('scheme', self::$scheme);
 		self::$host = $config->get('host', self::$host);

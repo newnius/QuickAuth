@@ -23,6 +23,7 @@
 		$config->set('db', DB_NAME);
 		$config->set('user', DB_USER);
 		$config->set('password', DB_PASSWORD);
+        $config->set('show_error', DB_SHOW_ERROR);
 		MysqlPDO::configure($config);
 	}
 

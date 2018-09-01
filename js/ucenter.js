@@ -47,13 +47,14 @@ $(function () {
 });
 
 function load_logs(who) {
-	$table = $("#table-log");
+    var $table = $("#table-log");
 	$table.bootstrapTable({
 		url: '/service?action=get_logs&who=' + who,
-		responseHandler: signinLogResponseHandler,
+		responseHandler: logResponseHandler,
+        sidePagination: 'server',
 		cache: true,
 		striped: true,
-		pagination: false,
+		pagination: true,
 		pageSize: 25,
 		pageList: [10, 25, 50, 100, 200],
 		search: false,
@@ -63,7 +64,7 @@ function load_logs(who) {
 		showPaginationSwitch: false,
 		minimumCountColumns: 2,
 		clickToSelect: false,
-		sortName: 'default',
+		sortName: 'time',
 		sortOrder: 'desc',
 		smartDisplay: true,
 		mobileResponsive: true,
@@ -92,7 +93,7 @@ function load_logs(who) {
 			title: 'IP',
 			align: 'center',
 			valign: 'middle',
-			sortable: true,
+			sortable: false,
 			formatter: long2ip
 		}, {
 			field: 'content',
@@ -104,10 +105,13 @@ function load_logs(who) {
 	});
 }
 
-function signinLogResponseHandler(res) {
-	if (res['errno'] === 0) {
-		return res['logs'];
-	}
+function logResponseHandler(res) {
+    if (res['errno'] === 0) {
+        var tmp = {};
+        tmp["total"] = res["count"];
+        tmp["rows"] = res["logs"];
+        return tmp;
+    }
 	alert(res['msg']);
 	return [];
 }

@@ -2,7 +2,7 @@
 
 require_once('predis/autoload.php');
 require_once('util4p/util.php');
-require_once('util4p/CRErrorCode.class.php');
+require_once('Code.class.php');
 require_once('util4p/ReSession.class.php');
 require_once('util4p/RateLimiter.class.php');
 
@@ -40,7 +40,10 @@ function csrf_check($action)
 		'block',
 		'unblock'
 	);
-	$csrf_token = $_SERVER['HTTP_X_CSRF_TOKEN'];
+	$csrf_token = null;
+	if(isset($_SERVER['HTTP_X_CSRF_TOKEN'])) {
+		$csrf_token = $_SERVER['HTTP_X_CSRF_TOKEN'];
+	}
 	if (in_array($action, $post_methods)) {
 		return $csrf_token !== null && isset($_COOKIE['csrf_token']) && $csrf_token === $_COOKIE['csrf_token'];
 	}
@@ -50,7 +53,7 @@ function csrf_check($action)
 function print_response($res)
 {
 	if (!isset($res['msg']))
-		$res['msg'] = CRErrorCode::getErrorMsg($res['errno']);
+		$res['msg'] = Code::getErrorMsg($res['errno']);
 	$json = json_encode($res);
 	//if(isset($_GET['callback']))
 	//$json = $_GET['callback'].'('.$json.')';
@@ -61,13 +64,13 @@ function print_response($res)
 }
 
 if (ENABLE_RATE_LIMIT && RateLimiter::getFreezeTime() > 0) {
-	$res['errno'] = CRErrorCode::TOO_FAST;
+	$res['errno'] = Code::TOO_FAST;
 	print_response($res);
 	exit(0);
 }
 
 
-$res['errno'] = CRErrorCode::UNKNOWN_REQUEST;
+$res['errno'] = Code::UNKNOWN_REQUEST;
 $action = cr_get_GET('action');
 
 if (!csrf_check($action)) {

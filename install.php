@@ -1,7 +1,7 @@
 <?php
 	require_once('util4p/util.php');
 	require_once('util4p/CRObject.class.php');
-	require_once('util4p/CRErrorCode.class.php');
+	require_once('Code.class.php');
 	require_once('util4p/MysqlPDO.class.php');
 	require_once('util4p/SQLBuilder.class.php');
 	require_once('util4p/Random.class.php');

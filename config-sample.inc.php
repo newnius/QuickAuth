@@ -7,6 +7,7 @@ define('DB_PORT', 3306);
 define('DB_NAME', 'quickauth');
 define('DB_USER', 'db_user');
 define('DB_PASSWORD', 'password');
+define('DB_SHOW_ERROR', false);
 
 /* Redis */
 /* Make sure that your Redis only listens to Intranet */

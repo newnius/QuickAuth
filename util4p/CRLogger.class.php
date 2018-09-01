@@ -13,15 +13,13 @@ class CRLogger
 	const LEVEL_ERROR = 4;
 
 	private static $db_table = 'cr_log';
-	private static $log_file = 'cr_log.log';
 
-	public static function configure($config)
+	public static function configure(CRObject $config)
 	{
 		self::$db_table = $config->get('db_table', self::$db_table);
-		self::$log_file = $config->get('log_file', self::$log_file);
 	}
 
-	public static function log2db($log)
+	public static function log(CRObject $log)
 	{
 		$scope = $log->get('scope', '');
 		$tag = $log->get('tag');
@@ -40,12 +38,7 @@ class CRLogger
 		return (new MysqlPDO())->execute($sql, $params) === 1;
 	}
 
-	public static function log2file()
-	{
-		return true;
-	}
-
-	public static function search($filter)
+	public static function search(CRObject $filter)
 	{
 		$scope = $filter->get('scope');
 		$tag = $filter->get('tag');
@@ -113,9 +106,60 @@ class CRLogger
 		return $logs;
 	}
 
-	public static function getCount($filter)
+	public static function getCount(CRObject $filter)
 	{
-		return -1;
+		$scope = $filter->get('scope');
+		$tag = $filter->get('tag');
+		$level_min = $filter->getInt('level_min');
+		$ip = $filter->get('ip');
+		$time_begin = $filter->getInt('time_begin');
+		$time_end = $filter->getInt('time_end');
+
+		$selected_rows = array('id');
+		$where_arr = array();
+		$opt_arr = array();
+		$params = array();
+
+		if (!empty($scope)) {
+			$where_arr['scope'] = '?';
+			$params[] = $scope;
+		}
+		if (!empty($tag)) {
+			$where_arr['tag'] = '?';
+			$params[] = $tag;
+		}
+		if (!is_null($level_min)) {
+			$where_arr['level'] = '?';
+			$opt_arr['level'] = '>=';
+			$params[] = $level_min;
+		}
+		if (!empty($ip)) {
+			$where_arr['ip'] = '?';
+			$params[] = ip2long($ip);
+		}
+		if (!is_null($time_begin) && !is_null($time_end)) {
+			$where_arr['time'] = '? AND ?';
+			$opt_arr['time'] = 'BETWEEN';
+			$params[] = $time_begin;
+			$params[] = $time_end;
+		} else if (!is_null($time_begin)) {
+			$where_arr['time'] = '?';
+			$opt_arr['time'] = '>=';
+			$params[] = $time_begin;
+		} else if (!is_null($time_end)) {
+			$where_arr['time'] = '?';
+			$opt_arr['time'] = '<=';
+			$params[] = $time_end;
+		}
+
+		$builder = new SQLBuilder();
+		$builder->select(self::$db_table, $selected_rows);
+		$builder->where($where_arr, $opt_arr);
+		$builder->limit(0, 1000);
+		$sql = $builder->build();
+		$sql = "SELECT COUNT(1) AS `count` FROM ( $sql ) as tmp";
+		$res = (new MysqlPDO())->executeQuery($sql, $params);
+		return intval($res[0]['count']);
 	}
 
 }

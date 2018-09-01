@@ -2,7 +2,7 @@
 
 require_once('predis/autoload.php');
 require_once('util4p/CRObject.class.php');
-require_once('util4p/CRErrorCode.class.php');
+require_once('Code.class.php');
 require_once('util4p/Validator.class.php');
 require_once('util4p/ReSession.class.php');
 require_once('util4p/CRLogger.class.php');
@@ -17,50 +17,50 @@ require_once('init.inc.php');
 /* Manage user sessions, including list current sessions, tickout a session etc. */
 
 /**/
-function users_online($rule)
+function users_online(CRObject $rule)
 {
 	if (!AccessController::hasAccess(Session::get('role', 'visitor'), 'get_online_users')) {
-		$res['errno'] = CRErrorCode::NO_PRIVILEGE;
+		$res['errno'] = Code::NO_PRIVILEGE;
 		return $res;
 	}
-	$res['errno'] = CRErrorCode::SUCCESS;
+	$res['errno'] = Code::SUCCESS;
 	$res['users'] = Session::listGroup($rule);
 	return $res;
 }
 
 /**/
-function user_sessions($rule)
+function user_sessions(CRObject $rule)
 {
 	if ($rule->get('group') === null || $rule->get('group') !== Session::get('username')) {
 		if (!AccessController::hasAccess(Session::get('role', 'visitor'), 'get_online_users')) {
-			$res['errno'] = CRErrorCode::NO_PRIVILEGE;
+			$res['errno'] = Code::NO_PRIVILEGE;
 			return $res;
 		}
 	}
-	$res['errno'] = CRErrorCode::SUCCESS;
+	$res['errno'] = Code::SUCCESS;
 	$res['sessions'] = Session::listSession($rule);
 	return $res;
 }
 
 /**/
-function tick_out($rule)
+function tick_out(CRObject $rule)
 {
 	if ($rule->get('username') === null || Session::get('username') !== $rule->get('username')) {
 		if (!AccessController::hasAccess(Session::get('role', 'visitor'), 'tick_out_user')) {
-			$res['errno'] = CRErrorCode::NO_PRIVILEGE;
+			$res['errno'] = Code::NO_PRIVILEGE;
 			return $res;
 		}
 		$user_arr = UserManager::getByUsername($rule->get('username'));
 		if ($user_arr === null) {
-			$res['errno'] = CRErrorCode::USER_NOT_EXIST;
+			$res['errno'] = Code::USER_NOT_EXIST;
 			return $res;
 		}
 		if (!AccessController::hasAccess(Session::get('role', 'visitor'), "tick_out_{$user_arr['role']}")) {
-			$res['errno'] = CRErrorCode::NO_PRIVILEGE;
+			$res['errno'] = Code::NO_PRIVILEGE;
 			return $res;
 		}
 	}
-	$res['errno'] = CRErrorCode::SUCCESS;
+	$res['errno'] = Code::SUCCESS;
 	Session::expireByGroup($rule->get('username'), $rule->getInt('_index'));
 
 	$log = new CRObject();
@@ -68,6 +68,6 @@ function tick_out($rule)
 	$log->set('tag', 'tickout');
 	$content = array('username' => $rule->get('username'), 'response' => $res['errno']);
 	$log->set('content', json_encode($content));
-	CRLogger::log2db($log);
+	CRLogger::log($log);
 	return $res;
 }

@@ -8,7 +8,7 @@ class SiteManager
 {
 
 	/**/
-	public static function add($site)
+	public static function add(CRObject $site)
 	{
 		$domain = $site->get('domain');
 		$owner = $site->get('owner');
@@ -26,7 +26,7 @@ class SiteManager
 	}
 
 	/**/
-	public static function gets($rule)
+	public static function gets(CRObject $rule)
 	{
 		$owner = $rule->get('owner');
 		$offset = $rule->getInt('offset', 0);
@@ -49,7 +49,7 @@ class SiteManager
 	}
 
 	/**/
-	public static function get($rule)
+	public static function get(CRObject $rule)
 	{
 		$id = $rule->getInt('id');
 		$selected_rows = array();
@@ -65,7 +65,7 @@ class SiteManager
 	}
 
 	/**/
-	public static function getCount($rule)
+	public static function getCount(CRObject $rule)
 	{
 		$owner = $rule->get('owner');
 		$selected_rows = array('COUNT(1) AS `count`');
@@ -85,7 +85,7 @@ class SiteManager
 	}
 
 	/**/
-	public function update($site)
+	public static function update(CRObject $site)
 	{
 		$id = $site->getInt('id');
 		$domain = $site->get('domain');

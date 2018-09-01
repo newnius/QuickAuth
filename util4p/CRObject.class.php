@@ -7,7 +7,7 @@ class CRObject
 	/*
 	 * @param $map: key-value array
 	 */
-	public function __construct($map = array())
+	public function __construct(array $map = array())
 	{
 		$this->map = $map;
 	}
@@ -52,7 +52,7 @@ class CRObject
 	 * (new CRObject(['k1' => 'v1'])).union(new CRObject(['k1' => 'v1.1', 'k2' => 'v2']))
 	 *   = new CRObject(['k1' => 'v1', 'k2' => 'v2'])
 	 */
-	public function union($obj)
+	public function union(CRObject $obj)
 	{
 		$keys = array_keys($obj->toArray());
 		foreach ($keys as $key) {

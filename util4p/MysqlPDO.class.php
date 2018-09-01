@@ -14,7 +14,7 @@ class MysqlPDO
 	private $dbh;
 
 	/**/
-	public static function configure($config)
+	public static function configure(CRObject $config)
 	{
 		self::$host = $config->get('host', self::$host);
 		self::$port = $config->getInt('port', self::$port);

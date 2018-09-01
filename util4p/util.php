@@ -10,7 +10,8 @@
 function cr_get_client_ip()
 {
 	$ip = $_SERVER['REMOTE_ADDR'];
-	if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {// REMOTE_ADDR may not be real ip in case server is behind proxy (nginx, docker etc.)
+	// REMOTE_ADDR may not be real ip in case server is behind proxy (nginx, docker etc.)
+	if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
 		if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
 			$ip = $_SERVER['HTTP_CLIENT_IP'];
 		} else if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {

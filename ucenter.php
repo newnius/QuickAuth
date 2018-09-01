@@ -318,7 +318,7 @@
 										<div id="toolbar"></div>
 										<table id="table-log" data-toolbar="#toolbar" class="table table-striped">
 										</table> 
-										<span class="text-info">* Only activities of last 7 days are shown</span>
+										<span class="text-info">* At mot 1000 records are shown</span>
 									</div>
 								</div>
 							</div>
@@ -348,7 +348,7 @@
 										<div id="toolbar"></div>
 										<table id="table-log" data-toolbar="#toolbar" class="table table-striped">
 										</table> 
-										<span class="text-info">* Only activities of last 7 days are shown</span>
+										<span class="text-info">* At mot 1000 records are shown</span>
 									</div>
 								</div>
 							</div>

@@ -8,7 +8,7 @@ class Session
 	private static $bind_ip = false; // bind session with ip, when client ip changes, previous session will be unavailable
 
 	/**/
-	public static function configure($config)
+	public static function configure(CRObject $config)
 	{
 		self::$time_out = $config->get('time_out', self::$time_out);
 		self::$bind_ip = $config->getBool('bind_ip', self::$bind_ip);

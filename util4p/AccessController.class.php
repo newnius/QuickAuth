@@ -13,7 +13,7 @@ class AccessController
 	 *	'user.block' => array('Admin')
 	 * );
 	 */
-	public static function setMap($map)
+	public static function setMap(array $map)
 	{
 		if (is_array($map)) {
 			self::$rules_array = $map;

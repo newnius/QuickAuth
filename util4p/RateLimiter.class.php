@@ -30,7 +30,7 @@ class RateLimiter
 	/*
 	 * @param $key customize your own key, default is ip2long(ip)
 	 */
-	public static function configure($config)
+	public static function configure(CRObject $config)
 	{
 		self::$keyPrefix = $config->get('key_prefix', self::$keyPrefix);
 		self::$id = $config->get('id', cr_get_client_ip());
@@ -141,9 +141,9 @@ LUA;
 		foreach (self::$rules as $rule) {
 			$interval = $rule['interval'];
 			$key = self::$keyPrefix . ':degree:' . $id . '-' . $interval;
-			$redis->del($key);
+			$redis->del(array($key));
 		}
-		$redis->del(self::$keyPrefix . ':punishing:' . $id);
+		$redis->del(array(self::$keyPrefix . ':punishing:' . $id));
 		$redis->disconnect();
 		return true;
 	}

@@ -1,8 +1,8 @@
 # utilities for php
 
-## AccessController.class.php
+Require PHP version >= 5.1.0
 
-## CRErrorCode.class.php
+## AccessController.class.php
 
 ## CRLogger.class.php
 

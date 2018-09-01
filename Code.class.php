@@ -1,6 +1,6 @@
 <?php
 
-class CRErrorCode
+class Code
 {
 	/* common */
 	const SUCCESS = 0;
@@ -49,106 +49,106 @@ class CRErrorCode
 	public static function getErrorMsg($errno)
 	{
 		switch ($errno) {
-			case CRErrorCode::SUCCESS:
+			case Code::SUCCESS:
 				return 'Success';
 
-			case CRErrorCode::USERNAME_OCCUPIED:
+			case Code::USERNAME_OCCUPIED:
 				return 'Username exists !';
 
-			case CRErrorCode::EMAIL_OCCUPIED:
+			case Code::EMAIL_OCCUPIED:
 				return 'Email exists !';
 
-			case CRErrorCode::NO_PRIVILEGE:
+			case Code::NO_PRIVILEGE:
 				return 'You dont\' have permission to do this !';
 
-			case CRErrorCode::INVALID_USERNAME:
+			case Code::INVALID_USERNAME:
 				return 'Invalid username !';
 
-			case CRErrorCode::INVALID_EMAIL:
+			case Code::INVALID_EMAIL:
 				return 'Invalid email !';
 
-			case CRErrorCode::UNKNOWN_ERROR:
+			case Code::UNKNOWN_ERROR:
 				return 'Unknown error !';
 
-			case CRErrorCode::WRONG_PASSWORD:
+			case Code::WRONG_PASSWORD:
 				return 'Wrong password !';
 
-			case CRErrorCode::IN_DEVELOP:
+			case Code::IN_DEVELOP:
 				return 'In develop ^_^ !';
 
-			case CRErrorCode::UNABLE_TO_CONNECT_REDIS:
+			case Code::UNABLE_TO_CONNECT_REDIS:
 				return 'Unable to connect Redis !';
 
-			case CRErrorCode::UNABLE_TO_CONNECT_MYSQL:
+			case Code::UNABLE_TO_CONNECT_MYSQL:
 				return 'Unable to connect Mysql !';
 
-			case CRErrorCode::NOT_LOGED:
+			case Code::NOT_LOGED:
 				return 'You haven\'t loged !';
 
-			case CRErrorCode::USER_NOT_EXIST:
+			case Code::USER_NOT_EXIST:
 				return 'User not exist !';
 
-			case CRErrorCode::INVALID_REQUEST:
+			case Code::INVALID_REQUEST:
 				return 'Invalid request !';
 
-			case CRErrorCode::UNKNOWN_REQUEST:
+			case Code::UNKNOWN_REQUEST:
 				return 'Unknown request !';
 
-			case CRErrorCode::CAN_NOT_BE_EMPTY:
+			case Code::CAN_NOT_BE_EMPTY:
 				return 'Input is empty !';
 
-			case CRErrorCode::FAIL:
+			case Code::FAIL:
 				return 'Failed !';
 
-			case CRErrorCode::INCOMPLETE_CONTENT:
+			case Code::INCOMPLETE_CONTENT:
 				return 'Cannot be empty !';
 
-			case CRErrorCode::FILE_NOT_UPLOADED:
+			case Code::FILE_NOT_UPLOADED:
 				return 'Upload failed !';
 
-			case CRErrorCode::RECORD_NOT_EXIST:
+			case Code::RECORD_NOT_EXIST:
 				return 'Record not found !';
 
-			case CRErrorCode::USER_IS_BLOCKED:
+			case Code::USER_IS_BLOCKED:
 				return 'Account is blocked !';
 
-			case CRErrorCode::USER_IS_REMOVED:
+			case Code::USER_IS_REMOVED:
 				return 'Account is removed !';
 
-			case CRErrorCode::INVALID_PASSWORD:
+			case Code::INVALID_PASSWORD:
 				return 'Invalid password !';
 
-			case CRErrorCode::USERNAME_MISMATCH_EMAIL:
+			case Code::USERNAME_MISMATCH_EMAIL:
 				return 'Username or email not match !';
 
-			case CRErrorCode::CODE_EXPIRED:
+			case Code::CODE_EXPIRED:
 				return 'Code is wrong or expires !';
 
-			case CRErrorCode::EMAIL_ALREADY_VERIFIED:
+			case Code::EMAIL_ALREADY_VERIFIED:
 				return 'Email is already verified !';
 
-			case CRErrorCode::TOO_FAST:
+			case Code::TOO_FAST:
 				return 'System busy !';
 
-			case CRErrorCode::INVALID_COOKIE:
+			case Code::INVALID_COOKIE:
 				return 'Invalid Cookie !';
 
-			case CRErrorCode::TOKEN_EXPIRED:
+			case Code::TOKEN_EXPIRED:
 				return 'Token expired !';
 
-			case CRErrorCode::SITE_NOT_EXIST:
+			case Code::SITE_NOT_EXIST:
 				return 'Site not exist !';
 
-			case CRErrorCode::INVALID_URL:
+			case Code::INVALID_URL:
 				return 'Invalid url !';
 
-			case CRErrorCode::INVALID_PARAM:
+			case Code::INVALID_PARAM:
 				return 'Invalid param !';
 
-			case CRErrorCode::DOMAIN_MISMATCH:
+			case Code::DOMAIN_MISMATCH:
 				return 'redirect_uri not in allowed hosts !';
 
-			case CRErrorCode::EMAIL_IS_NOT_VERIFIED:
+			case Code::EMAIL_IS_NOT_VERIFIED:
 				return 'Verify your email first !';
 
 			default:

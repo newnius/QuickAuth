@@ -5,7 +5,7 @@ require_once('auth.logic.php');
 
 
 $action = cr_get_GET('action');
-$res['errno'] = CRErrorCode::UNKNOWN_REQUEST;
+$res['errno'] = Code::UNKNOWN_REQUEST;
 switch ($action) {
 	case 'get_token':
 		$rule = new CRObject();
@@ -37,7 +37,7 @@ switch ($action) {
 }
 
 if (!isset($res['msg']))
-	$res['msg'] = CRErrorCode::getErrorMsg($res['errno']);
+	$res['msg'] = Code::getErrorMsg($res['errno']);
 $json = json_encode($res);
 header('Content-type: application/json');
 echo $json;
