@@ -1,32 +1,31 @@
-function register_events_blocked()
-{
-	$('#btn-block-add').click(function(e){
+function register_events_blocked() {
+	$('#btn-block-add').click(function (e) {
 		e.preventDefault();
 		$('#modal-block').modal('show');
 		$("#form-block-ip").removeAttr("disabled");
 	});
 
-	$('#form-block-submit').click(function(e){
+	$('#form-block-submit').click(function (e) {
 		e.preventDefault();
 		$('#modal-block').modal('hide');
 		var ip = $("#form-block-ip").val();
 		var time = $("#form-block-time").val();
-		var type = !time||time>0?"block":"unblock";
+		var type = !time || time > 0 ? "block" : "unblock";
 		var ajax = $.ajax({
 			url: "/service?action=" + type,
-			type: 'POST', 
+			type: 'POST',
 			data: {
 				ip: ip,
 				time: time
 			}
 		});
-		ajax.done(function(msg){
+		ajax.done(function (msg) {
 			var res = JSON.parse(msg);
-			if(res["errno"]==0){
+			if (res["errno"] === 0) {
 				$('#table-block').bootstrapTable("refresh");
 				$('#form-block-ip').val('');
 				$('#form-block-time').val('');
-			}else{
+			} else {
 				$('#modal-msg').modal('show');
 				$("#modal-msg-content").text(res['msg']);
 			}
@@ -35,8 +34,7 @@ function register_events_blocked()
 
 }
 
-function load_list_blocked()
-{
+function load_list_blocked() {
 	$table = $("#table-block");
 	$table.bootstrapTable({
 		url: '/service?action=list_blocked',
@@ -78,9 +76,8 @@ function load_list_blocked()
 	});
 }
 
-function blockedResponseHandler(res)
-{
-	if(res['errno'] == 0){
+function blockedResponseHandler(res) {
+	if (res['errno'] === 0) {
 		return res["list"];
 	}
 	$('#modal-msg').modal('show');
@@ -88,8 +85,7 @@ function blockedResponseHandler(res)
 	return [];
 }
 
-function blockedOperateFormatter(value, row, index)
-{
+function blockedOperateFormatter(value, row, index) {
 	return [
 		'<button class="btn btn-default view" href="javascript:void(0)">',
 		'<i class="glyphicon glyphicon-eye-open"></i>&nbsp;View',
@@ -98,26 +94,26 @@ function blockedOperateFormatter(value, row, index)
 }
 
 window.blockedOperateEvents =
-{
-	'click .view': function (e, value, row, index) {
-		var ajax = $.ajax({
-			url: "/service?action=get_blocked_time",
-			type: 'POST',
-			data: {
-				ip: row.id
-			}
-		});
-		ajax.done(function(res){
-			if(res["errno"] == 0){
-				$('#modal-block').modal('show');
-				$('#form-block-ip').val(row.id);
-				$('#form-block-time').val(res['time']);
-				$('#form-block-ip').attr('disabled', 'disabled');
-			}else{
-				$('#modal-msg').modal('show');
-				$('#modal-msg-content').text(res['msg']);
-				$('#table-block').bootstrapTable("refresh");
-			}
-		});
-	}
-};
+	{
+		'click .view': function (e, value, row, index) {
+			var ajax = $.ajax({
+				url: "/service?action=get_blocked_time",
+				type: 'POST',
+				data: {
+					ip: row.id
+				}
+			});
+			ajax.done(function (res) {
+				if (res["errno"] === 0) {
+					$('#modal-block').modal('show');
+					$('#form-block-ip').val(row.id);
+					$('#form-block-time').val(res['time']);
+					$('#form-block-ip').attr('disabled', 'disabled');
+				} else {
+					$('#modal-msg').modal('show');
+					$('#modal-msg-content').text(res['msg']);
+					$('#table-block').bootstrapTable("refresh");
+				}
+			});
+		}
+	};

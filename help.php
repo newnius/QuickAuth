@@ -8,7 +8,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
 		<meta name="keywords" content="QuickAuth, free, quick, OAuth, User System"/>
-		<meta name="description" content="QuickAuth is a user system and an implement of OAuth. By using QuickAuth, you can log in to some websites without sign up for another account, which most likely will be used only once. Also ,it is totally free!" />
+		<meta name="description" content="QuickAuth is a user system and an implement of OAuth. By using QuickAuth, you can log in to some websites without creating new accounts, which will most likely be used only once. Also ,it is totally free!" />
 		<meta name="author" content="Newnius"/>
 		<link rel="icon" href="favicon.ico"/>
 		<title>Manual | QuickAuth</title>
@@ -62,7 +62,7 @@
 						<div id="qid-1" class="panel panel-default">
 							<div class="panel-heading">What is QuickAuth</div> 
 							<div class="panel-body">
-								<p><a href="<?=BASE_URL?>">QuickAuth</a> is a open-source user system which supports OAuth. By using QuickAuth, you can log in to some websites without sign up for another account, which most likely will be used only once. Frankly speaking, only my websites would use this platform.(hahah)</p>
+								<p><a href="<?=BASE_URL?>">QuickAuth</a> is an open-source user system which supports OAuth. By using QuickAuth, you can log in to some websites without sign up for another account, which most likely will be used only once. Frankly speaking, only my websites would use this platform.(hahah)</p>
 							</div>
 						</div>
 						<div id="qid-2" class="panel panel-default">
@@ -78,7 +78,7 @@
 							</div>
 						</div>
 						<div id="qid-4" class="panel panel-default">
- 							<div class="panel-heading">Why will I use QuickAuth</div>
+							<div class="panel-heading">Why will I use QuickAuth</div>
 							<div class="panel-body">
 								<p>You don't have to own a Google account, but when you access some Google products, you need one, right?</p>
 							</div>
@@ -90,7 +90,7 @@
 							</div>
 						</div>
 						<div id="qid-6" class="panel panel-default">
-							<div class="panel-heading">I am a developer, how to guaranteen the auth</div> 
+							<div class="panel-heading">I am a developer, how to guarantee the auth</div>
 							<div class="panel-body">
 								<p>The process of auth is:<br/>1. Client redirect user to QuickAuth, attaching your redirect uri<br/>2. User sign on to finish grant<br/>3. Redirect to uri requested, attaching auth code and state<br/>4. Client sending auth code and others values to QuickAuth in the backend<br/>5. QuickAuth response information in json for success, or error info in json for invalid auth key<br/>Note: It is a standard <abbr title="An open protocol to allow secure authorization">OAuth</abbr> progress.</p>
 							</div>
@@ -98,13 +98,13 @@
 						<div id="qid-7" class="panel panel-default">
 							<div class="panel-heading">How long will the auth be valid</div> 
 							<div class="panel-body">
-								<p>The access token is valid for 30 days, but it is recommanded to refresh token timely in case user revokes.</p>
+								<p>The access token is valid for 30 days, but it is recommended to refresh token timely in case user revokes.</p>
 							</div>
 						</div>
 						<div id="qid-8" class="panel panel-default">
 							<div class="panel-heading">What is the relationship between this and OAuth</div> 
 							<div class="panel-body">
-								<p>We try our best to make this a standard implemention of OAuth.</p>
+								<p>We try our best to make this a standard implementation of OAuth.</p>
 							</div>
 						</div>
 						<div id="qid-9" class="panel panel-default">
@@ -116,7 +116,7 @@
 						<div id="qid-999" class="panel panel-default">
 							<div class="panel-heading">More</div> 
 							<div class="panel-body">
-								<p>This document has not been completed. If you have any problem, please contact me at <a href="mailto:support@newnius.com?subject=From Quickauth">support@newnius.com</a></p>
+								<p>This document has not been completed. If you have any problem, please contact me at <a href="mailto:support@newnius.com?subject=From QuickAuth">support@newnius.com</a></p>
 							</div>
 						</div>
 

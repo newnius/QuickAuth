@@ -1,6 +1,6 @@
-$(function(){
+$(function () {
 	console.log(page_type);
-	switch(page_type){
+	switch (page_type) {
 		case "users":
 			load_users();
 			register_events_user();
@@ -20,9 +20,11 @@ $(function(){
 		case "user_sessions":
 			load_user_sessions();
 			register_events_session();
+			break;
 		case "blocked_list":
 			load_list_blocked();
 			register_events_blocked();
+			break;
 		case "logs":
 			load_logs('self');
 			break;
@@ -44,11 +46,10 @@ $(function(){
 	}
 });
 
-function load_logs(who)
-{
+function load_logs(who) {
 	$table = $("#table-log");
 	$table.bootstrapTable({
-		url: '/service?action=get_logs&who='+who,
+		url: '/service?action=get_logs&who=' + who,
 		responseHandler: signinLogResponseHandler,
 		cache: true,
 		striped: true,
@@ -103,25 +104,22 @@ function load_logs(who)
 	});
 }
 
-function signinLogResponseHandler(res)
-{
-	if(res['errno'] == 0){
+function signinLogResponseHandler(res) {
+	if (res['errno'] === 0) {
 		return res['logs'];
 	}
 	alert(res['msg']);
 	return [];
 }
 
-function timeFormatter(unixTimestamp)
-{
-	var d = new Date(unixTimestamp*1000);
-	d.setTime( d.getTime() - d.getTimezoneOffset()*60*1000 );
+function timeFormatter(unixTimestamp) {
+	var d = new Date(unixTimestamp * 1000);
+	d.setTime(d.getTime() - d.getTimezoneOffset() * 60 * 1000);
 	return formatDate(d, '%Y-%M-%d %H:%m');
 }
 
 
-function load_auth_list()
-{
+function load_auth_list() {
 	$table = $("#table-auth");
 	$table.bootstrapTable({
 		url: '/service?action=auth_list',
@@ -172,17 +170,15 @@ function load_auth_list()
 	});
 }
 
-function authListResponseHandler(res)
-{
-	if(res['errno'] == 0){
+function authListResponseHandler(res) {
+	if (res['errno'] === 0) {
 		return res['list'];
 	}
 	alert(res['msg']);
 	return [];
 }
 
-function authOperateFormatter(value, row, index)
-{
+function authOperateFormatter(value, row, index) {
 	return [
 		'<button class="btn btn-default revoke" href="javascript:void(0)">',
 		'<i class="glyphicon glyphicon-log-out"></i>&nbsp;Revoke',
@@ -191,23 +187,23 @@ function authOperateFormatter(value, row, index)
 }
 
 window.authOperateEvents =
-{
-	'click .revoke': function (e, value, row, index) {
-		var ajax = $.ajax({
-			url: "/service?action=auth_revoke",
-			type: 'POST',
-			data: {
-				app_id: row.app_id
-			}
-		});
-		ajax.done(function(res){
-			if(res["errno"] == 0){
-				$('#table-auth').bootstrapTable("refresh");
-			}else{
-				$('#modal-msg').modal('show');
-				$('#modal-msg-content').text(res["msg"]);
-			}
-		});
-	}
-};
+	{
+		'click .revoke': function (e, value, row, index) {
+			var ajax = $.ajax({
+				url: "/service?action=auth_revoke",
+				type: 'POST',
+				data: {
+					app_id: row.app_id
+				}
+			});
+			ajax.done(function (res) {
+				if (res["errno"] === 0) {
+					$('#table-auth').bootstrapTable("refresh");
+				} else {
+					$('#modal-msg').modal('show');
+					$('#modal-msg-content').text(res["msg"]);
+				}
+			});
+		}
+	};
 

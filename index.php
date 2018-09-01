@@ -8,7 +8,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
 		<meta name="keywords" content="QuickAuth, free, quick, OAuth, User System"/>
-		<meta name="description" content="QuickAuth is a user system and an implement of OAuth. By using QuickAuth, you can log in to some websites without sign up for another account, which most likely will be used only once. Also ,it is totally free!" />
+		<meta name="description" content="QuickAuth is a user system and an implement of OAuth. By using QuickAuth, you can log in to some websites without creating new account, which will most likely be used only once. Also ,it is totally free!" />
 		<meta name="author" content="Newnius"/>
 		<link rel="icon" href="favicon.ico"/>
 		<title>QuickAuth | A user system which supports OAuth</title>
@@ -22,7 +22,7 @@
 			<div class="container">
 				<div class="jumbotron">
 					<h2>What is QuickAuth</h2>
-					<p><a href="<?=BASE_URL?>/">QuickAuth</a> is an open-source user system which supports OAuth. By using QuickAuth, you can log in to some websites without sign up for another account, which most likely will be used only once. Frankly speaking, only my websites would use this system.(hahah)</p>
+					<p><a href="<?=BASE_URL?>/">QuickAuth</a> is an open-source user system which supports OAuth. By using QuickAuth, you can log in to some websites without creating new accounts, which will most likely be used only once. Frankly speaking, only my websites would use this system.(hahah)</p>
 					<p><a class="btn btn-primary btn-lg" href="<?=BASE_URL?>/register?getstarted">Get started</a></p>
 				</div>
 				<div class="jumbotron">
@@ -37,8 +37,8 @@
 						<p>&nbsp;&nbsp;In short,information such as username, email, verified or not, and some personal information(granted by the user) can be accessed.</p>
 					</div>
 					<div>
-						<h4><span class="glyphicon glyphicon-question-sign"></span>I am a site manager, how to garanteen the auth?</h4>
-						<p>&nbsp;&nbsp;This is an implemention of OAuth, and it is proved safe, look at <a href="<?=BASE_URL?>/help#qid-6">Doc</a> to learn more.</p>
+						<h4><span class="glyphicon glyphicon-question-sign"></span>I am a site manager, how to grantee the auth?</h4>
+						<p>&nbsp;&nbsp;This is an implementation of OAuth, and it is proved safe, look at <a href="<?=BASE_URL?>/help#qid-6">documents</a> to learn more.</p>
 					</div>
 				</div>
 			</div> <!-- /container -->

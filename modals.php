@@ -34,7 +34,7 @@
 						<tr>
 							<th>Role</th>
 							<td>
-								<select id="form-user-role" class="form-group form-control" required>
+                                <label for="form-user-role"></label><select id="form-user-role" class="form-group form-control" required>
 									<option value="removed">Removed</option>
 									<option value="blocked">Blocked</option>
 									<option value="normal">Normal</option>
@@ -99,7 +99,7 @@
 						<tr>
 							<th>Type</th>
 							<td>
-								<select id="form-site-level" class="form-group form-control" required>
+                                <label for="form-site-level"></label><select id="form-site-level" class="form-group form-control" required>
 									<option value="1" selected>Normal</option>
 									<option value="99">Partner</option>
 								</select>
@@ -108,14 +108,14 @@
 						<tr id="form-site-id-tr">
 							<th>APPID</th>
 							<td>
-								<label for="id" class="sr-only">App ID</label>
+								<label for="form-site-id" class="sr-only">App ID</label>
 								<input type="text" id="form-site-id" class="form-group form-control" required disabled/>
 							</td>
 						</tr>
 						<tr id="form-site-key-tr">
 							<th>KEY</th>
 							<td>
-								<label for="key" class="sr-only">Key</label>
+								<label for="form-site-key" class="sr-only">Key</label>
 								<input type="text" id="form-site-key" class="form-group form-control" required disabled/>
 							</td>
 						</tr>

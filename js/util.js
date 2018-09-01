@@ -1,8 +1,8 @@
-function formatDate(date, fmt)
-{
+function formatDate(date, fmt) {
 	function pad(value) {
 		return (value.toString().length < 2) ? '0' + value : value;
 	}
+
 	return fmt.replace(/%([a-zA-Z])/g, function (_, fmtCode) {
 		switch (fmtCode) {
 			case 'Y':
@@ -25,8 +25,7 @@ function formatDate(date, fmt)
 	});
 }
 
-function long2ip(ip)
-{
+function long2ip(ip) {
 	//  discuss at: http://locutus.io/php/long2ip/
 	// original by: Waldo Malqui Silva (http://waldo.malqui.info)
 	if (!isFinite(ip)) {
@@ -36,22 +35,20 @@ function long2ip(ip)
 }
 
 //http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
-function getParameterByName(name, url)
-{
+function getParameterByName(name, url) {
 	if (!url) {
 		url = window.location.href;
 	}
 	name = name.replace(/[\[\]]/g, "\\$&");
 	var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-			results = regex.exec(url);
+		results = regex.exec(url);
 	if (!results) return null;
 	if (!results[2]) return '';
 	return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
 // https://stackoverflow.com/questions/736513/how-do-i-parse-a-url-into-hostname-and-path-in-javascript
-function isURL(url)
-{
+function isURL(url) {
 	var parser = document.createElement('a');
 	parser.href = url;
 
@@ -63,8 +60,8 @@ function isURL(url)
 	var hash = parser.hash;         // => "#hash"
 	var search = parser.search;     // => "?search=test"
 	var origin = parser.origin;     // => "http://example.com:3000"
-	if(protocal == "http:" || protocal == "https:"){
-		return hostname != '';
+	if (protocal === "http:" || protocal === "https:") {
+		return hostname !== '';
 	}
 	return false;
 }
@@ -72,20 +69,21 @@ function isURL(url)
 function getCookieByName(name) {
 	var nameEQ = name + "=";
 	var ca = document.cookie.split(';');
-	for(var i=0;i < ca.length;i++) {
+	for (var i = 0; i < ca.length; i++) {
 		var c = ca[i];
-		while (c.charAt(0)==' ') c = c.substring(1,c.length);
-		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+		while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+		if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
 	}
 	return null;
 }
- 
+
 function isCSRFSafeMethod(method) {
 	// these HTTP methods do not require CSRF protection
 	return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
+
 $.ajaxSetup({
-	beforeSend: function(xhr, settings) {
+	beforeSend: function (xhr, settings) {
 		if (!isCSRFSafeMethod(settings.type) && !this.crossDomain) {
 			xhr.setRequestHeader("X-CSRF-Token", getCookieByName('csrf_token'));
 		}

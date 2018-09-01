@@ -53,15 +53,15 @@
 		// $operation => arrayof roles
 		$map = array(
 			/* user */
-      'user_get_self' => array('root', 'admin', 'developer', 'normal'),
-      'user_get_others' => array('root', 'admin'),
-      'user_update_admin' => array('root'),
-      'user_update_developer' => array('root', 'admin'),
-      'user_update_normal' => array('root', 'admin'),
-      'user_update_blocked' => array('root', 'admin'),
-      'user_update_removed' => array('root', 'admin'),
-      'get_logs_self' => array('root', 'admin', 'developer', 'normal'),
-      'get_logs_others' => array('root', 'admin'),
+			'user_get_self' => array('root', 'admin', 'developer', 'normal'),
+			'user_get_others' => array('root', 'admin'),
+			'user_update_admin' => array('root'),
+			'user_update_developer' => array('root', 'admin'),
+			'user_update_normal' => array('root', 'admin'),
+			'user_update_blocked' => array('root', 'admin'),
+			'user_update_removed' => array('root', 'admin'),
+			'get_logs_self' => array('root', 'admin', 'developer', 'normal'),
+			'get_logs_others' => array('root', 'admin'),
 
 			/* site */
 			'sites_get_self' => array('root', 'admin', 'developer'),
@@ -88,20 +88,20 @@
 
 
 			/* ucenter entry show control */
-      'show_ucenter_home' => array('root', 'admin', 'developer', 'normal'),
-      'show_ucenter_profile' => array('admin', 'developer', 'normal'),
-      'show_ucenter_changepwd' => array('root', 'admin', 'developer', 'normal'),
-      'show_ucenter_logs' => array('root', 'admin', 'developer', 'normal'),
-      'show_ucenter_auth_list' => array('root', 'admin', 'developer', 'normal'),
-      'show_ucenter_user_sessions' => array('root', 'admin', 'developer', 'normal'),
-      'show_ucenter_admin' => array('root', 'admin'),
-      'show_ucenter_signout' => array('root', 'admin', 'developer', 'normal'),
+			'show_ucenter_home' => array('root', 'admin', 'developer', 'normal'),
+			'show_ucenter_profile' => array('admin', 'developer', 'normal'),
+			'show_ucenter_changepwd' => array('root', 'admin', 'developer', 'normal'),
+			'show_ucenter_logs' => array('root', 'admin', 'developer', 'normal'),
+			'show_ucenter_auth_list' => array('root', 'admin', 'developer', 'normal'),
+			'show_ucenter_user_sessions' => array('root', 'admin', 'developer', 'normal'),
+			'show_ucenter_admin' => array('root', 'admin'),
+			'show_ucenter_signout' => array('root', 'admin', 'developer', 'normal'),
 
-      'show_ucenter_users' => array('root', 'admin'),
-      'show_ucenter_sites_all' => array('root', 'admin'),
-      'show_ucenter_users_online' => array('root', 'admin'),
-      'show_ucenter_blocked_list' => array('root', 'admin'),
-      'show_ucenter_logs_all' => array('root', 'admin'),
+			'show_ucenter_users' => array('root', 'admin'),
+			'show_ucenter_sites_all' => array('root', 'admin'),
+			'show_ucenter_users_online' => array('root', 'admin'),
+			'show_ucenter_blocked_list' => array('root', 'admin'),
+			'show_ucenter_logs_all' => array('root', 'admin'),
 
 		);
 		AccessController::setMap($map);

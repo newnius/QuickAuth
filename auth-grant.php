@@ -24,10 +24,10 @@
 					<span class="text-info" id="auth-grant-host">example.com</span>
 					<form id="form-auth" action="javascript:void(0)">
 						<p>Information to be accessed</p>
-						* <input type="checkbox" id="form-auth-username" class="form-group" checked disabled/><span>Username</span><br/>
-						* <input type="checkbox" id="form-auth-email" class="form-group"/><span>Email</span><br/>
-						* <input type="checkbox" id="form-auth-verified" class="form-group"/><span>Verified</span><br/>
-						* <input type="checkbox" id="form-auth-role" class="form-group"/><span>Role</span><br/>
+						* <label for="form-auth-username"></label><input type="checkbox" id="form-auth-username" class="form-group" checked disabled/><span>Username</span><br/>
+						* <label for="form-auth-email"></label><input type="checkbox" id="form-auth-email" class="form-group"/><span>Email</span><br/>
+						* <label for="form-auth-verified"></label><input type="checkbox" id="form-auth-verified" class="form-group"/><span>Verified</span><br/>
+						* <label for="form-auth-role"></label><input type="checkbox" id="form-auth-role" class="form-group"/><span>Role</span><br/>
 						<button id="form-auth-accept" type="button" class="btn btn-primary">&nbsp;Accept&nbsp;</button>
 						<button id="form-auth-decline" type="button" class="btn btn-default">&nbsp;Decline&nbsp;</button>
 					</form>
@@ -41,6 +41,6 @@
 		<script src="js/script.js"></script>
 		<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 		<script src="//cdn.bootcss.com/blueimp-md5/1.1.1/js/md5.min.js"></script>
-		<script src="//cdn.bootcss.com/jqueryui/1.11.4/jquery-ui.js"></script> 
+		<script src="//cdn.bootcss.com/jqueryui/1.11.4/jquery-ui.js"></script>
 	</body>
 </html>

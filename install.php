@@ -22,6 +22,7 @@
 		foreach($sqls as $description=>$sql){
 			echo "Executing $description: ";
 			var_dump((new MysqlPDO)->execute($sql, array()));
+			echo "<hr/>";
 		}
 	}
 

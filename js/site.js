@@ -1,6 +1,5 @@
-function register_events_site()
-{
-	$('#btn-site-add').click(function(e){
+function register_events_site() {
+	$('#btn-site-add').click(function (e) {
 		e.preventDefault();
 		$('#form-site-submit-type').val('site_add');
 		$('#form-site-domain').val('');
@@ -12,17 +11,17 @@ function register_events_site()
 		$("#form-site-key-tr").addClass("hidden");
 	});
 
-	$('#form-site-submit').click(function(e){
+	$('#form-site-submit').click(function (e) {
 		e.preventDefault();
 		var id = $("#form-site-id").val();
 		var domain = $("#form-site-domain").val();
 		var revoke_url = $("#form-site-revokeurl").val();
 		var level = $("#form-site-level").val();
 		var method = $("#form-site-submit-type").val();
-		$("#form-site-submit").attr("disabled","disabled");
+		$("#form-site-submit").attr("disabled", "disabled");
 		var ajax = $.ajax({
 			url: "/service?action=" + method,
-			type: 'POST', 
+			type: 'POST',
 			data: {
 				id: id,
 				domain: domain,
@@ -30,18 +29,18 @@ function register_events_site()
 				level: level
 			}
 		});
-		ajax.done(function(msg){
+		ajax.done(function (msg) {
 			var res = JSON.parse(msg);
-			if(res["errno"]==0){
+			if (res["errno"] === 0) {
 				$('#modal-site').modal('hide');
 				$('#table-site').bootstrapTable("refresh");
-			}else{
+			} else {
 				$("#form-site-msg").html(res["msg"]);
 				$("#modal-site").effect("shake");
 			}
 			$("#form-site-submit").removeAttr("disabled");
 		});
-		ajax.fail(function(jqXHR,textStatus){
+		ajax.fail(function (jqXHR, textStatus) {
 			alert("Request failed :" + textStatus);
 			$("#form-site-submit").removeAttr("disabled");
 		});
@@ -49,13 +48,12 @@ function register_events_site()
 
 }
 
-function load_sites(who)
-{
+function load_sites(who) {
 	$table = $("#table-site");
 	$table.bootstrapTable({
-		url: '/service?action=sites_get&who='+who,
+		url: '/service?action=sites_get&who=' + who,
 		responseHandler: siteResponseHandler,
-    sidePagination: 'server',
+		sidePagination: 'server',
 		cache: true,
 		striped: true,
 		pagination: true,
@@ -107,9 +105,8 @@ function load_sites(who)
 	});
 }
 
-function siteLevelFormatter(level)
-{
-	switch(level){
+function siteLevelFormatter(level) {
+	switch (level) {
 		case "99":
 			return "Partners";
 		case "1":
@@ -120,10 +117,9 @@ function siteLevelFormatter(level)
 	return "Unknown";
 }
 
-function siteResponseHandler(res)
-{
-	if(res['errno'] == 0){
-		var tmp = new Object();
+function siteResponseHandler(res) {
+	if (res['errno'] === 0) {
+		var tmp = {};
 		tmp["total"] = res["count"];
 		tmp["rows"] = res["sites"];
 		return tmp;
@@ -132,8 +128,7 @@ function siteResponseHandler(res)
 	return [];
 }
 
-function siteOperateFormatter(value, row, index)
-{
+function siteOperateFormatter(value, row, index) {
 	return [
 		'<button class="btn btn-default edit" href="javascript:void(0)">',
 		'<i class="glyphicon glyphicon-edit"></i>&nbsp;View',
@@ -142,14 +137,13 @@ function siteOperateFormatter(value, row, index)
 }
 
 window.siteOperateEvents =
-{
-	'click .edit': function (e, value, row, index) {
-		show_modal_site(row);
-	}
-};
+	{
+		'click .edit': function (e, value, row, index) {
+			show_modal_site(row);
+		}
+	};
 
-function show_modal_site(site)
-{
+function show_modal_site(site) {
 	$('#modal-site').modal('show');
 	$('#modal-site-title').html('Edit');
 	$('#form-site-submit').html('Save');

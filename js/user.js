@@ -1,50 +1,49 @@
-function register_events_user()
-{
-	$("#btn-verify-email").click(function(e){
+function register_events_user() {
+	$("#btn-verify-email").click(function (e) {
 		e.preventDefault();
 		$('#modal-verify').modal('show');
 	});
 
 
-	$("#btn-verify-send").click(function(e){
+	$("#btn-verify-send").click(function (e) {
 		e.preventDefault();
-		$("#btn-verify-send").attr("disabled","disabled");
+		$("#btn-verify-send").attr("disabled", "disabled");
 		$('#btn-verify-send').text("Sending...");
 		var ajax = $.ajax({
 			url: "/service?action=verify_email_send_code",
 			type: 'POST',
 			data: {}
 		});
-		ajax.done(function(res){
-			if(res["errno"] != 0){
+		ajax.done(function (res) {
+			if (res["errno"] !== 0) {
 				$('#modal-verify').modal('hide');
 				$('#modal-msg').modal("show");
 				$('#modal-msg-content').text(res["msg"]);
-			}else{
+			} else {
 				$('#btn-verify-send').text("Sent");
 			}
 		});
 	});
 
 
-	$("#form-verify-submit").click(function(e){
+	$("#form-verify-submit").click(function (e) {
 		e.preventDefault();
 		var code = $("#form-verify-code").val();
-		if(code.length < 6){
+		if (code.length < 6) {
 			return false;
 		}
 		$('#modal-verify').modal("hide");
 		var ajax = $.ajax({
 			url: "service?action=verify_email",
-			type: 'POST',	
+			type: 'POST',
 			data: {
 				code: code
 			}
 		});
-		ajax.done(function(res){
-			if(res["errno"] == 0){
+		ajax.done(function (res) {
+			if (res["errno"] === 0) {
 				load_profile();
-			}else{
+			} else {
 				$('#modal-msg').modal("show");
 				$('#modal-msg-content').text(res["msg"]);
 			}
@@ -52,30 +51,30 @@ function register_events_user()
 	});
 
 
-	$("#btn-update-email").click(function(e){
+	$("#btn-update-email").click(function (e) {
 		e.preventDefault();
 		$('#modal-email').modal('show');
 	});
 
 
-	$("#form-email-submit").click(function(e){
+	$("#form-email-submit").click(function (e) {
 		e.preventDefault();
 		var email = $("#form-email-email").val();
-		if(email.length < 6){
+		if (email.length < 6) {
 			return false;
 		}
 		$('#modal-email').modal("hide");
 		var ajax = $.ajax({
 			url: "service?action=user_update",
-			type: 'POST',	
+			type: 'POST',
 			data: {
 				email: email
 			}
 		});
-		ajax.done(function(res){
-			if(res["errno"] == 0){
+		ajax.done(function (res) {
+			if (res["errno"] === 0) {
 				load_profile();
-			}else{
+			} else {
 				$('#modal-msg').modal("show");
 				$('#modal-msg-content').text(res["msg"]);
 			}
@@ -83,50 +82,50 @@ function register_events_user()
 	});
 
 
-	$("#btn-updatepwd").click(function(e){
+	$("#btn-updatepwd").click(function (e) {
 		e.preventDefault();
 		$('#modal-msg').modal('show');
 		$('#modal-msg-content').text("Processing...");
 		var oldpwd = $("#form-updatepwd-oldpwd").val();
 		var password = $("#form-updatepwd-password").val();
-		if(oldpwd.length<6 || password.length<6){
-		$("#modal-msg-content").text("Password length should >= 6");
+		if (oldpwd.length < 6 || password.length < 6) {
+			$("#modal-msg-content").text("Password length should >= 6");
 			return false;
 		}
 		var oldpwd = cryptPwd(oldpwd);
 		var newpwd = cryptPwd(password);
 		var ajax = $.ajax({
 			url: "/service?action=update_pwd",
-			type: 'POST',	
+			type: 'POST',
 			data: {
 				oldpwd: oldpwd,
 				password: newpwd
 			}
 		});
-		ajax.done(function(res){
-			if(res["errno"] == 0){
+		ajax.done(function (res) {
+			if (res["errno"] === 0) {
 				$('#modal-msg-content').text("Your password has been successfully reset.");
-			}else{
+			} else {
 				$('#modal-msg-content').text(res["msg"]);
 			}
 		});
 	});
 
 
-	$('#form-user-submit').click(function(e){
+	$('#form-user-submit').click(function (e) {
 		e.preventDefault();
 		var username = $("#form-user-username").val();
 		var email = $("#form-user-email").val();
 		var password = $("#form-user-password").val();
 		var role = $("#form-user-role").val();
-		if(!validateEmail(email))
+		if (!validateEmail(email))
 			return false;
-		if(password.length!=0)
-			password=cryptPwd(password);
-		$("#form-user-submit").attr("disabled","disabled");
+		if (password.length !== 0)
+			password = cryptPwd(password);
+		$("#form-user-submit").attr("disabled", "disabled");
 		var ajax = $.ajax({
 			url: "/service?action=user_update",
-			type: 'POST', 
+			type: 'POST',
 			data: {
 				username: username,
 				email: email,
@@ -134,17 +133,17 @@ function register_events_user()
 				role: role
 			}
 		});
-		ajax.done(function(res){
-			if(res["errno"]==0){
+		ajax.done(function (res) {
+			if (res["errno"] === 0) {
 				$('#modal-user').modal('hide');
 				$('#table-user').bootstrapTable("refresh");
-			}else{
+			} else {
 				$("#form-user-msg").html(res["msg"]);
 				$("#modal-user").effect("shake");
 			}
 			$("#form-user-submit").removeAttr("disabled");
 		});
-		ajax.fail(function(jqXHR,textStatus){
+		ajax.fail(function (jqXHR, textStatus) {
 			alert("Request failed :" + textStatus);
 			$("#form-user-submit").removeAttr("disabled");
 		});
@@ -152,13 +151,12 @@ function register_events_user()
 
 }
 
-function load_users()
-{
+function load_users() {
 	$table = $("#table-user");
 	$table.bootstrapTable({
 		url: '/service?action=users_get',
 		responseHandler: userResponseHandler,
-    sidePagination: 'server',
+		sidePagination: 'server',
 		cache: true,
 		striped: true,
 		pagination: true,
@@ -231,9 +229,8 @@ function load_users()
 	});
 }
 
-function roleFormatter(role)
-{
-	switch(role){
+function roleFormatter(role) {
+	switch (role) {
 		case "root":
 			return "Root";
 		case "admin":
@@ -250,10 +247,9 @@ function roleFormatter(role)
 	return "Unknown";
 }
 
-function userResponseHandler(res)
-{
-	if(res['errno'] == 0){
-		var tmp = new Object();
+function userResponseHandler(res) {
+	if (res['errno'] === 0) {
+		var tmp = {};
 		tmp["total"] = res["count"];
 		tmp["rows"] = res["users"];
 		return tmp;
@@ -263,8 +259,7 @@ function userResponseHandler(res)
 	return [];
 }
 
-function userOperateFormatter(value, row, index)
-{
+function userOperateFormatter(value, row, index) {
 	return [
 		'<button class="btn btn-default edit" href="javascript:void(0)">',
 		'<i class="glyphicon glyphicon-edit"></i>&nbsp;Edit',
@@ -273,14 +268,13 @@ function userOperateFormatter(value, row, index)
 }
 
 window.userOperateEvents =
-{
-	'click .edit': function (e, value, row, index) {
-		show_modal_user(row);
-	}
-};
+	{
+		'click .edit': function (e, value, row, index) {
+			show_modal_user(row);
+		}
+	};
 
-function show_modal_user(user)
-{
+function show_modal_user(user) {
 	$('#modal-user').modal('show');
 	$('#modal-user-title').html('Edit');
 	$('#form-user-submit').html('Save');
@@ -292,27 +286,26 @@ function show_modal_user(user)
 	$('#form-user-username').attr('disabled', 'disabled');
 }
 
-function load_profile()
-{
+function load_profile() {
 	var ajax = $.ajax({
 		url: "/service?action=user_get",
 		type: 'GET',
-		data: { }
+		data: {}
 	});
-	ajax.done(function(res){
-		if(res["errno"] == 0){
+	ajax.done(function (res) {
+		if (res["errno"] === 0) {
 			var user = res["user"];
 			$('#user-username').text(user.username);
 			$('#user-email').text(user.email);
-			if(user.email_verified==1){
+			if (user.email_verified === 1) {
 				$('#btn-verify-email').text("Verified");
 				$('#btn-verify-email').addClass("hidden");
-			}else{
+			} else {
 				$('#btn-verify-email').text("verify");
 				$('#btn-verify-email').removeClass("hidden");
 			}
 			$('#user-role').text(user.role);
-		}else{
+		} else {
 			$('#modal-msg').modal("show");
 			$('#modal-msg-content').text(res["msg"]);
 		}

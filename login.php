@@ -46,7 +46,7 @@
 						</p>
 						<div class="alert alert-danger alert-dismissable my-info"  style="display:none">
 							<button type="button" class="close" data-dismiss="alert"  aria-hidden="true">&times;</button>
-							<span id="msg-info"></a>
+							<span id="msg-info"></span>
 						</div>
 					</form>
 				</div>

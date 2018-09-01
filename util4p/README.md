@@ -1,4 +1,4 @@
-# utilties for php
+# utilities for php
 
 ## AccessController.class.php
 

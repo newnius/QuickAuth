@@ -1,10 +1,8 @@
-function register_events_session()
-{
+function register_events_session() {
 
 }
 
-function load_users_online()
-{
+function load_users_online() {
 	$table = $("#table-user");
 	$table.bootstrapTable({
 		url: '/service?action=users_online',
@@ -46,9 +44,8 @@ function load_users_online()
 	});
 }
 
-function usersOnlineResponseHandler(res)
-{
-	if(res['errno'] == 0){
+function usersOnlineResponseHandler(res) {
+	if (res['errno'] === 0) {
 		return res["users"];
 	}
 	$('#modal-msg').modal('show');
@@ -56,8 +53,7 @@ function usersOnlineResponseHandler(res)
 	return [];
 }
 
-function usersOnlineOperateFormatter(value, row, index)
-{
+function usersOnlineOperateFormatter(value, row, index) {
 	return [
 		'<button class="btn btn-default view" href="javascript:void(0)">',
 		'<i class="glyphicon glyphicon-eye-open"></i>&nbsp;View',
@@ -66,21 +62,20 @@ function usersOnlineOperateFormatter(value, row, index)
 }
 
 window.usersOnlineOperateEvents =
-{
-	'click .view': function (e, value, row, index) {
-		window.open("?user_sessions&username="+row.group);
-	}
-};
+	{
+		'click .view': function (e, value, row, index) {
+			window.open("?user_sessions&username=" + row.group);
+		}
+	};
 
 
-function load_user_sessions()
-{	
+function load_user_sessions() {
 	var username = getParameterByName('username');
-	if(username==null)
+	if (username == null)
 		username = "";
 	$table = $("#table-session");
 	$table.bootstrapTable({
-		url: '/service?action=user_sessions&username='+username,
+		url: '/service?action=user_sessions&username=' + username,
 		responseHandler: sessionsResponseHandler,
 		cache: true,
 		striped: true,
@@ -131,9 +126,8 @@ function load_user_sessions()
 	});
 }
 
-function sessionsResponseHandler(res)
-{
-	if(res['errno'] == 0){
+function sessionsResponseHandler(res) {
+	if (res['errno'] === 0) {
 		return res["sessions"];
 	}
 	$('#modal-msg').modal('show');
@@ -141,8 +135,7 @@ function sessionsResponseHandler(res)
 	return [];
 }
 
-function sessionsOperateFormatter(value, row, index)
-{
+function sessionsOperateFormatter(value, row, index) {
 	return [
 		'<button class="btn btn-default tickout" href="javascript:void(0)">',
 		'<i class="glyphicon glyphicon-log-out"></i>&nbsp;Log out',
@@ -151,23 +144,23 @@ function sessionsOperateFormatter(value, row, index)
 }
 
 window.sessionsOperateEvents =
-{
-	'click .tickout': function (e, value, row, index) {
-		var ajax = $.ajax({
-			url: "/service?action=tick_out",
-			type: 'POST',
-			data: {
-				username: row.username,
-				_index: row._index
-			}
-		});
-		ajax.done(function(res){
-			if(res["errno"] == 0){
-				$('#table-session').bootstrapTable("refresh");
-			}else{
-				$('#modal-msg').modal('show');
-				$('#modal-msg-content').text(res["msg"]);
-			}
-		});
-	}
-};
+	{
+		'click .tickout': function (e, value, row, index) {
+			var ajax = $.ajax({
+				url: "/service?action=tick_out",
+				type: 'POST',
+				data: {
+					username: row.username,
+					_index: row._index
+				}
+			});
+			ajax.done(function (res) {
+				if (res["errno"] === 0) {
+					$('#table-session').bootstrapTable("refresh");
+				} else {
+					$('#modal-msg').modal('show');
+					$('#modal-msg-content').text(res["msg"]);
+				}
+			});
+		}
+	};
