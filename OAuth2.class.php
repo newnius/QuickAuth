@@ -38,7 +38,6 @@ class OAuth2
 		$builder->where($where);
 		$sql = $builder->build();
 		$UIDs = (new MysqlPDO())->executeQuery($sql, $values);
-		var_dump($UIDs);
 		if (count($UIDs) > 0) {
 			return $UIDs[0]['uid'];
 		}
