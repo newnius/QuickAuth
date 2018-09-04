@@ -50,7 +50,7 @@ class Code
 	{
 		switch ($errno) {
 			case Code::SUCCESS:
-				return 'Success';
+				return 'Success !';
 
 			case Code::USERNAME_OCCUPIED:
 				return 'Username exists !';
@@ -59,7 +59,7 @@ class Code
 				return 'Email exists !';
 
 			case Code::NO_PRIVILEGE:
-				return 'You dont\' have permission to do this !';
+				return 'You don\'t have permission to do this !';
 
 			case Code::INVALID_USERNAME:
 				return 'Invalid username !';
@@ -152,7 +152,7 @@ class Code
 				return 'Verify your email first !';
 
 			default:
-				return 'Unknown error(' . $errno . ')';
+				return 'Unknown error(' . $errno . ') !';
 		}
 	}
 }

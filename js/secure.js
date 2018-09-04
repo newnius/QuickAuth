@@ -31,7 +31,6 @@ function register_events_blocked() {
 			}
 		});
 	});
-
 }
 
 function load_list_blocked() {
@@ -87,7 +86,7 @@ function blockedResponseHandler(res) {
 
 function blockedOperateFormatter(value, row, index) {
 	return [
-		'<button class="btn btn-default view" href="javascript:void(0)">',
+		'<button class="btn btn-default view">',
 		'<i class="glyphicon glyphicon-eye-open"></i>&nbsp;View',
 		'</button>'
 	].join('');

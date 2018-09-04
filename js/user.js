@@ -4,7 +4,6 @@ function register_events_user() {
 		$('#modal-verify').modal('show');
 	});
 
-
 	$("#btn-verify-send").click(function (e) {
 		e.preventDefault();
 		$("#btn-verify-send").attr("disabled", "disabled");
@@ -24,7 +23,6 @@ function register_events_user() {
 			}
 		});
 	});
-
 
 	$("#form-verify-submit").click(function (e) {
 		e.preventDefault();
@@ -50,12 +48,10 @@ function register_events_user() {
 		});
 	});
 
-
 	$("#btn-update-email").click(function (e) {
 		e.preventDefault();
 		$('#modal-email').modal('show');
 	});
-
 
 	$("#form-email-submit").click(function (e) {
 		e.preventDefault();
@@ -81,18 +77,17 @@ function register_events_user() {
 		});
 	});
 
-
 	$("#btn-updatepwd").click(function (e) {
 		e.preventDefault();
 		$('#modal-msg').modal('show');
 		$('#modal-msg-content').text("Processing...");
-		var oldpwd = $("#form-updatepwd-oldpwd").val();
+		var oldpass = $("#form-updatepwd-oldpwd").val();
 		var password = $("#form-updatepwd-password").val();
-		if (oldpwd.length < 6 || password.length < 6) {
+		if (oldpass.length < 6 || password.length < 6) {
 			$("#modal-msg-content").text("Password length should >= 6");
 			return false;
 		}
-		var oldpwd = cryptPwd(oldpwd);
+		var oldpwd = cryptPwd(oldpass);
 		var newpwd = cryptPwd(password);
 		var ajax = $.ajax({
 			url: "/service?action=update_pwd",
@@ -110,7 +105,6 @@ function register_events_user() {
 			}
 		});
 	});
-
 
 	$('#form-user-submit').click(function (e) {
 		e.preventDefault();
@@ -148,7 +142,6 @@ function register_events_user() {
 			$("#form-user-submit").removeAttr("disabled");
 		});
 	});
-
 }
 
 function load_users() {

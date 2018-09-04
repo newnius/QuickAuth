@@ -65,7 +65,7 @@ function tick_out(CRObject $rule)
 
 	$log = new CRObject();
 	$log->set('scope', Session::get('username'));
-	$log->set('tag', 'tickout');
+	$log->set('tag', 'session.tickout');
 	$content = array('username' => $rule->get('username'), 'response' => $res['errno']);
 	$log->set('content', json_encode($content));
 	CRLogger::log($log);

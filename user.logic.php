@@ -70,7 +70,7 @@ function user_register(CRObject $user)
 	}
 	$log = new CRObject();
 	$log->set('scope', $username);
-	$log->set('tag', 'signup');
+	$log->set('tag', 'user.signup');
 	$content = array('username' => $username, 'email' => $email, 'response' => $res['errno']);
 	$log->set('content', json_encode($content));
 	CRLogger::log($log);
@@ -116,7 +116,7 @@ function user_login(CRObject $user)
 	} else {
 		$log->set('scope', '[nobody]');
 	}
-	$log->set('tag', 'signin');
+	$log->set('tag', 'user.login');
 	$content = array('account' => $account, 'response' => $res['errno']);
 	$log->set('content', json_encode($content));
 	CRLogger::log($log);
@@ -170,7 +170,7 @@ function user_update(CRObject $user)
 	}
 	$log = new CRObject();
 	$log->set('scope', Session::get('username'));
-	$log->set('tag', 'update_user');
+	$log->set('tag', 'user.update');
 	$content = array(
 		'username' => $user->get('username'),
 		'email' => $user->get('email'),
@@ -200,7 +200,7 @@ function user_update_pwd(CRObject $user)
 	$res['errno'] = $success ? Code::SUCCESS : Code::UNKNOWN_ERROR;
 	$log = new CRObject();
 	$log->set('scope', Session::get('username'));
-	$log->set('tag', 'update_pwd');
+	$log->set('tag', 'user.update_pwd');
 	$content = array('response' => $res['errno']);
 	$log->set('content', json_encode($content));
 	CRLogger::log($log);
@@ -248,7 +248,7 @@ function user_get_log(CRObject $rule)
 		}
 	} else {// view self signin log
 		$rule->set('scope', $rule->get('username'));
-		$rule->set('tag', 'signin');
+		$rule->set('tag', 'user.login');
 	}
 	$res['errno'] = Code::SUCCESS;
 	$res['count'] = CRLogger::getCount($rule);
@@ -291,7 +291,7 @@ function reset_pwd_send_code(CRObject $user)
 
 	$log = new CRObject();
 	$log->set('scope', $user_arr['username']);
-	$log->set('tag', 'send_email');
+	$log->set('tag', 'email.send');
 	$content = array('username' => $user->get('username'), 'type' => 'reset_pwd', 'email' => $user->get('email'), 'response' => $res['errno']);
 	$log->set('content', json_encode($content));
 	CRLogger::log($log);
@@ -332,7 +332,7 @@ function verify_email_send_code(CRObject $user)
 
 	$log = new CRObject();
 	$log->set('scope', $user_arr['username']);
-	$log->set('tag', 'send_email');
+	$log->set('tag', 'email.send');
 	$content = array('username' => $user_arr['username'], 'type' => 'verify_email', 'email' => $user_arr['email'], 'response' => $res['errno']);
 	$log->set('content', json_encode($content));
 	CRLogger::log($log);
@@ -365,7 +365,7 @@ function reset_pwd(CRObject $user)
 
 	$log = new CRObject();
 	$log->set('scope', $user_arr['username']);
-	$log->set('tag', 'resetpwd');
+	$log->set('tag', 'user.resetpwd');
 	$content = array('username' => $user_arr['username'], 'response' => $res['errno']);
 	$log->set('content', json_encode($content));
 	CRLogger::log($log);
@@ -397,7 +397,7 @@ function verify_email(CRObject $user)
 	}
 	$log = new CRObject();
 	$log->set('scope', $user_arr['username']);
-	$log->set('tag', 'verify_email');
+	$log->set('tag', 'user.verify_email');
 	$content = array('username' => $user_arr['username'], 'response' => $res['errno']);
 	$log->set('content', json_encode($content));
 	CRLogger::log($log);

@@ -23,7 +23,8 @@ define('FORCE_VERIFY', false); //if set, unverified user will be refused to logi
 //define('ALLOW_CUSTOM_UID', true);
 
 /* Auth */
-define('AUTH_TOKEN_TIMEOUT', 604800); // 3600*24*7 s
+define('AUTH_CODE_TIMEOUT', 300); // 5 min
+define('AUTH_TOKEN_TIMEOUT', 604800); // 7 day
 
 /* Session */
 define('ENABLE_MULTIPLE_LOGIN', true);

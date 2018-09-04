@@ -55,7 +55,7 @@
 								<input type="password" class="form-control" id="form-resetpwd-repeat" placeholder="Repeat new password" required />
 							</div>
 						</div>
-						<button id="form-resetpwd-submit" class="btn btn-lg btn-primary btn-block" type="submita">Reset</button>
+						<button id="form-resetpwd-submit" class="btn btn-lg btn-primary btn-block" type="submit">Reset</button>
 					</form>
 				</div>
 			</div> <!-- /container -->

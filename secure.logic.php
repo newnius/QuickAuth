@@ -57,7 +57,7 @@ function block(CRObject $rule)
 	RateLimiter::punish($r, $ip);
 	$log = new CRObject();
 	$log->set('scope', Session::get('username'));
-	$log->set('tag', 'block');
+	$log->set('tag', 'secure.block');
 	$content = array('ip' => $ip, 'time' => $rule->getInt('time', 3600), 'response' => $res['errno']);
 	$log->set('content', json_encode($content));
 	CRLogger::log($log);
@@ -75,7 +75,7 @@ function unblock(CRObject $rule)
 	$res['errno'] = Code::SUCCESS;
 	$log = new CRObject();
 	$log->set('scope', Session::get('username'));
-	$log->set('tag', 'unblock');
+	$log->set('tag', 'secure.unblock');
 	$content = array('ip' => $rule->get('ip'), 'response' => $res['errno']);
 	$log->set('content', json_encode($content));
 	CRLogger::log($log);

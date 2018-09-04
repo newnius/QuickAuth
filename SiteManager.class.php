@@ -7,20 +7,26 @@ require_once('util4p/SQLBuilder.class.php');
 class SiteManager
 {
 
+    private static $table_client = 'oauth_client';
+
+    public static function configure(CRObject $config)
+    {
+        self::$table_client = $config->get('table_client', self::$table_client);
+    }
+
 	/**/
 	public static function add(CRObject $site)
 	{
 		$domain = $site->get('domain');
 		$owner = $site->get('owner');
-		$key = $site->get('key');
-		$revoke_url = $site->get('revoke_url');
-		$level = $site->getInt('level');
+		$client_id = $site->get('client_id');
+		$client_secret = $site->get('client_secret');
 
-		$key_values = array('domain' => '?', 'owner' => '?', 'key' => '?', 'revoke_url' => '?', 'level' => '?');
+		$key_values = array('domain' => '?', 'owner' => '?', 'client_id' => '?', 'client_secret' => '?');
 		$builder = new SQLBuilder();
-		$builder->insert('qa_site', $key_values);
+		$builder->insert(self::$table_client, $key_values);
 		$sql = $builder->build();
-		$params = array($domain, $owner, $key, $revoke_url, $level);
+		$params = array($domain, $owner, $client_id, $client_secret);
 		$count = (new MysqlPDO())->execute($sql, $params);
 		return $count === 1;
 	}
@@ -32,16 +38,15 @@ class SiteManager
 		$offset = $rule->getInt('offset', 0);
 		$limit = $rule->getInt('limit', -1);
 		$selected_rows = array();
-		$where_arr = array('level' => '?');
-		$opts_arr = array('level' => '!=');
-		$params = array('0');
+		$where_arr = array();
+		$params = array();
 		if ($owner !== null) {
 			$where_arr['owner'] = '?';
 			$params[] = $owner;
 		}
 		$builder = new SQLBuilder();
-		$builder->select('qa_site', $selected_rows);
-		$builder->where($where_arr, $opts_arr);
+		$builder->select(self::$table_client, $selected_rows);
+		$builder->where($where_arr);
 		$builder->limit($offset, $limit);
 		$sql = $builder->build();
 		$sites = (new MysqlPDO())->executeQuery($sql, $params);
@@ -51,14 +56,13 @@ class SiteManager
 	/**/
 	public static function get(CRObject $rule)
 	{
-		$id = $rule->getInt('id');
+		$client_id = $rule->get('client_id');
 		$selected_rows = array();
-		$where_arr = array('id' => '?', 'level' => '?');
-		$opts_arr = array('level' => '!=');
-		$params = array($id, '0');
+		$where_arr = array('client_id' => '?');
+		$params = array($client_id);
 		$builder = new SQLBuilder();
-		$builder->select('qa_site', $selected_rows);
-		$builder->where($where_arr, $opts_arr);
+		$builder->select(self::$table_client, $selected_rows);
+		$builder->where($where_arr);
 		$sql = $builder->build();
 		$sites = (new MysqlPDO())->executeQuery($sql, $params);
 		return count($sites) > 0 ? $sites[0] : null;
@@ -69,16 +73,15 @@ class SiteManager
 	{
 		$owner = $rule->get('owner');
 		$selected_rows = array('COUNT(1) AS `count`');
-		$where_arr = array('level' => '?');
-		$opts_arr = array('level' => '!=');
-		$params = array('0');
+		$where_arr = array();
+		$params = array();
 		if ($owner !== null) {
 			$where_arr['owner'] = '?';
 			$params[] = $owner;
 		}
 		$builder = new SQLBuilder();
-		$builder->select('qa_site', $selected_rows);
-		$builder->where($where_arr, $opts_arr);
+		$builder->select(self::$table_client, $selected_rows);
+		$builder->where($where_arr);
 		$sql = $builder->build();
 		$res = (new MysqlPDO())->executeQuery($sql, $params);
 		return intval($res[0]['count']);
@@ -87,22 +90,7 @@ class SiteManager
 	/**/
 	public static function update(CRObject $site)
 	{
-		$id = $site->getInt('id');
-		$domain = $site->get('domain');
-		$key = $site->get('key');
-		$revoke_url = $site->get('revoke_url');
-		$level = $site->get('level');
-
-		$key_values = array('domain' => '?', 'key' => '?', 'revoke_url' => '?', 'level' => '?');
-		$where_arr = array('id' => '?');
-
-		$builder = new SQLBuilder();
-		$builder->update('qa_site', $key_values);
-		$builder->where($where_arr);
-		$sql = $builder->build();
-		$params = array($domain, $key, $revoke_url, $level, $id);
-		$count = (new MysqlPDO())->execute($sql, $params);
-		return $count === 1;
+		return true;
 	}
 
 }

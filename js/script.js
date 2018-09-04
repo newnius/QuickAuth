@@ -1,45 +1,3 @@
-if (window.location.pathname.indexOf("auth") !== -1) {
-	var response_type = getParameterByName('response_type');
-	var app_id = getParameterByName('client_id');
-	var redirect_uri = getParameterByName('redirect_uri');
-	if (redirect_uri == null) redirect_uri = 'javascript:void(0)';
-	var state = getParameterByName('state');
-	var scope = getParameterByName('scope');
-	if (scope == null) scope = '';
-	var array = scope.split(',');
-	$.each(array, function (i) {
-		if (array[i] === 'email')
-			$("#form-auth-email").attr("checked", "checked");
-		if (array[i] === 'email_verified')
-			$("#form-auth-verified").attr("checked", "checked");
-		if (array[i] === 'role')
-			$("#form-auth-role").attr("checked", "checked");
-		console.log(array[i]);
-	});
-
-	/* check auto accept */
-	var ajax = $.ajax({
-		url: "/service?action=auth_get_site",
-		type: 'POST',
-		data: {
-			app_id: app_id
-		}
-	});
-
-	ajax.done(function (res) {
-		if (res["errno"] === 0) {
-			$('#auth-grant-host').text(res['host']);
-			if (res['auto_grant'] === 1) {
-				$('#form-auth-accept').click();
-			}
-		} else {
-			$('#modal-msg').modal('show');
-			$('#modal-msg-content').text(res["msg"]);
-		}
-	});
-
-}
-
 $(function () {
 	$("#tabs").tabs();
 });
@@ -61,15 +19,9 @@ $("#btn-register").click(function (e) {
 				password: pass
 			}
 		});
-
 		ajax.done(function (res) {
 			if (res["errno"] === 0) {
 				window.location.pathname = "/login";
-				//if(window.location.href.indexOf("redirect_uri") != -1){
-				//window.location.pathname = "/login";
-				//}else{
-				//$('#modal-msg-content').text("Verify email");
-				//}
 			} else {
 				$('#modal-msg-content').text(res["msg"]);
 			}
@@ -83,7 +35,7 @@ $("#btn-login").click(function (e) {
 	var password = $("#password").val();
 	var pass = cryptPwd(password);
 	var rememberme = $("#rememberme").prop("checked");
-	$("#btn-login").html("submiting");
+	$("#btn-login").html("submitting");
 	$("#btn-login").attr("disabled", "disabled");
 	var ajax = $.ajax({
 		url: "/service?action=login",
@@ -119,7 +71,6 @@ $("#btn-login").click(function (e) {
 	});
 });
 
-
 $("#btn-login-continue").click(function (e) {
 	var next = "/ucenter";
 	if (window.location.href.indexOf("redirect_uri") !== -1) {
@@ -130,13 +81,10 @@ $("#btn-login-continue").click(function (e) {
 	window.location.pathname = next;
 });
 
-
 $("#btn-signout, #btn-signout-header").click(function (e) {
 	e.preventDefault();
 	$('#modal-msg').modal('show');
 	$('#modal-msg-content').text("Processing...");
-	var username = $("#form-lostpass-username").val();
-	var email = $("#form-lostpass-email").val();
 	var ajax = $.ajax({
 		url: "/service?action=signout",
 		type: 'POST',
@@ -146,7 +94,6 @@ $("#btn-signout, #btn-signout-header").click(function (e) {
 		window.location.pathname = "/login";
 	});
 });
-
 
 $("#form-lostpass-submit").click(function (e) {
 	e.preventDefault();
@@ -197,14 +144,73 @@ $("#form-resetpwd-submit").click(function (e) {
 	});
 });
 
+function validateUsername(username) {
+	return username.length > 0 && username.length <= 12;
+}
+
+function validateEmail(email) {
+	var emailRegex = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
+	if (!$.trim(email)) {
+		return false;
+	} else if (!(emailRegex.test(email))) {
+		return false;
+	}
+	return true;
+}
+
+function validatePwd(password) {
+	return password.length >= 6;
+}
+
+function cryptPwd(password) {
+	password = window.md5(password + "QuickAuth");
+	password = window.md5(password + "newnius");
+	password = window.md5(password + "com");
+	return password;
+}
+
+if (window.location.pathname.indexOf("auth") !== -1) {
+	var response_type = getParameterByName('response_type');
+	var client_id = getParameterByName('client_id');
+	var redirect_uri = getParameterByName('redirect_uri');
+	if (redirect_uri == null) redirect_uri = 'javascript:void(0)';
+	var state = getParameterByName('state');
+	var scope = getParameterByName('scope');
+	if (scope == null) scope = '';
+	var array = scope.split(',');
+	$.each(array, function (i) {
+		if (array[i] === 'email')
+			$("#form-auth-email").attr("checked", "checked");
+		if (array[i] === 'email_verified')
+			$("#form-auth-verified").attr("checked", "checked");
+		if (array[i] === 'role')
+			$("#form-auth-role").attr("checked", "checked");
+	});
+	/* check auto accept */
+	var ajax = $.ajax({
+		url: "/service?action=auth_get_site",
+		type: 'POST',
+		data: {
+			client_id: client_id
+		}
+	});
+	ajax.done(function (res) {
+		if (res["errno"] === 0) {
+			$('#auth-grant-host').text(res['host']);
+		} else {
+			$('#modal-msg').modal('show');
+			$('#modal-msg-content').text(res["msg"]);
+		}
+	});
+}
+
 $('#form-auth-accept').click(function (e) {
 	e.preventDefault();
 	$('#modal-msg').modal('show');
 	var response_type = getParameterByName('response_type');
-	var app_id = getParameterByName('client_id');
+	var client_id = getParameterByName('client_id');
 	var redirect_uri = getParameterByName('redirect_uri');
 	var state = getParameterByName('state');
-	var scope = getParameterByName('scope');
 	var scope = [];
 	if ($("#form-auth-email").prop("checked"))
 		scope.push('email');
@@ -217,7 +223,7 @@ $('#form-auth-accept').click(function (e) {
 		type: 'POST',
 		data: {
 			response_type: response_type,
-			app_id: app_id,
+			client_id: client_id,
 			redirect_uri: redirect_uri,
 			state: state,
 			scope: scope.join(',')
@@ -252,28 +258,3 @@ $('#form-auth-decline').click(function (e) {
 	else
 		window.location.pathname = '/ucenter';
 });
-
-function validateUsername(username) {
-	return username.length > 0 && username.length <= 12;
-}
-
-function validateEmail(email) {
-	var emailRegex = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
-	if (!$.trim(email)) {
-		return false;
-	} else if (!(emailRegex.test(email))) {
-		return false;
-	}
-	return true;
-}
-
-function validatePwd(password) {
-	return password.length >= 6;
-}
-
-function cryptPwd(password) {
-	password = window.md5(password + "QuickAuth");
-	password = window.md5(password + "newnius");
-	password = window.md5(password + "com");
-	return password;
-}

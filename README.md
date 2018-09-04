@@ -1,5 +1,5 @@
 # QuickAuth
-Account system which supports OAuth & SSO.
+Account system which supports OAuth.
 
 ## Requirements
   - Redis
@@ -15,7 +15,7 @@ Account system which supports OAuth & SSO.
 
 ## Features
   - OAuth
-  - Muiltiple Login
+  - Multiple Login
   - Block IP
   - Rate Limit
   - Session Control
@@ -28,5 +28,4 @@ Account system which supports OAuth & SSO.
 ## TODOs
   - New UI
   - Divide front-end to template
-  - SSO
   - Security Improvements

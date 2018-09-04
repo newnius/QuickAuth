@@ -255,7 +255,7 @@
 										</div>
 										<table id="table-site" data-toolbar="#toolbar" class="table table-striped">
 										</table> 
-										<span class="text-info">* hi</span>
+										<span class="text-info">* Clients in OAuth2</span>
 									</div>
 								</div>
 							</div>
@@ -312,13 +312,13 @@
 						<?php }elseif($page_type == 'logs'){ ?>
 						<div id="logs">
 							<div class="panel panel-default">
-								<div class="panel-heading">Recent activities</div> 
+								<div class="panel-heading">Recent activities</div>
 								<div class="panel-body">
 									<div class="table-responsive">
 										<div id="toolbar"></div>
 										<table id="table-log" data-toolbar="#toolbar" class="table table-striped">
 										</table> 
-										<span class="text-info">* At mot 1000 records are shown</span>
+										<span class="text-info">* At most 1000 records are shown</span>
 									</div>
 								</div>
 							</div>
@@ -333,7 +333,7 @@
 										<div id="toolbar"></div>
 										<table id="table-auth" data-toolbar="#toolbar" class="table table-striped">
 										</table> 
-										<span class="text-info">* Only activities of last 7 days are shown</span>
+										<span class="text-info">* Authentications</span>
 									</div>
 								</div>
 							</div>
@@ -342,13 +342,13 @@
 						<?php }elseif($page_type == 'logs_all'){ ?>
 						<div id="logs">
 							<div class="panel panel-default">
-								<div class="panel-heading">Recent activities</div> 
+								<div class="panel-heading">Recent activities</div>
 								<div class="panel-body">
 									<div class="table-responsive">
 										<div id="toolbar"></div>
 										<table id="table-log" data-toolbar="#toolbar" class="table table-striped">
 										</table> 
-										<span class="text-info">* At mot 1000 records are shown</span>
+										<span class="text-info">* At most 1000 records are shown</span>
 									</div>
 								</div>
 							</div>
@@ -379,6 +379,7 @@
 
 		<script src="js/util.js"></script>
 		<script src="js/script.js"></script>
+		<script src="js/auth.js"></script>
 		<script src="js/user.js"></script>
 		<script src="js/session.js"></script>
 		<script src="js/secure.js"></script>

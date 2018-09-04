@@ -2,10 +2,10 @@
 
 require_once('predis/autoload.php');
 require_once('util4p/util.php');
-require_once('Code.class.php');
 require_once('util4p/ReSession.class.php');
 require_once('util4p/RateLimiter.class.php');
 
+require_once('Code.class.php');
 require_once('config.inc.php');
 require_once('user.logic.php');
 require_once('session.logic.php');
@@ -55,10 +55,6 @@ function print_response($res)
 	if (!isset($res['msg']))
 		$res['msg'] = Code::getErrorMsg($res['errno']);
 	$json = json_encode($res);
-	//if(isset($_GET['callback']))
-	//$json = $_GET['callback'].'('.$json.')';
-	//else
-	//$json = 'Void('.$json.')';
 	header('Content-type: application/json');
 	echo $json;
 }
@@ -187,14 +183,14 @@ switch ($action) {
 	/* oauth */
 	case 'auth_get_site':
 		$rule = new CRObject();
-		$rule->set('app_id', cr_get_POST('app_id'));
+		$rule->set('client_id', cr_get_POST('client_id'));
 		$res = auth_get_site($rule);
 		break;
 
 	case 'auth_grant':
 		$rule = new CRObject();
 		$rule->set('response_type', cr_get_POST('response_type'));
-		$rule->set('app_id', cr_get_POST('app_id'));
+		$rule->set('client_id', cr_get_POST('client_id'));
 		$rule->set('redirect_uri', cr_get_POST('redirect_uri'));
 		$rule->set('state', cr_get_POST('state'));
 		$rule->set('scope', cr_get_POST('scope'));
@@ -203,7 +199,7 @@ switch ($action) {
 
 	case 'auth_revoke':
 		$rule = new CRObject();
-		$rule->set('app_id', cr_get_POST('app_id'));
+		$rule->set('client_id', cr_get_POST('client_id'));
 		$res = auth_revoke($rule);
 		break;
 

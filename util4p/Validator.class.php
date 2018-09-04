@@ -23,16 +23,14 @@ class Validator
 		return preg_match("/^([0-9A-Za-z\\-_\\.]+)@([0-9a-z]+\\.[a-z]{2,3}(\\.[a-z]{2})?)$/i", $str) === 1;
 	}
 
-	/*
-	 * FIXME: filter_var sucks, undependable
-	 */
+
+	/*TODO*/
 	public static function isURL($url)
 	{
-		return true;
 		if (is_null($url) || empty($url)) {
 			return false;
 		}
-		return !filter_var($url, FILTER_VALIDATE_URL);
+		return true;
 	}
 
 }

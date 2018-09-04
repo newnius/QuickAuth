@@ -3,34 +3,31 @@ function register_events_site() {
 		e.preventDefault();
 		$('#form-site-submit-type').val('site_add');
 		$('#form-site-domain').val('');
-		$('#form-site-revokeurl').val('');
-		$('#form-site-level').val('1');
 		$('#modal-site').modal('show');
 		$("#form-site-domain").removeAttr("disabled");
 		$("#form-site-id-tr").addClass("hidden");
 		$("#form-site-key-tr").addClass("hidden");
+		$("#form-site-remove").addClass("hidden");
+		$("#form-site-msg").html("");
 	});
 
 	$('#form-site-submit').click(function (e) {
 		e.preventDefault();
-		var id = $("#form-site-id").val();
 		var domain = $("#form-site-domain").val();
-		var revoke_url = $("#form-site-revokeurl").val();
-		var level = $("#form-site-level").val();
 		var method = $("#form-site-submit-type").val();
+		if (method === "site_update") {
+			$('#modal-site').modal('hide');
+			return;
+		}
 		$("#form-site-submit").attr("disabled", "disabled");
 		var ajax = $.ajax({
 			url: "/service?action=" + method,
 			type: 'POST',
 			data: {
-				id: id,
-				domain: domain,
-				revoke_url: revoke_url,
-				level: level
+				domain: domain
 			}
 		});
-		ajax.done(function (msg) {
-			var res = JSON.parse(msg);
+		ajax.done(function (res) {
 			if (res["errno"] === 0) {
 				$('#modal-site').modal('hide');
 				$('#table-site').bootstrapTable("refresh");
@@ -46,10 +43,36 @@ function register_events_site() {
 		});
 	});
 
+	$('#form-site-remove').click(function (e) {
+		e.preventDefault();
+		var id = $("#form-site-id").val();
+		$("#form-site-remove").attr("disabled", "disabled");
+		var ajax = $.ajax({
+			url: "/service?action=site_remove",
+			type: 'POST',
+			data: {
+				client_id: id
+			}
+		});
+		ajax.done(function (res) {
+			if (res["errno"] === 0) {
+				$('#modal-site').modal('hide');
+				$('#table-site').bootstrapTable("refresh");
+			} else {
+				$("#form-site-msg").html(res["msg"]);
+				$("#modal-site").effect("shake");
+			}
+			$("#form-site-remove").removeAttr("disabled");
+		});
+		ajax.fail(function (jqXHR, textStatus) {
+			alert("Request failed :" + textStatus);
+			$("#form-site-remove").removeAttr("disabled");
+		});
+	});
 }
 
 function load_sites(who) {
-	$table = $("#table-site");
+	var $table = $("#table-site");
 	$table.bootstrapTable({
 		url: '/service?action=sites_get&who=' + who,
 		responseHandler: siteResponseHandler,
@@ -89,13 +112,6 @@ function load_sites(who) {
 			valign: 'middle',
 			sortable: true
 		}, {
-			field: 'level',
-			title: 'Type',
-			align: 'center',
-			valign: 'middle',
-			sortable: true,
-			formatter: siteLevelFormatter
-		}, {
 			field: 'operate',
 			title: 'Operation',
 			align: 'center',
@@ -103,18 +119,6 @@ function load_sites(who) {
 			formatter: siteOperateFormatter
 		}]
 	});
-}
-
-function siteLevelFormatter(level) {
-	switch (level) {
-		case "99":
-			return "Partners";
-		case "1":
-			return "Normal";
-		case "0":
-			return "Removed";
-	}
-	return "Unknown";
 }
 
 function siteResponseHandler(res) {
@@ -148,13 +152,13 @@ function show_modal_site(site) {
 	$('#modal-site-title').html('Edit');
 	$('#form-site-submit').html('Save');
 	$('#form-site-submit-type').val('site_update');
-	$('#form-site-id').val(site.id);
+	$('#form-site-id').val(site.client_id);
 	$('#form-site-domain').val(site.domain);
-	$('#form-site-revokeurl').val(site.revoke_url);
-	$('#form-site-key').val(site.key);
-	$('#form-site-level').val(site.level);
+	$('#form-site-key').val(site.client_secret);
 
 	$('#form-site-domain').attr("disabled", "disabled");
 	$("#form-site-id-tr").removeClass("hidden");
 	$("#form-site-key-tr").removeClass("hidden");
+	$("#form-site-remove").removeClass("hidden");
+	$("#form-site-msg").html("");
 }

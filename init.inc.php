@@ -9,12 +9,15 @@
 	require_once('util4p/CRObject.class.php');
 	require_once('util4p/AccessController.class.php');
 
+	require_once('OAuth2.class.php');
+
 	init_mysql();
 	init_redis();
 	init_logger();
 	init_Session();
 	init_accessMap();
 	init_RateLimiter();
+	init_OAuth();
 
 	function init_mysql(){
 		$config = new CRObject();
@@ -23,7 +26,7 @@
 		$config->set('db', DB_NAME);
 		$config->set('user', DB_USER);
 		$config->set('password', DB_PASSWORD);
-        $config->set('show_error', DB_SHOW_ERROR);
+		$config->set('show_error', DB_SHOW_ERROR);
 		MysqlPDO::configure($config);
 	}
 
@@ -67,9 +70,7 @@
 			/* site */
 			'sites_get_self' => array('root', 'admin', 'developer'),
 			'sites_get_others' => array('root', 'admin'),
-			'site_add_0' => array('root', 'admin', 'developer'),
-			'site_add_1' => array('root', 'admin'),
-			'site_add_99' => array('root', 'admin'),
+			'site_add' => array('root', 'admin', 'developer'),
 			'site_update_others' => array('root', 'admin'),
 
 			/* session */
@@ -85,8 +86,6 @@
 			'rc_list' => array('root', 'admin'),
 			'rc_block' => array('root', 'admin'),
 			'rc_unblock' => array('root', 'admin'),
-			
-
 
 			/* ucenter entry show control */
 			'show_ucenter_home' => array('root', 'admin', 'developer', 'normal'),
@@ -111,7 +110,7 @@
 	function init_RateLimiter()
 	{
 		$rules = array(
-			array('interval' => 300, 'degree' => 100),
+			array('interval' => 300, 'degree' => 200),
 			array('interval' => 3600, 'degree' => 500),
 			array('interval' => 86400, 'degree' => 1000)
 		);
@@ -119,4 +118,17 @@
 		$config->set('key_prefix', RATE_LIMIT_KEY_PREFIX);
 		$config->set('rules', $rules);
 		RateLimiter::configure($config);
+	}
+
+	function init_OAuth()
+	{
+		$config = new CRObject();
+		$config->set('table_client', 'qa_oauth_client');
+		$config->set('table_openid', 'qa_oauth_openid');
+		$config->set('table_code', 'qa_oauth_code');
+		$config->set('table_token', 'qa_oauth_token');
+		$config->set('code_timeout', AUTH_CODE_TIMEOUT);
+		$config->set('token_timeout', AUTH_TOKEN_TIMEOUT);
+		OAuth2::configure($config);
+		SiteManager::configure($config);
 	}

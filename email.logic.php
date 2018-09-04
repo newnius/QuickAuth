@@ -1,7 +1,6 @@
 <?php
 
 require_once('util4p/CRObject.class.php');
-require_once('Code.class.php');
 require_once('util4p/Validator.class.php');
 require_once('util4p/CRLogger.class.php');
 require_once('util4p/AccessController.class.php');
@@ -9,6 +8,7 @@ require_once('util4p/Random.class.php');
 
 require_once("sendgrid/sendgrid-php.php");
 
+require_once('Code.class.php');
 require_once('config.inc.php');
 require_once('init.inc.php');
 
@@ -47,7 +47,7 @@ function can_send(CRObject $email)
 	$rule = new CRObject();
 	$rule->set('time_begin', time() - 86400);//last 24 hours
 	$rule->set('scope', $email->get('username'));
-	$rule->set('tag', 'send_email');
+	$rule->set('tag', 'email.send');
 	$res['errno'] = Code::SUCCESS;
 	$cnt = CRLogger::getCount($rule);
 	return $cnt < MAXIMUM_EMAIL_PER_EMAIL;

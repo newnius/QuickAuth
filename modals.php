@@ -89,31 +89,15 @@
 								<input type="text" id="form-site-domain" class="form-group form-control" placeholder="example.com" required />
 							</td>
 						</tr>
-						<tr>
-							<th>Revoke URL(可选)</th>
-							<td>
-								<label for="revoke url" class="sr-only">Revoke URL</label>
-								<input type="text" id="form-site-revokeurl" class="form-group form-control" placeholder="http://example.com/revoke.php" required />
-							</td>
-						</tr>
-						<tr>
-							<th>Type</th>
-							<td>
-                                <label for="form-site-level"></label><select id="form-site-level" class="form-group form-control" required>
-									<option value="1" selected>Normal</option>
-									<option value="99">Partner</option>
-								</select>
-							</td>
-						</tr>
 						<tr id="form-site-id-tr">
-							<th>APPID</th>
+							<th>ClientID</th>
 							<td>
 								<label for="form-site-id" class="sr-only">App ID</label>
 								<input type="text" id="form-site-id" class="form-group form-control" required disabled/>
 							</td>
 						</tr>
 						<tr id="form-site-key-tr">
-							<th>KEY</th>
+							<th>ClientSecret</th>
 							<td>
 								<label for="form-site-key" class="sr-only">Key</label>
 								<input type="text" id="form-site-key" class="form-group form-control" required disabled/>
@@ -122,6 +106,7 @@
 					</table>
 					<div>
 						<button id="form-site-submit" type="submit" class="btn btn-primary">Save</button>
+						<button id="form-site-remove" type="button" class="btn btn-danger">Remove</button>
 						<span id="form-site-msg" class="text-danger"></span>
 					</div>
 				</form>
