@@ -28,10 +28,9 @@ class UserManager
 		$sql = $builder->build();
 
 		$params = array(
-			$username, $email, $password, $role, time(), ip2long(cr_get_client_ip())
+			$username, $email, $password, $role, time(), ip2long(cr_get_client_ip(false))
 		);
-		$count = (new MysqlPDO())->execute($sql, $params);
-		return $count === 1;
+		return (new MysqlPDO())->execute($sql, $params);
 	}
 
 	/**/
@@ -55,8 +54,7 @@ class UserManager
 		$builder->where($where_arr);
 		$sql = $builder->build();
 		$params = array($email, $email_verified, $password, $role, $username);
-		$count = (new MysqlPDO())->execute($sql, $params);
-		return $count === 1;
+		return (new MysqlPDO())->execute($sql, $params);
 	}
 
 	/**/
@@ -70,7 +68,7 @@ class UserManager
 		$sql = $builder->build();
 		$params = array($username);
 		$users = (new MysqlPDO())->executeQuery($sql, $params);
-		return count($users) === 1 ? $users[0] : null;
+		return $users !== null && count($users) === 1 ? $users[0] : null;
 	}
 
 	/**/
@@ -84,7 +82,7 @@ class UserManager
 		$sql = $builder->build();
 		$params = array($email);
 		$users = (new MysqlPDO())->executeQuery($sql, $params);
-		return count($users) === 1 ? $users[0] : null;
+		return $users !== null && count($users) === 1 ? $users[0] : null;
 	}
 
 	/**/
@@ -115,6 +113,6 @@ class UserManager
 		$sql = $builder->build();
 		$params = array();
 		$res = (new MysqlPDO())->executeQuery($sql, $params);
-		return intval($res[0]['count']);
+		return $res !== null ? intval($res[0]['count']) : 0;
 	}
 }

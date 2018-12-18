@@ -27,8 +27,7 @@ class SiteManager
 		$builder->insert(self::$table_client, $key_values);
 		$sql = $builder->build();
 		$params = array($domain, $owner, $client_id, $client_secret);
-		$count = (new MysqlPDO())->execute($sql, $params);
-		return $count === 1;
+		return (new MysqlPDO())->execute($sql, $params);
 	}
 
 	/**/
@@ -65,7 +64,7 @@ class SiteManager
 		$builder->where($where_arr);
 		$sql = $builder->build();
 		$sites = (new MysqlPDO())->executeQuery($sql, $params);
-		return count($sites) > 0 ? $sites[0] : null;
+		return $sites !== null && count($sites) > 0 ? $sites[0] : null;
 	}
 
 	/**/
@@ -84,7 +83,7 @@ class SiteManager
 		$builder->where($where_arr);
 		$sql = $builder->build();
 		$res = (new MysqlPDO())->executeQuery($sql, $params);
-		return intval($res[0]['count']);
+		return $res !== null ? intval($res[0]['count']) : 0;
 	}
 
 	/**/

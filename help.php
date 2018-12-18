@@ -1,25 +1,17 @@
 <?php
-require_once('global.inc.php');
+require_once('config.inc.php');
+require_once('secure.inc.php');
 ?>
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
-	<meta charset="utf-8"/>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1"/>
-	<meta name="keywords" content="QuickAuth, free, quick, OAuth, User System"/>
-	<meta name="description"
-	      content="QuickAuth is a user system and an implement of OAuth. By using QuickAuth, you can log in to some websites without creating new accounts, which will most likely be used only once. Also ,it is totally free!"/>
-	<meta name="author" content="Newnius"/>
-	<link rel="icon" href="favicon.ico"/>
+	<?php require('head.php') ?>
 	<title>Manual | QuickAuth</title>
-	<link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"/>
-	<link href="style.css" rel="stylesheet"/>
-	<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
 </head>
 <body>
 <div class="wrapper">
-	<?php require_once('header.php'); ?>
+	<?php require('header.php'); ?>
+	<?php require('modals.php'); ?>
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-4 col-md-3 hidden-xs">
@@ -133,21 +125,18 @@ require_once('global.inc.php');
 				<div id="qid-999" class="panel panel-default">
 					<div class="panel-heading">More</div>
 					<div class="panel-body">
-						<p>This document has not been completed. If you have any problem, please contact me at <a
-									href="mailto:support@newnius.com?subject=From QuickAuth">support@newnius.com</a></p>
+						<p>This document has not been completed. If you have any problem, please contact me at
+							<a href="mailto:<?= FEEDBACK_EMAIL ?>?subject=From QA"><?= FEEDBACK_EMAIL ?></a>
+						</p>
 					</div>
 				</div>
 
 			</div>
 		</div>
 	</div> <!-- /container -->
+	<!--This div exists to avoid footer from covering main body-->
 	<div class="push"></div>
 </div>
-<?php require_once('footer.php'); ?>
-<script src="js/util.js"></script>
-<script src="js/script.js"></script>
-<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<script src="//cdn.bootcss.com/blueimp-md5/1.1.1/js/md5.min.js"></script>
-<script src="//cdn.bootcss.com/jqueryui/1.11.4/jquery-ui.js"></script>
+<?php require('footer.php'); ?>
 </body>
 </html>

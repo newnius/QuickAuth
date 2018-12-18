@@ -1,11 +1,10 @@
 <?php
 require_once('predis/autoload.php');
-require_once('util4p/util.php');
 require_once('util4p/ReSession.class.php');
 require_once('config.inc.php');
 require_once('init.inc.php');
 ?>
-<nav class="navbar navbar-default">
+<header id="header" class="navbar navbar-default">
 	<div class="container">
 		<!-- Brand and toggle get grouped for better mobile display -->
 		<div class="navbar-header">
@@ -40,7 +39,7 @@ require_once('init.inc.php');
 							<li><a href="<?= BASE_URL ?>/ucenter?notice">Notice&nbsp;<span class="badge">0</span></a>
 							</li>
 							<li><a href="<?= BASE_URL ?>/ucenter?home">Settings</a></li>
-							<li><a href="javascript:void(0)" id="btn-signout-header">Sign out</a></li>
+							<li><a href="javascript:void(0)" id="btn-signout">Sign out</a></li>
 							<li role="separator" class="divider"></li>
 						<?php } ?>
 						<li><a href="<?= BASE_URL ?>/help">Help</a></li>
@@ -50,4 +49,4 @@ require_once('init.inc.php');
 			</ul>
 		</div><!-- /.navbar-collapse -->
 	</div><!-- /.container -->
-</nav>
+</header>

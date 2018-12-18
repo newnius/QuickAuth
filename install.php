@@ -11,6 +11,10 @@ require_once('UserManager.class.php');
 require_once('config.inc.php');
 require_once('init.inc.php');
 
+/* show error for debug purpose */
+$config = new CRObject();
+$config->set('show_error', true);
+MysqlPDO::configure($config);
 
 create_tables_user();
 create_tables_oauth();
@@ -22,7 +26,8 @@ function execute_sqls($sqls)
 {
 	foreach ($sqls as $description => $sql) {
 		echo "Executing $description: ";
-		var_dump((new MysqlPDO)->execute($sql, array()));
+		$success = (new MysqlPDO)->execute($sql, array());
+		echo $success ? '<em>Success</em>' : '<em>Failed</em>';
 		echo "<hr/>";
 	}
 }
@@ -30,8 +35,9 @@ function execute_sqls($sqls)
 function add_root_user()
 {
 	$password = Random::randomString(12);
-	echo "Adding user: (root, $password) \n";
+	echo "Adding root user with password $password \n";
 
+	/* pseudo encryption in client side */
 	$password = md5($password . 'QuickAuth');
 	$password = md5($password . 'newnius');
 	$password = md5($password . 'com');
@@ -43,14 +49,16 @@ function add_root_user()
 	$user->set('email', 'root@domain.com');
 	$user->set('password', $password);
 	$user->set('role', 'root');
-	var_dump(UserManager::add($user));
+	$success = UserManager::add($user);
+	echo $success ? '<em>Success</em>' : '<em>Failed</em>';
+	echo "<hr/>";
 }
 
 
 function create_tables_user()
 {
 	$sqls = array(
-		'DROP `qa_user`' => 'DROP TABLE IF EXISTS `qa_user`',
+//		'DROP `qa_user`' => 'DROP TABLE IF EXISTS `qa_user`',
 		'CREATE `qa_user`' =>
 			'CREATE TABLE `qa_user`( 
 				`username` VARCHAR(12) PRIMARY KEY,
@@ -69,7 +77,7 @@ function create_tables_user()
 function create_tables_oauth()
 {
 	$sqls = array(
-		'DROP `qa_oauth_client`' => 'DROP TABLE IF EXISTS `qa_oauth_client`',
+//		'DROP `qa_oauth_client`' => 'DROP TABLE IF EXISTS `qa_oauth_client`',
 		'CREATE `qa_oauth_client`' =>
 			'CREATE TABLE `qa_oauth_client`(
 				`client_id` VARCHAR(16) PRIMARY KEY,
@@ -79,7 +87,7 @@ function create_tables_oauth()
 				 INDEX(`owner`)
 			)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci',
 
-		'DROP `qa_oauth_openid`' => 'DROP TABLE IF EXISTS `qa_oauth_openid`',
+//		'DROP `qa_oauth_openid`' => 'DROP TABLE IF EXISTS `qa_oauth_openid`',
 		'CREATE `qa_oauth_openid`' =>
 			'CREATE TABLE `qa_oauth_openid`(
 				`open_id` VARCHAR(64) PRIMARY KEY,
@@ -88,7 +96,7 @@ function create_tables_oauth()
 				 UNIQUE(`uid`, `client_id`)
 			)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci',
 
-		'DROP `qa_oauth_code`' => 'DROP TABLE IF EXISTS `qa_oauth_code`',
+//		'DROP `qa_oauth_code`' => 'DROP TABLE IF EXISTS `qa_oauth_code`',
 		'CREATE `qa_oauth_code`' =>
 			'CREATE TABLE `qa_oauth_code`(
 				`code` VARCHAR(64) PRIMARY KEY,
@@ -99,7 +107,7 @@ function create_tables_oauth()
 				`scope` VARCHAR(256) NOT NULL DEFAULT ""
 			)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci',
 
-		'DROP `qa_oauth_token`' => 'DROP TABLE IF EXISTS `qa_oauth_token`',
+//		'DROP `qa_oauth_token`' => 'DROP TABLE IF EXISTS `qa_oauth_token`',
 		'CREATE `qa_oauth_token`' =>
 			'CREATE TABLE `qa_oauth_token`(
 				`token` VARCHAR(64) PRIMARY KEY,
@@ -116,7 +124,7 @@ function create_tables_oauth()
 function create_tables_log()
 {
 	$sqls = array(
-		'DROP `qa_log`' => 'DROP TABLE IF EXISTS `qa_log`',
+//		'DROP `qa_log`' => 'DROP TABLE IF EXISTS `qa_log`',
 		'CREATE `qa_log`' =>
 			'CREATE TABLE `qa_log`(
 				`id` BIGINT AUTO_INCREMENT,

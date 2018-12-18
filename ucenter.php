@@ -85,27 +85,17 @@ foreach ($admin_entries as $entry) {
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
-	<meta charset="utf-8"/>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1"/>
-	<meta name="keywords" content="QuickAuth, free, quick, OAuth, User System"/>
-	<meta name="description"
-	      content="QuickAuth is a user system and an implement of OAuth. By using QuickAuth, you can log in to some websites without sign up for another account, which most likely will be used only once. Also ,it is totally free!"/>
-	<meta name="author" content="Newnius"/>
-	<link rel="icon" href="favicon.ico"/>
+	<?php require('head.php'); ?>
 	<title>User Center | QuickAuth</title>
-	<link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"/>
-	<link href="style.css" rel="stylesheet"/>
-	<link href="//cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.css" rel="stylesheet">
-	<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.12.1/dist/bootstrap-table.min.css" rel="stylesheet">
 	<script type="text/javascript">
 		var page_type = "<?=$page_type?>";
 	</script>
 </head>
 <body>
 <div class="wrapper">
-	<?php require_once('header.php'); ?>
-	<?php require_once('modals.php'); ?>
+	<?php require('header.php'); ?>
+	<?php require('modals.php'); ?>
 	<div class="container">
 		<div class="row">
 
@@ -142,7 +132,7 @@ foreach ($admin_entries as $entry) {
 							<div class="panel-heading">Welcome</div>
 							<div class="panel-body">
 								Welcome back, <?= htmlspecialchars($username) ?>.<br/>
-								Current IP: &nbsp; <?= cr_get_client_ip() ?>.<br/>
+								Current IP: &nbsp; <?= cr_get_client_ip(false) ?>.<br/>
 							</div>
 						</div>
 						<div class="panel panel-default">
@@ -380,23 +370,22 @@ foreach ($admin_entries as $entry) {
 	<!--This div exists to avoid footer from covering main body-->
 	<div class="push"></div>
 </div>
-<?php require_once('footer.php'); ?>
 
-<script src="js/util.js"></script>
-<script src="js/script.js"></script>
-<script src="js/auth.js"></script>
-<script src="js/user.js"></script>
-<script src="js/session.js"></script>
-<script src="js/secure.js"></script>
-<script src="js/site.js"></script>
-<script src="js/ucenter.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.12.1/dist/bootstrap-table.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.12.1/dist/extensions/mobile/bootstrap-table-mobile.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.12.1/dist/extensions/export/bootstrap-table-export.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.1/tableExport.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+<?php require('footer.php'); ?>
 
-<script src="//cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
-<script src="//cdn.bootcss.com/bootstrap-table/1.11.1/extensions/mobile/bootstrap-table-mobile.min.js"></script>
-<script src="//cdn.bootcss.com/bootstrap-table/1.11.1/extensions/export/bootstrap-table-export.min.js"></script>
-<script src="//cdn.bootcss.com/TableExport/5.0.0-rc.11/js/tableexport.min.js"></script>
-<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<script src="//cdn.bootcss.com/blueimp-md5/1.1.1/js/md5.min.js"></script>
-<script src="//cdn.bootcss.com/jqueryui/1.11.4/jquery-ui.js"></script>
+<script src="static/util.js"></script>
+<script src="static/script.js"></script>
+<script src="static/auth.js"></script>
+<script src="static/user.js"></script>
+<script src="static/session.js"></script>
+<script src="static/secure.js"></script>
+<script src="static/site.js"></script>
+<script src="static/ucenter.js"></script>
+
 </body>
 </html>

@@ -6,6 +6,8 @@ require_once('util4p/ReSession.class.php');
 require_once('util4p/RateLimiter.class.php');
 
 require_once('Code.class.php');
+require_once('Securer.class.php');
+
 require_once('config.inc.php');
 require_once('user.logic.php');
 require_once('session.logic.php');
@@ -15,9 +17,9 @@ require_once('auth.logic.php');
 function csrf_check($action)
 {
 	/* check referer, just in case I forget to add the method to $post_methods */
-	$referer = $_SERVER['HTTP_REFERER'];
+	$referer = cr_get_SERVER('HTTP_REFERER', '');
 	$url = parse_url($referer);
-	if (isset($url['host']) && $url['host'] != $_SERVER['HTTP_HOST']) {
+	if (isset($url['host']) && $url['host'] !== cr_get_SERVER(['HTTP_HOST'])) {
 		return false;
 	}
 
@@ -40,12 +42,8 @@ function csrf_check($action)
 		'block',
 		'unblock'
 	);
-	$csrf_token = null;
-	if (isset($_SERVER['HTTP_X_CSRF_TOKEN'])) {
-		$csrf_token = $_SERVER['HTTP_X_CSRF_TOKEN'];
-	}
 	if (in_array($action, $post_methods)) {
-		return $csrf_token !== null && isset($_COOKIE['csrf_token']) && $csrf_token === $_COOKIE['csrf_token'];
+		return Securer::validate_csrf_token();
 	}
 	return true;
 }

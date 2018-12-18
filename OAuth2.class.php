@@ -38,7 +38,7 @@ class OAuth2
 		$builder->where($where);
 		$sql = $builder->build();
 		$UIDs = (new MysqlPDO())->executeQuery($sql, $values);
-		if (count($UIDs) > 0) {
+		if ($UIDs !== null && count($UIDs) > 0) {
 			return $UIDs[0]['uid'];
 		}
 		return null;
@@ -68,8 +68,8 @@ class OAuth2
 			$builder->insert(self::$table_openid, $key_values);
 			$sql = $builder->build();
 			$values = array($uid, $client_id, $open_id);
-			$count = (new MysqlPDO())->execute($sql, $values);
-			if ($count > 0) {
+			$success = (new MysqlPDO())->execute($sql, $values);
+			if ($success > 0) {
 				return $open_id;
 			}
 		}
@@ -90,8 +90,8 @@ class OAuth2
 			$builder->insert(self::$table_code, $key_values);
 			$sql = $builder->build();
 			$values = array($code, $data->get('client_id'), $data->get('open_id'), time() + self::$code_timeout, $scope, $data->get('redirect_uri'));
-			$count = (new MysqlPDO())->execute($sql, $values);
-			if ($count === 1) {
+			$success = (new MysqlPDO())->execute($sql, $values);
+			if ($success) {
 				return $code;
 			}
 		}
@@ -113,7 +113,7 @@ class OAuth2
 		$builder->where($where);
 		$sql = $builder->build();
 		$records = (new MysqlPDO())->executeQuery($sql, $values);
-		if (count($records) === 0) {
+		if ($records === null || count($records) === 0) {
 			return null;
 		}
 		$record = $records[0];
@@ -143,8 +143,8 @@ class OAuth2
 			$builder->insert(self::$table_token, $key_values);
 			$sql = $builder->build();
 			$params = array($token, $record['client_id'], $record['open_id'], time() + AUTH_TOKEN_TIMEOUT, $record['scope']);
-			$count = (new MysqlPDO())->execute($sql, $params);
-			if ($count > 0) {
+			$success = (new MysqlPDO())->execute($sql, $params);
+			if ($success) {
 				return $token;
 			}
 		}
@@ -168,7 +168,7 @@ class OAuth2
 		$builder->where($where);
 		$sql = $builder->build();
 		$records = (new MysqlPDO())->executeQuery($sql, $values);
-		if (count($records) === 0) {
+		if ($records === null || count($records) === 0) {
 			return null;
 		}
 		$record = $records[0];
@@ -182,8 +182,8 @@ class OAuth2
 			$builder->insert(self::$table_token, $key_values);
 			$sql = $builder->build();
 			$params = array($token, $record['client_id'], $record['open_id'], time() + AUTH_TOKEN_TIMEOUT, $record['scope']);
-			$count = (new MysqlPDO())->execute($sql, $params);
-			if ($count > 0) {
+			$success = (new MysqlPDO())->execute($sql, $params);
+			if ($success) {
 				return $token;
 			}
 		}
@@ -205,7 +205,7 @@ class OAuth2
 		$builder->where($where);
 		$sql = $builder->build();
 		$records = (new MysqlPDO())->executeQuery($sql, $values);
-		if (count($records) === 0) {
+		if ($records === null || count($records) === 0) {
 			return false;
 		}
 		$record = $records[0];
@@ -231,8 +231,7 @@ class OAuth2
 		$builder->delete(self::$table_token);
 		$builder->where($where);
 		$sql = $builder->build();
-		$count = (new MysqlPDO())->execute($sql, $values);
-		return $count > 0;
+		return (new MysqlPDO())->execute($sql, $values);
 	}
 
 	public static function getAuth(CRObject $data)
@@ -245,7 +244,7 @@ class OAuth2
 		$builder->where($where);
 		$sql = $builder->build();
 		$records = (new MysqlPDO())->executeQuery($sql, $values);
-		return count($records) > 0 ? $records[0] : null;
+		return $records !== null && count($records) > 0 ? $records[0] : null;
 	}
 
 	/* */

@@ -24,7 +24,7 @@ class CRLogger
 		$scope = $log->get('scope', '');
 		$tag = $log->get('tag');
 		$level = $log->getInt('level', self::LEVEL_INFO);
-		$ip = $log->get('ip', cr_get_client_ip());
+		$ip = $log->get('ip', cr_get_client_ip(false));
 		$time = $log->getInt('time', time());
 		$content = $log->get('content');
 
@@ -35,7 +35,7 @@ class CRLogger
 		$builder->insert(self::$db_table, $key_values);
 		$sql = $builder->build();
 		$params = array($scope, $tag, $level, ip2long($ip), $time, $content);
-		return (new MysqlPDO())->execute($sql, $params) === 1;
+		return (new MysqlPDO())->execute($sql, $params);
 	}
 
 	public static function search(CRObject $filter)
@@ -159,7 +159,7 @@ class CRLogger
 		$sql = $builder->build();
 		$sql = "SELECT COUNT(1) AS `count` FROM ( $sql ) as tmp";
 		$res = (new MysqlPDO())->executeQuery($sql, $params);
-		return intval($res[0]['count']);
+		return $res !== null ? intval($res[0]['count']) : 0;
 	}
 
 }

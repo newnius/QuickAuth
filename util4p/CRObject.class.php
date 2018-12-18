@@ -1,6 +1,6 @@
 <?php
 
-class CRObject
+class CRObject implements JsonSerializable
 {
 	private $map;
 
@@ -60,5 +60,10 @@ class CRObject
 		}
 		return $this;
 	}
+
+	public function jsonSerialize()
+	{
+		return $this->toArray();
+    }
 
 }

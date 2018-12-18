@@ -21,6 +21,7 @@ define('BASE_URL', 'http://127.0.0.1'); //make absolute url for SEO and avoid hi
 define('FORCE_VERIFY', false); //if set, unverified user will be refused to login (Warn: leave this switch as it is not finished)
 //define('ALLOW_REGISTRATION', true);
 //define('ALLOW_CUSTOM_UID', true);
+define('FEEDBACK_EMAIL', 'support@newnius.com');
 
 /* Auth */
 define('AUTH_CODE_TIMEOUT', 300); // 5 min
