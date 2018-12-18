@@ -1,8 +1,13 @@
 config.inc.php
 test.php
-*.swp
 
-
-# IntelliJ
+# IntelliJ IDEA
 .idea/
 *.iml
+
+# Temp files
+*~
+*.swp
+
+# MacOS
+.DS_Store
