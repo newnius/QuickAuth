@@ -157,8 +157,8 @@ body {
 
 #verify-error {
 	max-width: 320px;
-    margin: 25px auto 0;
-    border-left: 4px solid #dd3d36;
+	margin: 25px auto 0;
+	border-left: 4px solid #dd3d36;
 	display: none;
 	background: #fff;
 	padding: 12px;

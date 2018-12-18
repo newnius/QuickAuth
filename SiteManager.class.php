@@ -7,12 +7,12 @@ require_once('util4p/SQLBuilder.class.php');
 class SiteManager
 {
 
-    private static $table_client = 'oauth_client';
+	private static $table_client = 'oauth_client';
 
-    public static function configure(CRObject $config)
-    {
-        self::$table_client = $config->get('table_client', self::$table_client);
-    }
+	public static function configure(CRObject $config)
+	{
+		self::$table_client = $config->get('table_client', self::$table_client);
+	}
 
 	/**/
 	public static function add(CRObject $site)

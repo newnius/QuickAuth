@@ -41,7 +41,7 @@ function csrf_check($action)
 		'unblock'
 	);
 	$csrf_token = null;
-	if(isset($_SERVER['HTTP_X_CSRF_TOKEN'])) {
+	if (isset($_SERVER['HTTP_X_CSRF_TOKEN'])) {
 		$csrf_token = $_SERVER['HTTP_X_CSRF_TOKEN'];
 	}
 	if (in_array($action, $post_methods)) {

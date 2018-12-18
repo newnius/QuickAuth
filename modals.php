@@ -3,7 +3,8 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+				</button>
 				<h4 id="modal-user-title" class="modal-title">Add User</h4>
 			</div>
 			<div class="modal-body">
@@ -14,27 +15,31 @@
 							<th>Username</th>
 							<td>
 								<label for="username" class="sr-only">username</label>
-								<input type="text" id="form-user-username" class="form-group form-control" placeholder="username" maxlength=12 required />
+								<input type="text" id="form-user-username" class="form-group form-control"
+								       placeholder="username" maxlength=12 required/>
 							</td>
 						</tr>
 						<tr>
 							<th>Email</th>
 							<td>
 								<label for="email" class="sr-only">email</label>
-								<input type="email" id="form-user-email" class="form-group form-control" placeholder="email" maxlength=45 required />
+								<input type="email" id="form-user-email" class="form-group form-control"
+								       placeholder="email" maxlength=45 required/>
 							</td>
 						</tr>
 						<tr>
 							<th>Password</th>
 							<td>
 								<label for="password" class="sr-only">password</label>
-								<input type="password" id="form-user-password" class="form-group form-control"  placeholder="leave it blank to remain old password"/>
+								<input type="password" id="form-user-password" class="form-group form-control"
+								       placeholder="leave it blank to remain old password"/>
 							</td>
 						</tr>
 						<tr>
 							<th>Role</th>
 							<td>
-                                <label for="form-user-role"></label><select id="form-user-role" class="form-group form-control" required>
+								<label for="form-user-role"></label><select id="form-user-role"
+								                                            class="form-group form-control" required>
 									<option value="removed">Removed</option>
 									<option value="blocked">Blocked</option>
 									<option value="normal">Normal</option>
@@ -60,7 +65,8 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+				</button>
 				<h4 id="modal-msg-title" class="modal-title">Notify</h4>
 			</div>
 			<div class="modal-body">
@@ -75,7 +81,8 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+				</button>
 				<h4 class="modal-title">Add Site</h4>
 			</div>
 			<div class="modal-body">
@@ -86,7 +93,8 @@
 							<th>Domain</th>
 							<td>
 								<label for="domain" class="sr-only">Domain</label>
-								<input type="text" id="form-site-domain" class="form-group form-control" placeholder="example.com" required />
+								<input type="text" id="form-site-domain" class="form-group form-control"
+								       placeholder="example.com" required/>
 							</td>
 						</tr>
 						<tr id="form-site-id-tr">
@@ -100,7 +108,8 @@
 							<th>ClientSecret</th>
 							<td>
 								<label for="form-site-key" class="sr-only">Key</label>
-								<input type="text" id="form-site-key" class="form-group form-control" required disabled/>
+								<input type="text" id="form-site-key" class="form-group form-control" required
+								       disabled/>
 							</td>
 						</tr>
 					</table>
@@ -120,7 +129,8 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+				</button>
 				<h4 id="modal-block-title" class="modal-title">Block Info</h4>
 			</div>
 			<div class="modal-body">
@@ -130,14 +140,16 @@
 							<th>IP</th>
 							<td>
 								<label for="ip" class="sr-only">IP</label>
-								<input type="text" id="form-block-ip" class="form-group form-control" placeholder="8.8.8.8" required />
+								<input type="text" id="form-block-ip" class="form-group form-control"
+								       placeholder="8.8.8.8" required/>
 							</td>
 						</tr>
 						<tr>
 							<th>Time</th>
 							<td>
 								<label for="time" class="sr-only">Time</label>
-								<input type="text" id="form-block-time" class="form-group form-control" placeholder="10 (set -1 to unblock)" required />
+								<input type="text" id="form-block-time" class="form-group form-control"
+								       placeholder="10 (set -1 to unblock)" required/>
 							</td>
 						</tr>
 					</table>
@@ -155,7 +167,8 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+				</button>
 				<h4 id="modal-email-title" class="modal-title">Update Email</h4>
 			</div>
 			<div class="modal-body">
@@ -165,7 +178,8 @@
 							<th>Email</th>
 							<td>
 								<label for="email" class="sr-only">Email</label>
-								<input type="email" id="form-email-email" class="form-group form-control" placeholder="new email" required />
+								<input type="email" id="form-email-email" class="form-group form-control"
+								       placeholder="new email" required/>
 							</td>
 						</tr>
 					</table>
@@ -183,7 +197,8 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+				</button>
 				<h4 id="modal-verify-title" class="modal-title">Verify Email</h4>
 			</div>
 			<div class="modal-body">
@@ -195,7 +210,8 @@
 								<div class="form-group">
 									<label for="code" class="sr-only">Code</label>
 									<div class="input-group">
-										<input type="number" class="form-control" id="form-verify-code" placeholder="Code Received" required />
+										<input type="number" class="form-control" id="form-verify-code"
+										       placeholder="Code Received" required/>
 										<div class="input-group-addon">
 											<a href="javascript:void(0)" id="btn-verify-send">Send</a>
 										</div>

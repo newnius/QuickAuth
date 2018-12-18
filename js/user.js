@@ -145,7 +145,7 @@ function register_events_user() {
 }
 
 function load_users() {
-    var $table = $("#table-user");
+	var $table = $("#table-user");
 	$table.bootstrapTable({
 		url: '/service?action=users_get',
 		responseHandler: userResponseHandler,
