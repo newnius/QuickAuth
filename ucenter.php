@@ -425,12 +425,12 @@ foreach ($admin_entries as $entry) {
 	<div class="push"></div>
 </div>
 
+<?php require('footer.php'); ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.12.1/dist/bootstrap-table.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.12.1/dist/extensions/mobile/bootstrap-table-mobile.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.12.1/dist/extensions/export/bootstrap-table-export.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.1/tableExport.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
-<?php require('footer.php'); ?>
 <script src="static/auth.js"></script>
 <script src="static/user.js"></script>
 <script src="static/session.js"></script>

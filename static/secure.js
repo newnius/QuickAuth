@@ -48,7 +48,7 @@ function load_list_blocked() {
 		search: true,
 		showColumns: true,
 		showRefresh: true,
-		showToggle: true,
+		showToggle: false,
 		showPaginationSwitch: true,
 		minimumCountColumns: 2,
 		clickToSelect: false,
