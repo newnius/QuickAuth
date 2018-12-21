@@ -4,7 +4,7 @@ function register_events_site() {
 		$('#form-site-submit-type').val('site_add');
 		$('#form-site-domain').val('');
 		$('#modal-site').modal('show');
-		$("#form-site-domain").removeAttr("disabled");
+		$("#form-site-domain").removeAttr("readonly");
 		$("#form-site-id-tr").addClass("hidden");
 		$("#form-site-key-tr").addClass("hidden");
 		$("#form-site-remove").addClass("hidden");
@@ -13,15 +13,14 @@ function register_events_site() {
 
 	$('#form-site-submit').click(function (e) {
 		e.preventDefault();
+		$('#modal-site').modal('hide');
 		var domain = $("#form-site-domain").val();
 		var method = $("#form-site-submit-type").val();
 		if (method === "site_update") {
-			$('#modal-site').modal('hide');
 			return;
 		}
-		$("#form-site-submit").attr("disabled", "disabled");
 		var ajax = $.ajax({
-			url: "/service?action=" + method,
+			url: window.config.BASE_URL + "/service?action=site_add",
 			type: 'POST',
 			data: {
 				domain: domain
@@ -29,26 +28,25 @@ function register_events_site() {
 		});
 		ajax.done(function (res) {
 			if (res["errno"] === 0) {
-				$('#modal-site').modal('hide');
 				$('#table-site').bootstrapTable("refresh");
 			} else {
-				$("#form-site-msg").html(res["msg"]);
-				$("#modal-site").effect("shake");
+				$('#modal-msg').modal('show');
+				$("#modal-msg-content").text(res['msg']);
 			}
 			$("#form-site-submit").removeAttr("disabled");
 		});
 		ajax.fail(function (jqXHR, textStatus) {
-			alert("Request failed :" + textStatus);
-			$("#form-site-submit").removeAttr("disabled");
+			$('#modal-msg').modal('show');
+			$("#modal-msg-content").text("Request failed :" + textStatus);
 		});
 	});
 
 	$('#form-site-remove').click(function (e) {
 		e.preventDefault();
+		$('#modal-site').modal('hide');
 		var id = $("#form-site-id").val();
-		$("#form-site-remove").attr("disabled", "disabled");
 		var ajax = $.ajax({
-			url: "/service?action=site_remove",
+			url: window.config.BASE_URL + "/service?action=site_remove",
 			type: 'POST',
 			data: {
 				client_id: id
@@ -56,25 +54,22 @@ function register_events_site() {
 		});
 		ajax.done(function (res) {
 			if (res["errno"] === 0) {
-				$('#modal-site').modal('hide');
 				$('#table-site').bootstrapTable("refresh");
 			} else {
-				$("#form-site-msg").html(res["msg"]);
-				$("#modal-site").effect("shake");
+				$('#modal-msg').modal('show');
+				$("#modal-msg-content").text(res["msg"]);
 			}
-			$("#form-site-remove").removeAttr("disabled");
 		});
 		ajax.fail(function (jqXHR, textStatus) {
-			alert("Request failed :" + textStatus);
-			$("#form-site-remove").removeAttr("disabled");
+			$('#modal-msg').modal('show');
+			$("#modal-msg-content").text("Request failed :" + textStatus);
 		});
 	});
 }
 
 function load_sites(who) {
-	var $table = $("#table-site");
-	$table.bootstrapTable({
-		url: '/service?action=sites_get&who=' + who,
+	$("#table-site").bootstrapTable({
+		url: window.config.BASE_URL + '/service?action=sites_get&who=' + who,
 		responseHandler: siteResponseHandler,
 		sidePagination: 'server',
 		cache: true,
@@ -103,14 +98,13 @@ function load_sites(who) {
 			title: 'Username',
 			align: 'center',
 			valign: 'middle',
-			sortable: true,
 			visible: false
 		}, {
 			field: 'domain',
 			title: 'Domain',
 			align: 'center',
 			valign: 'middle',
-			sortable: true
+			escape: true
 		}, {
 			field: 'operate',
 			title: 'Operation',
@@ -128,13 +122,14 @@ function siteResponseHandler(res) {
 		tmp["rows"] = res["sites"];
 		return tmp;
 	}
-	alert(res["msg"]);
+	$('#modal-msg').modal('show');
+	$("#modal-msg-content").text(res["msg"]);
 	return [];
 }
 
 function siteOperateFormatter(value, row, index) {
 	return [
-		'<button class="btn btn-default edit" href="javascript:void(0)">',
+		'<button class="btn btn-default edit">',
 		'<i class="glyphicon glyphicon-edit"></i>&nbsp;View',
 		'</button>'
 	].join('');
@@ -156,7 +151,7 @@ function show_modal_site(site) {
 	$('#form-site-domain').val(site.domain);
 	$('#form-site-key').val(site.client_secret);
 
-	$('#form-site-domain').attr("disabled", "disabled");
+	$('#form-site-domain').attr("readonly", "readonly");
 	$("#form-site-id-tr").removeClass("hidden");
 	$("#form-site-key-tr").removeClass("hidden");
 	$("#form-site-remove").removeClass("hidden");

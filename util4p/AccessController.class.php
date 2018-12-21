@@ -25,6 +25,9 @@ class AccessController
 	 */
 	public static function hasAccess($role, $operation)
 	{
+		if ($role === null || $operation === null) {
+			return false;
+		}
 		if (array_key_exists($operation, self::$rules_array)) {
 			return in_array($role, self::$rules_array[$operation]);
 		}

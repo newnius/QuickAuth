@@ -62,51 +62,54 @@ function init_accessMap()
 	// $operation => arrayof roles
 	$map = array(
 		/* user */
-		'user_get_self' => array('root', 'admin', 'developer', 'normal'),
-		'user_get_others' => array('root', 'admin'),
-		'user_update_admin' => array('root'),
-		'user_update_developer' => array('root', 'admin'),
-		'user_update_normal' => array('root', 'admin'),
-		'user_update_blocked' => array('root', 'admin'),
-		'user_update_removed' => array('root', 'admin'),
-		'get_logs_self' => array('root', 'admin', 'developer', 'normal'),
-		'get_logs_others' => array('root', 'admin'),
+		'user.get_self' => array('root', 'admin', 'developer', 'normal'),
+		'user.get_others' => array('root', 'admin'),
+		'user.update_admin' => array('root'),
+		'user.update_developer' => array('root', 'admin'),
+		'user.update_normal' => array('root', 'admin'),
+		'user.update_blocked' => array('root', 'admin'),
+		'user.update_removed' => array('root', 'admin'),
+		'log.get_self' => array('root', 'admin', 'developer', 'normal'),
+		'log.get_others' => array('root', 'admin'),
 
 		/* site */
-		'sites_get_self' => array('root', 'admin', 'developer'),
-		'sites_get_others' => array('root', 'admin'),
-		'site_add' => array('root', 'admin', 'developer'),
-		'site_update_others' => array('root', 'admin'),
+		'site.get_self' => array('root', 'admin', 'developer'),
+		'site.get_others' => array('root', 'admin'),
+		'site.add' => array('root', 'admin', 'developer', 'normal'),
+		'site.update_others' => array('root', 'admin'),
+		'site.remove' => array('root', 'admin', 'developer', 'normal'),
+		'site.remove_others' => array('root', 'admin'),
 
 		/* session */
-		'get_online_users' => array('root', 'admin'),
-		'tick_out_user' => array('root', 'admin'),
-		'tick_out_removed' => array('root', 'admin'),
-		'tick_out_blocked' => array('root', 'admin'),
-		'tick_out_normal' => array('root', 'admin'),
-		'tick_out_developer' => array('root', 'admin'),
-		'tick_out_admin' => array('root'),
+		'session.get_online' => array('root', 'admin'),
+		'session.tick_out_user' => array('root', 'admin'),
+		'session.tick_out_removed' => array('root', 'admin'),
+		'session.tick_out_blocked' => array('root', 'admin'),
+		'session.tick_out_normal' => array('root', 'admin'),
+		'session.tick_out_developer' => array('root', 'admin'),
+		'session.tick_out_admin' => array('root'),
 
 		/* rate limit */
-		'rc_list' => array('root', 'admin'),
-		'rc_block' => array('root', 'admin'),
-		'rc_unblock' => array('root', 'admin'),
+		'rc.list' => array('root', 'admin'),
+		'rc.block' => array('root', 'admin'),
+		'rc.unblock' => array('root', 'admin'),
 
 		/* ucenter entry show control */
-		'show_ucenter_home' => array('root', 'admin', 'developer', 'normal'),
-		'show_ucenter_profile' => array('admin', 'developer', 'normal'),
-		'show_ucenter_changepwd' => array('root', 'admin', 'developer', 'normal'),
-		'show_ucenter_logs' => array('root', 'admin', 'developer', 'normal'),
-		'show_ucenter_auth_list' => array('root', 'admin', 'developer', 'normal'),
-		'show_ucenter_user_sessions' => array('root', 'admin', 'developer', 'normal'),
-		'show_ucenter_admin' => array('root', 'admin'),
-		'show_ucenter_signout' => array('root', 'admin', 'developer', 'normal'),
+		'ucenter.show_home' => array('root', 'admin', 'developer', 'normal'),
+		'ucenter.show_profile' => array('admin', 'developer', 'normal'),
+		'ucenter.show_changepwd' => array('root', 'admin', 'developer', 'normal'),
+		'ucenter.show_logs' => array('root', 'admin', 'developer', 'normal'),
+		'ucenter.show_auth_list' => array('root', 'admin', 'developer', 'normal'),
+		'ucenter.show_user_sessions' => array('root', 'admin', 'developer', 'normal'),
+		'ucenter.show_admin' => array('root', 'admin'),
 
-		'show_ucenter_users' => array('root', 'admin'),
-		'show_ucenter_sites_all' => array('root', 'admin'),
-		'show_ucenter_users_online' => array('root', 'admin'),
-		'show_ucenter_blocked_list' => array('root', 'admin'),
-		'show_ucenter_logs_all' => array('root', 'admin'),
+		'ucenter.show_users' => array('root', 'admin'),
+		'ucenter.show_sites' => array('admin', 'developer', 'normal'),
+		'ucenter.show_sites_all' => array('root', 'admin'),
+		'ucenter.show_users_online' => array('root', 'admin'),
+		'ucenter.show_blocked_list' => array('root', 'admin'),
+		'ucenter.show_logs_all' => array('root', 'admin'),
+		'ucenter.show_visitors' => array('root', 'admin'),
 
 	);
 	AccessController::setMap($map);
@@ -132,8 +135,8 @@ function init_OAuth()
 	$config->set('table_openid', 'qa_oauth_openid');
 	$config->set('table_code', 'qa_oauth_code');
 	$config->set('table_token', 'qa_oauth_token');
-	$config->set('code_timeout', AUTH_CODE_TIMEOUT);
-	$config->set('token_timeout', AUTH_TOKEN_TIMEOUT);
+	$config->set('code_timeout', OAUTH_CODE_TIMEOUT);
+	$config->set('token_timeout', OAUTH_TOKEN_TIMEOUT);
 	OAuth2::configure($config);
 	SiteManager::configure($config);
 }

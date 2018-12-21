@@ -1,10 +1,19 @@
 <?php
-require_once('global.inc.php');
+require_once('predis/autoload.php');
+
+require_once('util4p/util.php');
+require_once('util4p/ReSession.class.php');
+require_once('util4p/AccessController.class.php');
+
 require_once('user.logic.php');
-require_once('UserManager.class.php');
+require_once('global.inc.php');
+require_once('config.inc.php');
+require_once('secure.inc.php');
+require_once('init.inc.php');
+
 
 if (Session::get('username') == null) {
-	header('location:login?a=notloged');
+	header('location:login?a=notlogged');
 	exit;
 }
 
@@ -19,6 +28,9 @@ if (isset($_GET['profile'])) {
 
 } elseif (isset($_GET['users'])) {
 	$page_type = 'users';
+
+} elseif (isset($_GET['sites'])) {
+	$page_type = 'sites';
 
 } elseif (isset($_GET['sites_all'])) {
 	$page_type = 'sites_all';
@@ -41,14 +53,11 @@ if (isset($_GET['profile'])) {
 } elseif (isset($_GET['logs_all'])) {
 	$page_type = 'logs_all';
 
+} elseif (isset($_GET['visitors'])) {
+	$page_type = 'visitors';
+
 } elseif (isset($_GET['admin'])) {
 	$page_type = 'admin';
-
-} elseif (isset($_GET['signout'])) {
-	$page_type = 'signout';
-	signout();
-	header('location:login?a=signout');
-	exit;
 }
 
 $entries = array(
@@ -57,27 +66,28 @@ $entries = array(
 	array('changepwd', 'Password'),
 	array('logs', 'Activities'),
 	array('auth_list', 'Auths'),
+	array('sites', 'Sites'),
 	array('user_sessions', 'Sessions'),
-	array('admin', 'Admin'),
-	array('signout', 'Logout')
+	array('admin', 'Admin')
 );
 $visible_entries = array();
 foreach ($entries as $entry) {
-	if (AccessController::hasAccess(Session::get('role'), 'show_ucenter_' . $entry[0])) {
+	if (AccessController::hasAccess(Session::get('role'), 'ucenter.show_' . $entry[0])) {
 		$visible_entries[] = array($entry[0], $entry[1]);
 	}
 }
 
 $admin_entries = array(
 	array('users', 'Users'),
-	array('sites_all', 'Sites'),
+	array('sites_all', 'Sites (ALL)'),
 	array('users_online', 'Online'),
 	array('blocked_list', 'Blocks'),
 	array('logs_all', 'Activities'),
+	array('visitors', 'Visitors')
 );
 $visible_admin_entries = array();
 foreach ($admin_entries as $entry) {
-	if (AccessController::hasAccess(Session::get('role'), 'show_ucenter_' . $entry[0])) {
+	if (AccessController::hasAccess(Session::get('role'), 'ucenter.show_' . $entry[0])) {
 		$visible_admin_entries[] = array($entry[0], $entry[1]);
 	}
 }
@@ -237,10 +247,29 @@ foreach ($admin_entries as $entry) {
 						</div>
 					</div>
 
-				<?php } elseif ($page_type == 'sites_all') { ?>
-					<div id="sites_all">
+				<?php } elseif ($page_type == 'sites') { ?>
+					<div id="sites">
 						<div class="panel panel-default">
 							<div class="panel-heading">Sites</div>
+							<div class="panel-body">
+								<div class="table-responsive">
+									<div id="toolbar">
+										<button id="btn-site-add" class="btn btn-primary">
+											<i class="glyphicon glyphicon-plus"></i> Add
+										</button>
+									</div>
+									<table id="table-site" data-toolbar="#toolbar" class="table table-striped">
+									</table>
+									<span class="text-info">* Clients in OAuth2</span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				<?php } elseif ($page_type == 'sites_all') { ?>
+					<div id="sites">
+						<div class="panel panel-default">
+							<div class="panel-heading">Sites (All)</div>
 							<div class="panel-body">
 								<div class="table-responsive">
 									<div id="toolbar">
@@ -313,7 +342,6 @@ foreach ($admin_entries as $entry) {
 									<div id="toolbar"></div>
 									<table id="table-log" data-toolbar="#toolbar" class="table table-striped">
 									</table>
-									<span class="text-info">* At most 1000 records are shown</span>
 								</div>
 							</div>
 						</div>
@@ -343,8 +371,34 @@ foreach ($admin_entries as $entry) {
 									<div id="toolbar"></div>
 									<table id="table-log" data-toolbar="#toolbar" class="table table-striped">
 									</table>
-									<span class="text-info">* At most 1000 records are shown</span>
 								</div>
+							</div>
+						</div>
+					</div>
+
+				<?php } elseif ($page_type === 'visitors') { ?>
+					<div id="visitors">
+						<div class="panel panel-default">
+							<div class="panel-heading">Visitors</div>
+							<div class="panel-body">
+								<table class="table table-striped table-bordered">
+									<tr>
+										<th>PV</th>
+										<td><span class="cr_count_site_pv">Loading</span></td>
+									</tr>
+									<tr>
+										<th>UV</th>
+										<td><span class="cr_count_site_uv">Loading</span></td>
+									</tr>
+									<tr>
+										<th>PV (today)</th>
+										<td><span class="cr_count_site_pv_24h">Loading</span></td>
+									</tr>
+									<tr>
+										<th>UV (today)</th>
+										<td><span class="cr_count_site_uv_24h">Loading</span></td>
+									</tr>
+								</table>
 							</div>
 						</div>
 					</div>
@@ -377,9 +431,6 @@ foreach ($admin_entries as $entry) {
 <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.1/tableExport.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
 <?php require('footer.php'); ?>
-
-<script src="static/util.js"></script>
-<script src="static/script.js"></script>
 <script src="static/auth.js"></script>
 <script src="static/user.js"></script>
 <script src="static/session.js"></script>

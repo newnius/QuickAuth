@@ -1,6 +1,10 @@
 <?php
 
-require_once('global.inc.php');
+require_once('util4p/util.php');
+require_once('util4p/CRObject.class.php');
+
+require_once('Code.class.php');
+
 require_once('auth.logic.php');
 
 /*

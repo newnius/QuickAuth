@@ -76,7 +76,7 @@
 	</div>
 </div>
 
-<!-- msg site -->
+<!-- site modal -->
 <div class="modal fade" id="modal-site" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -101,15 +101,14 @@
 							<th>ClientID</th>
 							<td>
 								<label for="form-site-id" class="sr-only">App ID</label>
-								<input type="text" id="form-site-id" class="form-group form-control" required disabled/>
+								<input type="text" id="form-site-id" class="form-group form-control" required readonly/>
 							</td>
 						</tr>
 						<tr id="form-site-key-tr">
 							<th>ClientSecret</th>
 							<td>
 								<label for="form-site-key" class="sr-only">Key</label>
-								<input type="text" id="form-site-key" class="form-group form-control" required
-								       disabled/>
+								<input type="text" id="form-site-key" class="form-group form-control" required readonly/>
 							</td>
 						</tr>
 					</table>

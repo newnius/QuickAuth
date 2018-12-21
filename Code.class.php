@@ -24,7 +24,7 @@ class Code
 	const INVALID_USERNAME = 16;
 	const INVALID_EMAIL = 17;
 	const WRONG_PASSWORD = 18;
-	const NOT_LOGED = 19;
+	const NOT_LOGGED = 19;
 	const USER_NOT_EXIST = 20;
 	const USER_IS_BLOCKED = 21;
 	const USER_IS_REMOVED = 22;
@@ -35,6 +35,7 @@ class Code
 	const CODE_EXPIRED = 24;
 	const EMAIL_ALREADY_VERIFIED = 25;
 	const INVALID_COOKIE = 26;
+	const REGISTRATION_CLOSED = 34;
 
 	/* auth */
 	const TOKEN_EXPIRED = 27;
@@ -42,6 +43,7 @@ class Code
 	const INVALID_URL = 29;
 	const INVALID_PARAM = 31;
 	const DOMAIN_MISMATCH = 32;
+	const OAUTH_DISABLED = 35;
 
 	/* rate limit */
 	const TOO_FAST = 30;
@@ -82,7 +84,7 @@ class Code
 			case Code::UNABLE_TO_CONNECT_MYSQL:
 				return 'Unable to connect Mysql !';
 
-			case Code::NOT_LOGED:
+			case Code::NOT_LOGGED:
 				return 'You haven\'t loged !';
 
 			case Code::USER_NOT_EXIST:
@@ -150,6 +152,12 @@ class Code
 
 			case Code::EMAIL_IS_NOT_VERIFIED:
 				return 'Verify your email first !';
+
+			case Code::REGISTRATION_CLOSED:
+				return 'Registration is temporally closed !';
+
+			case Code::OAUTH_DISABLED:
+				return 'OAuth is temporally disabled !';
 
 			default:
 				return 'Unknown error(' . $errno . ') !';

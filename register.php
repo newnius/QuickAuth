@@ -13,21 +13,20 @@ require_once('secure.inc.php');
 	<?php require('header.php'); ?>
 	<?php require('modals.php'); ?>
 	<div class="container">
-		<div id="register">
-			<form class="form-signup" action="javascript:void(0)">
+		<div id="signup">
+			<form id="form-signup" action="javascript:void(0)">
 				<h2>Sign up</h2>
 				<div class="form-group">
-					<label class="sr-only" for="inputUsername">Username</label>
+					<label class="sr-only" for="form-signup-username">Username</label>
 					<div class="input-group">
 						<div class="input-group-addon">
 							<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
 						</div>
-						<input type="text" class="form-control" id="form-signup-username" placeholder="Username"
-						       required/>
+						<input type="text" class="form-control" id="form-signup-username" placeholder="Username" required autofocus/>
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="sr-only" for="inputEmail">Email</label>
+					<label class="sr-only" for="form-signup-email">Email</label>
 					<div class="input-group">
 						<div class="input-group-addon">
 							<span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
@@ -36,16 +35,15 @@ require_once('secure.inc.php');
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="sr-only" for="inputPassword">Password</label>
+					<label class="sr-only" for="form-signup-password">Password</label>
 					<div class="input-group">
 						<div class="input-group-addon">
 							<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
 						</div>
-						<input type="password" class="form-control" id="form-signup-password" placeholder="Password"
-						       required/>
+						<input type="password" class="form-control" id="form-signup-password" placeholder="Password" required/>
 					</div>
 				</div>
-				<button id="btn-register" class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+				<button id="form-signup-submit" class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
 			</form>
 		</div>
 	</div> <!-- /container -->

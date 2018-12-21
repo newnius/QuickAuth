@@ -1,5 +1,4 @@
 <?php
-require_once('Code.class.php');
 require_once('secure.inc.php');
 
 $error = '404 Not Found';

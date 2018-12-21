@@ -87,9 +87,16 @@ class SiteManager
 	}
 
 	/**/
-	public static function update(CRObject $site)
+	public static function remove(CRObject $site)
 	{
-		return true;
+		$client_id = $site->get('client_id');
+		$where = array('client_id' => '?');
+		$builder = new SQLBuilder();
+		$builder->delete(self::$table_client);
+		$builder->where($where);
+		$sql = $builder->build();
+		$params = array($client_id);
+		return (new MysqlPDO())->execute($sql, $params);
 	}
 
 }

@@ -13,15 +13,11 @@ require_once('secure.inc.php');
 	<?php require('header.php'); ?>
 	<?php require('modals.php'); ?>
 	<div class="container">
-		<div id="lostpass-error">
-			<strong>Error:</strong>
-			<span id="lostpass-error-msg"></span>
-		</div>
 		<div id="lostpass">
 			<form class="form-lostpass">
 				<h2>Lost password</h2>
 				<div class="form-group">
-					<label class="sr-only" for="inputUsername">Username</label>
+					<label class="sr-only" for="form-lostpass-username">Username</label>
 					<div class="input-group">
 						<div class="input-group-addon">
 							<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
@@ -31,7 +27,7 @@ require_once('secure.inc.php');
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="sr-only" for="inputEmail">Email</label>
+					<label class="sr-only" for="form-lostpass-email">Email</label>
 					<div class="input-group">
 						<div class="input-group-addon">
 							<span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
@@ -47,7 +43,6 @@ require_once('secure.inc.php');
 	<!--This div exists to avoid footer from covering main body-->
 	<div class="push"></div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
 <?php require('footer.php') ?>
 </body>
 </html>

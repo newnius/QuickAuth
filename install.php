@@ -35,7 +35,7 @@ function execute_sqls($sqls)
 function add_root_user()
 {
 	$password = Random::randomString(12);
-	echo "Adding root user with password $password \n";
+	echo "Adding root user with (root,$password) \n";
 
 	/* pseudo encryption in client side */
 	$password = md5($password . 'QuickAuth');

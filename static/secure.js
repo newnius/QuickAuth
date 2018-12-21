@@ -2,7 +2,7 @@ function register_events_blocked() {
 	$('#btn-block-add').click(function (e) {
 		e.preventDefault();
 		$('#modal-block').modal('show');
-		$("#form-block-ip").removeAttr("disabled");
+		$("#form-block-ip").removeAttr("readonly");
 	});
 
 	$('#form-block-submit').click(function (e) {
@@ -12,15 +12,14 @@ function register_events_blocked() {
 		var time = $("#form-block-time").val();
 		var type = !time || time > 0 ? "block" : "unblock";
 		var ajax = $.ajax({
-			url: "/service?action=" + type,
+			url: window.config.BASE_URL + "/service?action=" + type,
 			type: 'POST',
 			data: {
 				ip: ip,
 				time: time
 			}
 		});
-		ajax.done(function (msg) {
-			var res = JSON.parse(msg);
+		ajax.done(function (res) {
 			if (res["errno"] === 0) {
 				$('#table-block').bootstrapTable("refresh");
 				$('#form-block-ip').val('');
@@ -30,18 +29,21 @@ function register_events_blocked() {
 				$("#modal-msg-content").text(res['msg']);
 			}
 		});
+		ajax.fail(function (jqXHR, textStatus) {
+			$('#modal-msg').modal('show');
+			$("#modal-msg-content").text("Request failed :" + textStatus);
+		});
 	});
 }
 
 function load_list_blocked() {
-	$table = $("#table-block");
-	$table.bootstrapTable({
-		url: '/service?action=list_blocked',
+	$("#table-block").bootstrapTable({
+		url: window.config.BASE_URL + '/service?action=list_blocked',
 		responseHandler: blockedResponseHandler,
 		cache: true,
 		striped: true,
 		pagination: true,
-		pageSize: 25,
+		pageSize: 10,
 		pageList: [25, 50, 100, 200],
 		search: true,
 		showColumns: true,
@@ -63,8 +65,7 @@ function load_list_blocked() {
 			field: 'id',
 			title: 'IP',
 			align: 'center',
-			valign: 'middle',
-			sortable: true
+			valign: 'middle'
 		}, {
 			field: 'operate',
 			title: 'Operations',
@@ -96,7 +97,7 @@ window.blockedOperateEvents =
 	{
 		'click .view': function (e, value, row, index) {
 			var ajax = $.ajax({
-				url: "/service?action=get_blocked_time",
+				url: window.config.BASE_URL + "/service?action=get_blocked_time",
 				type: 'POST',
 				data: {
 					ip: row.id
@@ -107,12 +108,16 @@ window.blockedOperateEvents =
 					$('#modal-block').modal('show');
 					$('#form-block-ip').val(row.id);
 					$('#form-block-time').val(res['time']);
-					$('#form-block-ip').attr('disabled', 'disabled');
+					$('#form-block-ip').attr('readonly', 'readonly');
 				} else {
 					$('#modal-msg').modal('show');
 					$('#modal-msg-content').text(res['msg']);
 					$('#table-block').bootstrapTable("refresh");
 				}
+			});
+			ajax.fail(function (jqXHR, textStatus) {
+				$('#modal-msg').modal('show');
+				$("#modal-msg-content").text("Request failed :" + textStatus);
 			});
 		}
 	};

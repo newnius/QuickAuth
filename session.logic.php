@@ -2,13 +2,13 @@
 
 require_once('predis/autoload.php');
 require_once('util4p/CRObject.class.php');
-require_once('Code.class.php');
 require_once('util4p/Validator.class.php');
 require_once('util4p/ReSession.class.php');
 require_once('util4p/CRLogger.class.php');
 require_once('util4p/AccessController.class.php');
 require_once('util4p/Random.class.php');
 
+require_once('Code.class.php');
 require_once('UserManager.class.php');
 
 require_once('config.inc.php');
@@ -19,7 +19,7 @@ require_once('init.inc.php');
 /**/
 function users_online(CRObject $rule)
 {
-	if (!AccessController::hasAccess(Session::get('role', 'visitor'), 'get_online_users')) {
+	if (!AccessController::hasAccess(Session::get('role', 'visitor'), 'session.get_online')) {
 		$res['errno'] = Code::NO_PRIVILEGE;
 		return $res;
 	}
@@ -32,7 +32,7 @@ function users_online(CRObject $rule)
 function user_sessions(CRObject $rule)
 {
 	if ($rule->get('group') === null || $rule->get('group') !== Session::get('username')) {
-		if (!AccessController::hasAccess(Session::get('role', 'visitor'), 'get_online_users')) {
+		if (!AccessController::hasAccess(Session::get('role', 'visitor'), 'session.get_online')) {
 			$res['errno'] = Code::NO_PRIVILEGE;
 			return $res;
 		}
@@ -46,7 +46,7 @@ function user_sessions(CRObject $rule)
 function tick_out(CRObject $rule)
 {
 	if ($rule->get('username') === null || Session::get('username') !== $rule->get('username')) {
-		if (!AccessController::hasAccess(Session::get('role', 'visitor'), 'tick_out_user')) {
+		if (!AccessController::hasAccess(Session::get('role', 'visitor'), 'session.tick_out_user')) {
 			$res['errno'] = Code::NO_PRIVILEGE;
 			return $res;
 		}
@@ -55,7 +55,7 @@ function tick_out(CRObject $rule)
 			$res['errno'] = Code::USER_NOT_EXIST;
 			return $res;
 		}
-		if (!AccessController::hasAccess(Session::get('role', 'visitor'), "tick_out_{$user_arr['role']}")) {
+		if (!AccessController::hasAccess(Session::get('role', 'visitor'), "session.tick_out_{$user_arr['role']}")) {
 			$res['errno'] = Code::NO_PRIVILEGE;
 			return $res;
 		}

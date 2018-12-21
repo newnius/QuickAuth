@@ -69,7 +69,7 @@ class OAuth2
 			$sql = $builder->build();
 			$values = array($uid, $client_id, $open_id);
 			$success = (new MysqlPDO())->execute($sql, $values);
-			if ($success > 0) {
+			if ($success) {
 				return $open_id;
 			}
 		}
@@ -142,7 +142,7 @@ class OAuth2
 			$builder = new SQLBuilder();
 			$builder->insert(self::$table_token, $key_values);
 			$sql = $builder->build();
-			$params = array($token, $record['client_id'], $record['open_id'], time() + AUTH_TOKEN_TIMEOUT, $record['scope']);
+			$params = array($token, $record['client_id'], $record['open_id'], time() + OAUTH_TOKEN_TIMEOUT, $record['scope']);
 			$success = (new MysqlPDO())->execute($sql, $params);
 			if ($success) {
 				return $token;
@@ -181,7 +181,7 @@ class OAuth2
 			$builder = new SQLBuilder();
 			$builder->insert(self::$table_token, $key_values);
 			$sql = $builder->build();
-			$params = array($token, $record['client_id'], $record['open_id'], time() + AUTH_TOKEN_TIMEOUT, $record['scope']);
+			$params = array($token, $record['client_id'], $record['open_id'], time() + OAUTH_TOKEN_TIMEOUT, $record['scope']);
 			$success = (new MysqlPDO())->execute($sql, $params);
 			if ($success) {
 				return $token;

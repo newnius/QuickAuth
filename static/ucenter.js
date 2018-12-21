@@ -46,16 +46,15 @@ $(function () {
 	}
 });
 
-function load_logs(who) {
-	var $table = $("#table-log");
-	$table.bootstrapTable({
-		url: '/service?action=get_logs&who=' + who,
+function load_logs(scope) {
+	$("#table-log").bootstrapTable({
+		url: window.config.BASE_URL + '/service?action=get_logs&who=' + scope,
 		responseHandler: logResponseHandler,
 		sidePagination: 'server',
 		cache: true,
 		striped: true,
 		pagination: true,
-		pageSize: 25,
+		pageSize: 10,
 		pageList: [10, 25, 50, 100, 200],
 		search: false,
 		showColumns: false,
@@ -64,23 +63,25 @@ function load_logs(who) {
 		showPaginationSwitch: false,
 		minimumCountColumns: 2,
 		clickToSelect: false,
-		sortName: 'time',
+		sortName: 'default',
 		sortOrder: 'desc',
 		smartDisplay: true,
 		mobileResponsive: true,
 		showExport: false,
 		columns: [{
 			field: 'scope',
-			title: 'Operator',
+			title: 'UID',
 			align: 'center',
 			valign: 'middle',
-			sortable: false
+			sortable: false,
+			visible: scope === 'all'
 		}, {
 			field: 'tag',
 			title: 'Tag',
 			align: 'center',
 			valign: 'middle',
-			sortable: false
+			sortable: false,
+			visible: scope === 'all'
 		}, {
 			field: 'time',
 			title: 'Time',
@@ -97,27 +98,39 @@ function load_logs(who) {
 			formatter: long2ip
 		}, {
 			field: 'content',
+			title: 'Result',
+			align: 'center',
+			valign: 'middle',
+			sortable: false,
+			formatter: resultFormatter
+		}, {
+			field: 'content',
 			title: 'Content',
 			align: 'center',
 			valign: 'middle',
-			sortable: false
+			sortable: false,
+			visible: scope === 'all',
+			escape: true
 		}]
 	});
 }
 
-function logResponseHandler(res) {
+var logResponseHandler = function (res) {
 	if (res['errno'] === 0) {
 		var tmp = {};
 		tmp["total"] = res["count"];
 		tmp["rows"] = res["logs"];
 		return tmp;
 	}
-	alert(res['msg']);
+	$("#modal-msg-content").html(res["msg"]);
+	$("#modal-msg").modal('show');
 	return [];
-}
+};
 
-function timeFormatter(unixTimestamp) {
-	var d = new Date(unixTimestamp * 1000);
-	d.setTime(d.getTime() - d.getTimezoneOffset() * 60 * 1000);
-	return formatDate(d, '%Y-%M-%d %H:%m');
-}
+var resultFormatter = function (json) {
+	var res = JSON.parse(json);
+	if (res['response'] === 0) {
+		return '<span class="text-success">成功</span>';
+	}
+	return '<span class="text-dander">失败</span>';
+};

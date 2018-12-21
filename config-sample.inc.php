@@ -22,14 +22,16 @@ define('FORCE_VERIFY', false); //if set, unverified user will be refused to logi
 //define('ALLOW_REGISTRATION', true);
 //define('ALLOW_CUSTOM_UID', true);
 define('FEEDBACK_EMAIL', 'support@newnius.com');
+define('ALLOW_REGISTER', true);
 
-/* Auth */
-define('AUTH_CODE_TIMEOUT', 300); // 5 min
-define('AUTH_TOKEN_TIMEOUT', 604800); // 7 day
+/* OAuth */
+define('ENABLE_OAUTH', true);
+define('OAUTH_CODE_TIMEOUT', 300); // 5 min
+define('OAUTH_TOKEN_TIMEOUT', 604800); // 7 day
 
 /* Session */
 define('ENABLE_MULTIPLE_LOGIN', true);
-define('BIND_SESSION_WITH_IP', true);
+define('BIND_SESSION_WITH_IP', false);
 define('SESSION_TIME_OUT', 1800);// 30 minutes 30*60=1800
 define('ENABLE_COOKIE', true);
 

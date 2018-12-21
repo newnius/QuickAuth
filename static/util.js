@@ -1,3 +1,12 @@
+function timeFormatter(unixTimestamp) {
+	if (unixTimestamp === null) {
+		return null;
+	}
+	var d = new Date(unixTimestamp * 1000);
+	d.setTime(d.getTime() - d.getTimezoneOffset() * 60 * 1000);
+	return formatDate(d, '%Y-%M-%d %H:%m');
+}
+
 function formatDate(date, fmt) {
 	function pad(value) {
 		return (value.toString().length < 2) ? '0' + value : value;

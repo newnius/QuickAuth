@@ -2,6 +2,7 @@
 
 require_once('predis/autoload.php');
 require_once('util4p/util.php');
+require_once('util4p/CRObject.class.php');
 require_once('util4p/ReSession.class.php');
 require_once('util4p/RateLimiter.class.php');
 
@@ -19,7 +20,7 @@ function csrf_check($action)
 	/* check referer, just in case I forget to add the method to $post_methods */
 	$referer = cr_get_SERVER('HTTP_REFERER', '');
 	$url = parse_url($referer);
-	if (isset($url['host']) && $url['host'] !== cr_get_SERVER(['HTTP_HOST'])) {
+	if (isset($url['host']) && $url['host'] !== cr_get_SERVER('HTTP_HOST')) {
 		return false;
 	}
 
@@ -81,12 +82,12 @@ switch ($action) {
 		$user = new CRObject();
 		$user->set('account', cr_get_POST('account'));
 		$user->set('password', cr_get_POST('password'));
-		$user->set('remember_me', cr_get_POST('rememberme', 'false') === 'true');
+		$user->set('remember_me', cr_get_POST('remember_me', 'false') === 'true');
 		$res = user_login($user);
 		break;
 
 	case 'signout':
-		signout();
+		$res = user_signout();
 		break;
 
 	case 'users_get':
@@ -181,7 +182,7 @@ switch ($action) {
 	/* oauth */
 	case 'auth_get_site':
 		$rule = new CRObject();
-		$rule->set('client_id', cr_get_POST('client_id'));
+		$rule->set('client_id', cr_get_GET('client_id'));
 		$res = auth_get_site($rule);
 		break;
 
@@ -210,26 +211,13 @@ switch ($action) {
 		RateLimiter::increase(5);
 		$site = new CRObject();
 		$site->set('domain', cr_get_POST('domain'));
-		$site->set('revoke_url', cr_get_POST('revoke_url'));
-		$site->set('level', cr_get_POST('level'));
 		$res = site_add($site);
 		break;
 
-	case 'site_update':
-		RateLimiter::increase(1);
-		$site = new CRObject();
-		$site->set('id', cr_get_POST('id'));
-		$site->set('domain', cr_get_POST('domain'));
-		$site->set('revoke_url', cr_get_POST('revoke_url'));
-		$site->set('level', cr_get_POST('level'));
-		$res = site_update($site);
-		break;
-
-	/* TODO */
 	case 'site_remove':
 		RateLimiter::increase(1);
 		$site = new CRObject();
-		$site->set('id', cr_get_POST('id'));
+		$site->set('client_id', cr_get_POST('client_id'));
 		$res = site_remove($site);
 		break;
 

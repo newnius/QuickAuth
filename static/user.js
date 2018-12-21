@@ -9,7 +9,7 @@ function register_events_user() {
 		$("#btn-verify-send").attr("disabled", "disabled");
 		$('#btn-verify-send').text("Sending...");
 		var ajax = $.ajax({
-			url: "/service?action=verify_email_send_code",
+			url: window.config.BASE_URL + "/service?action=verify_email_send_code",
 			type: 'POST',
 			data: {}
 		});
@@ -32,7 +32,7 @@ function register_events_user() {
 		}
 		$('#modal-verify').modal("hide");
 		var ajax = $.ajax({
-			url: "service?action=verify_email",
+			url: window.config.BASE_URL + "service?action=verify_email",
 			type: 'POST',
 			data: {
 				code: code
@@ -61,7 +61,7 @@ function register_events_user() {
 		}
 		$('#modal-email').modal("hide");
 		var ajax = $.ajax({
-			url: "service?action=user_update",
+			url: window.config.BASE_URL + "service?action=user_update",
 			type: 'POST',
 			data: {
 				email: email
@@ -90,7 +90,7 @@ function register_events_user() {
 		var oldpwd = cryptPwd(oldpass);
 		var newpwd = cryptPwd(password);
 		var ajax = $.ajax({
-			url: "/service?action=update_pwd",
+			url: window.config.BASE_URL + "/service?action=update_pwd",
 			type: 'POST',
 			data: {
 				oldpwd: oldpwd,
@@ -118,7 +118,7 @@ function register_events_user() {
 			password = cryptPwd(password);
 		$("#form-user-submit").attr("disabled", "disabled");
 		var ajax = $.ajax({
-			url: "/service?action=user_update",
+			url: window.config.BASE_URL + "/service?action=user_update",
 			type: 'POST',
 			data: {
 				username: username,
@@ -133,7 +133,6 @@ function register_events_user() {
 				$('#table-user').bootstrapTable("refresh");
 			} else {
 				$("#form-user-msg").html(res["msg"]);
-				$("#modal-user").effect("shake");
 			}
 			$("#form-user-submit").removeAttr("disabled");
 		});
@@ -145,15 +144,14 @@ function register_events_user() {
 }
 
 function load_users() {
-	var $table = $("#table-user");
-	$table.bootstrapTable({
-		url: '/service?action=users_get',
+	$("#table-user").bootstrapTable({
+		url: window.config.BASE_URL + '/service?action=users_get',
 		responseHandler: userResponseHandler,
 		sidePagination: 'server',
 		cache: true,
 		striped: true,
 		pagination: true,
-		pageSize: 25,
+		pageSize: 10,
 		pageList: [10, 25, 50, 100, 200],
 		search: true,
 		showColumns: true,
@@ -176,25 +174,23 @@ function load_users() {
 			title: 'Username',
 			align: 'center',
 			valign: 'middle',
-			sortable: true
+			escape: true
 		}, {
 			field: 'email',
 			title: 'Email',
 			align: 'center',
 			valign: 'middle',
-			sortable: true
+			escape: true
 		}, {
 			field: 'email_verified',
 			title: 'Verified',
 			align: 'center',
-			valign: 'middle',
-			sortable: false
+			valign: 'middle'
 		}, {
 			field: 'role',
 			title: 'Role',
 			align: 'center',
 			valign: 'middle',
-			sortable: true,
 			formatter: roleFormatter
 		}, {
 			field: 'reg_time',
@@ -209,7 +205,6 @@ function load_users() {
 			title: 'create IP',
 			align: 'center',
 			valign: 'middle',
-			sortable: true,
 			visible: false,
 			formatter: long2ip
 		}, {
@@ -276,12 +271,12 @@ function show_modal_user(user) {
 	$('#form-user-password').val("");
 	$('#form-user-email').val(user.email);
 	$('#form-user-role').val(user.role);
-	$('#form-user-username').attr('disabled', 'disabled');
+	$('#form-user-username').attr('readonly', 'readonly');
 }
 
 function load_profile() {
 	var ajax = $.ajax({
-		url: "/service?action=user_get",
+		url: window.config.BASE_URL + "/service?action=user_get",
 		type: 'GET',
 		data: {}
 	});

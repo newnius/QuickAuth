@@ -2,39 +2,21 @@ body {
 	background-color: #eee;
 }
 
-#login {
+#login, #signup {
 	max-width: 320px;
 	margin: 0 auto;
 }
 
-#signin-error {
-	max-width: 320px;
-	margin: 25px auto 0;
-	border-left: 4px solid #dd3d36;
-	display: none;
-	background: #fff;
-	padding: 12px;
-}
-
-.form-signin {
+#form-login, #form-signup {
 	max-width: 330px;
 	padding: 25px;
 	margin-top: 20px;
 	margin-bottom: 20px;
 	background: none repeat scroll 0 0 #fff;
-	box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-.form-signin .form-signin-heading,
-.form-signin .checkbox {
-	margin-bottom: 10px;
-}
-
-.form-signin .checkbox {
-	font-weight: normal;
-}
-
-.form-signin .form-control {
+#form-login .form-control {
 	position: relative;
 	height: auto;
 	-webkit-box-sizing: border-box;
@@ -44,17 +26,26 @@ body {
 	font-size: 16px;
 }
 
-.form-signin .form-control:focus {
+#form-login #form-login-remember {
+	margin-bottom: 10px;
+	margin-right: 5px;
+}
+
+#form-login .form-control:focus {
 	z-index: 2;
 }
 
-.form-signin input[type="email"] {
+#form-login label {
+	font-weight: normal;
+}
+
+#form-login input[type="email"] {
 	margin-bottom: -1px;
 	border-bottom-right-radius: 0;
 	border-bottom-left-radius: 0;
 }
 
-.form-signin input[type="password"] {
+#form-login input[type="password"] {
 	margin-bottom: 10px;
 	border-top-left-radius: 0;
 	border-top-right-radius: 0;
@@ -62,20 +53,6 @@ body {
 
 .my-info {
 	margin: 0 auto;
-}
-
-#register {
-	max-width: 320px;
-	margin: 0 auto;
-}
-
-#reg-error {
-	max-width: 320px;
-	margin: 25px auto 0;
-	border-left: 4px solid #dd3d36;
-	display: none;
-	background: #fff;
-	padding: 12px;
 }
 
 .form-register {
@@ -173,7 +150,7 @@ body {
 	box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-#haveloged {
+#havelogged {
 	max-width: 320px;
 	padding: 25px;
 	margin: 20px auto 0;
@@ -185,19 +162,34 @@ body {
 	padding: 25px;
 }
 
+/* make sticky footer  */
 body, html {
 	height: 100%;
 }
 
 footer, .push {
-	height: 35px;
+	height: 36px;
 }
 
-footer .breadcrumb {
-	margin-bottom: 0px;
+footer, footer .ul, footer .breadcrumb {
+	margin-bottom: 0;
+	background-color: transparent;
+	text-align: center;
+}
+
+footer a:link, footer a:visited {
+	text-decoration: none;
+	color: #777;
+}
+
+footer a:hover {
+	text-decoration: underline;
+	color: #000000;
 }
 
 .wrapper {
 	min-height: 100%;
-	margin: 0 auto -35px; /* the bottom margin is the negative value of the footer's height */
+	margin: 0 auto -36px; /* the bottom margin is the negative value of the footer's height */
 }
+
+/* end */

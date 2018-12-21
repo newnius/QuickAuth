@@ -3,13 +3,13 @@
 /* This file aims to avoid spam in many different ways such as rate limit. */
 require_once('predis/autoload.php');
 require_once('util4p/CRObject.class.php');
-require_once('Code.class.php');
 require_once('util4p/Validator.class.php');
 require_once('util4p/ReSession.class.php');
 require_once('util4p/CRLogger.class.php');
 require_once('util4p/AccessController.class.php');
 require_once('util4p/Random.class.php');
 
+require_once('Code.class.php');
 require_once('UserManager.class.php');
 
 require_once('config.inc.php');
@@ -19,7 +19,7 @@ require_once('init.inc.php');
 /* list IPs being blocked */
 function list_blocked()
 {
-	if (!AccessController::hasAccess(Session::get('role', 'visitor'), 'rc_list')) {
+	if (!AccessController::hasAccess(Session::get('role', 'visitor'), 'rc.list')) {
 		$res['errno'] = Code::NO_PRIVILEGE;
 		return $res;
 	}
@@ -31,7 +31,7 @@ function list_blocked()
 /**/
 function get_blocked_time($ip)
 {
-	if (!AccessController::hasAccess(Session::get('role', 'visitor'), 'rc_list')) {
+	if (!AccessController::hasAccess(Session::get('role', 'visitor'), 'rc.list')) {
 		$res['errno'] = Code::NO_PRIVILEGE;
 		return $res;
 	}
@@ -43,7 +43,7 @@ function get_blocked_time($ip)
 /**/
 function block(CRObject $rule)
 {
-	if (!AccessController::hasAccess(Session::get('role', 'visitor'), 'rc_block')) {
+	if (!AccessController::hasAccess(Session::get('role', 'visitor'), 'rc.block')) {
 		$res['errno'] = Code::NO_PRIVILEGE;
 		return $res;
 	}
@@ -67,7 +67,7 @@ function block(CRObject $rule)
 /**/
 function unblock(CRObject $rule)
 {
-	if (!AccessController::hasAccess(Session::get('role', 'visitor'), 'rc_unblock')) {
+	if (!AccessController::hasAccess(Session::get('role', 'visitor'), 'rc.unblock')) {
 		$res['errno'] = Code::NO_PRIVILEGE;
 		return $res;
 	}

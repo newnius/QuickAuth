@@ -2,13 +2,13 @@
 
 require_once('predis/autoload.php');
 require_once('util4p/CRObject.class.php');
-require_once('Code.class.php');
 require_once('util4p/Validator.class.php');
 require_once('util4p/ReSession.class.php');
 require_once('util4p/CRLogger.class.php');
 require_once('util4p/AccessController.class.php');
 require_once('util4p/Random.class.php');
 
+require_once('Code.class.php');
 require_once('UserManager.class.php');
 require_once('email.logic.php');
 
@@ -28,7 +28,7 @@ function validate_username($username)
 	if (preg_match('/^[0-9]+$/', $username)) {//reserve for phone number
 		return false;
 	}
-	$blacklist = array("[", "]", "@");
+	$blacklist = array("[", "]", "@", "<", ">", "'", "\"");
 	foreach ($blacklist as $s) {
 		if (stripos($username, $s) !== false)
 			return false;
@@ -58,12 +58,14 @@ function user_register(CRObject $user)
 		$res['errno'] = Code::INVALID_USERNAME;
 	} else if (!validate_email($email)) {
 		$res['errno'] = Code::INVALID_EMAIL;
+	} else if (!ALLOW_REGISTER) {
+		$res['errno'] = Code::REGISTRATION_CLOSED;
 	} else if (UserManager::getByUsername($username) !== null) {
 		$res['errno'] = Code::USERNAME_OCCUPIED;
 	} else if (UserManager::getByEmail($email) !== null) {
 		$res['errno'] = Code::EMAIL_OCCUPIED;
 	} else {
-		$password = password_hash($user->get('password'), PASSWORD_DEFAULT);
+		$password = password_hash($user->get('password', ''), PASSWORD_DEFAULT);
 		$user->set('password', $password);
 		$success = UserManager::add($user);
 		$res['errno'] = $success ? Code::SUCCESS : Code::UNKNOWN_ERROR;
@@ -81,7 +83,7 @@ function user_register(CRObject $user)
 function user_login(CRObject $user)
 {
 	$account = $user->get('account', '');// can be username, email etc.
-	$password = $user->get('password');
+	$password = $user->get('password', '');
 	$remember_me = $user->getBool('remember_me', false);
 	if (strpos($account, '@') !== false) {
 		$user_arr = UserManager::getByEmail($account);
@@ -90,12 +92,12 @@ function user_login(CRObject $user)
 	}
 	if ($user_arr === null) {
 		$res['errno'] = Code::USER_NOT_EXIST;
-	} else if (!password_verify($password, $user_arr['password'])) {
-		$res['errno'] = Code::WRONG_PASSWORD;
 	} else if ($user_arr['role'] === 'removed') { //removed
 		$res['errno'] = Code::USER_IS_REMOVED;
 	} else if ($user_arr['role'] === 'blocked') { //blocked
 		$res['errno'] = Code::USER_IS_BLOCKED;
+	} else if (!password_verify($password, $user_arr['password'])) {
+		$res['errno'] = Code::WRONG_PASSWORD;
 	} else if (FORCE_VERIFY && $user_arr['email_verified'] === '0') {
 		$res['errno'] = Code::EMAIL_IS_NOT_VERIFIED;
 	} else {
@@ -111,7 +113,7 @@ function user_login(CRObject $user)
 		$res['errno'] = Code::SUCCESS;
 	}
 	$log = new CRObject();
-	if (isset($user_arr['username'])) {
+	if ($user_arr !== null) {
 		$log->set('scope', $user_arr['username']);
 	} else {
 		$log->set('scope', '[nobody]');
@@ -126,7 +128,7 @@ function user_login(CRObject $user)
 /*
  * clear session and cookie
  */
-function signout()
+function user_signout()
 {
 	Session::expire();
 	$res['errno'] = Code::SUCCESS;
@@ -154,10 +156,10 @@ function user_update(CRObject $user)
 	}
 	if ($user_arr['username'] !== Session::get('username')) {
 		if ($user->get('password') !== null) {
-			$user_arr['password'] = password_hash($user->get('password'), PASSWORD_DEFAULT);
+			$user_arr['password'] = password_hash($user->get('password', ''), PASSWORD_DEFAULT);
 		}
-		if (AccessController::hasAccess(Session::get('role'), 'user_update_' . $user_arr['role'])// can update role
-			&& AccessController::hasAccess(Session::get('role'), 'user_update_' . $user->get('role', '')))// can update to role
+		if (AccessController::hasAccess(Session::get('role'), 'user.update_' . $user_arr['role'])// can update role
+			&& AccessController::hasAccess(Session::get('role'), 'user.update_' . $user->get('role', '')))// can update to role
 		{
 			$user_arr['role'] = $user->get('role');
 		} else {
@@ -190,11 +192,11 @@ function user_update_pwd(CRObject $user)
 		$res['errno'] = Code::USER_NOT_EXIST;
 		return $res;
 	}
-	if (!password_verify($user->get('old_pwd'), $user_arr['password'])) { /* verify old password first */
+	if (!password_verify($user->get('old_pwd', ''), $user_arr['password'])) { /* verify old password first */
 		$res['errno'] = Code::WRONG_PASSWORD;
 		return $res;
 	}
-	$password = password_hash($user->get('password'), PASSWORD_DEFAULT);
+	$password = password_hash($user->get('password', ''), PASSWORD_DEFAULT);
 	$user_arr['password'] = $password;
 	$success = UserManager::update(new CRObject($user_arr));
 	$res['errno'] = $success ? Code::SUCCESS : Code::UNKNOWN_ERROR;
@@ -210,7 +212,8 @@ function user_update_pwd(CRObject $user)
 /**/
 function user_get(CRObject $rule)
 {
-	if (Session::get('username') === $rule->get('username') || AccessController::hasAccess(Session::get('role', 'visitor'), 'user_get_others')) {
+	if (Session::get('username') === $rule->get('username')
+		|| AccessController::hasAccess(Session::get('role', 'visitor'), 'user.get_others')) {
 		$res['errno'] = Code::SUCCESS;
 		$user_arr = UserManager::getByUsername($rule->get('username'));
 		if ($user_arr === null) {
@@ -228,7 +231,7 @@ function user_get(CRObject $rule)
 /**/
 function users_get(CRObject $rule)
 {
-	if (!AccessController::hasAccess(Session::get('role', 'visitor'), 'user_get_others')) {
+	if (!AccessController::hasAccess(Session::get('role', 'visitor'), 'user.get_others')) {
 		$res['errno'] = Code::NO_PRIVILEGE;
 		return $res;
 	}
@@ -242,11 +245,11 @@ function users_get(CRObject $rule)
 function user_get_log(CRObject $rule)
 {
 	if ($rule->get('username') === null || $rule->get('username') !== Session::get('username')) {
-		if (!AccessController::hasAccess(Session::get('role', 'visitor'), 'get_logs_others')) {
+		if (!AccessController::hasAccess(Session::get('role', 'visitor'), 'log.get_others')) {
 			$res['errno'] = Code::NO_PRIVILEGE;
 			return $res;
 		}
-	} else {// view self signin log
+	} else {// view self login log
 		$rule->set('scope', $rule->get('username'));
 		$rule->set('tag', 'user.login');
 	}
@@ -286,6 +289,7 @@ function reset_pwd_send_code(CRObject $user)
 	$content = str_replace('<%username%>', $user_arr['username'], $content);
 	$content = str_replace('<%email%>', $user_arr['email'], $content);
 	$content = str_replace('<%auth_key%>', $code, $content);
+	$content = str_replace('<%base_url%>', BASE_URL, $content);
 	$email->set('content', $content);
 	$res = email_send($email);
 
@@ -327,6 +331,7 @@ function verify_email_send_code(CRObject $user)
 	$content = str_replace('<%username%>', $user_arr['username'], $content);
 	$content = str_replace('<%email%>', $user_arr['email'], $content);
 	$content = str_replace('<%auth_key%>', $code, $content);
+	$content = str_replace('<%base_url%>', BASE_URL, $content);
 	$email->set('content', $content);
 	$res = email_send($email);
 
@@ -356,7 +361,7 @@ function reset_pwd(CRObject $user)
 	$redis->del(array('resetpwd:code:' . $user_arr['username']));//expire code immediately
 	$redis->disconnect();
 	if ($code !== null && $code === $user->get('code')) {
-		$user_arr['password'] = password_hash($user->get('password'), PASSWORD_DEFAULT);
+		$user_arr['password'] = password_hash($user->get('password', ''), PASSWORD_DEFAULT);
 		$success = UserManager::update(new CRObject($user_arr));
 		$res['errno'] = $success ? Code::SUCCESS : Code::UNKNOWN_ERROR;
 	} else {

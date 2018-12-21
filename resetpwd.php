@@ -13,15 +13,11 @@ require_once('secure.inc.php');
 	<?php require('header.php'); ?>
 	<?php require('modals.php'); ?>
 	<div class="container">
-		<div id="reg-error">
-			<strong>Error:</strong>
-			<span id="reg-error-msg"></span>
-		</div>
 		<div id="resetpwd">
 			<form class="form-resetpwd" action="javascript:void(0)">
 				<h2>Reset Password</h2>
 				<div class="form-group">
-					<label class="sr-only" for="inputUsername">Username</label>
+					<label class="sr-only" for="form-resetpwd-username">Username</label>
 					<div class="input-group">
 						<div class="input-group-addon">
 							<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
@@ -31,7 +27,7 @@ require_once('secure.inc.php');
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="sr-only" for="inputPassword">Password</label>
+					<label class="sr-only" for="form-resetpwd-password">Password</label>
 					<div class="input-group">
 						<div class="input-group-addon">
 							<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
@@ -41,7 +37,7 @@ require_once('secure.inc.php');
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="sr-only" for="inputPassword">Repeat</label>
+					<label class="sr-only" for="form-resetpwd-repeat">Repeat</label>
 					<div class="input-group">
 						<div class="input-group-addon">
 							<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>

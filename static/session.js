@@ -3,14 +3,13 @@ function register_events_session() {
 }
 
 function load_users_online() {
-	$table = $("#table-user");
-	$table.bootstrapTable({
-		url: '/service?action=users_online',
+	$("#table-user").bootstrapTable({
+		url: window.config.BASE_URL + '/service?action=users_online',
 		responseHandler: usersOnlineResponseHandler,
 		cache: true,
 		striped: true,
 		pagination: true,
-		pageSize: 25,
+		pageSize: 10,
 		pageList: [25, 50, 100, 200],
 		search: true,
 		showColumns: true,
@@ -33,7 +32,7 @@ function load_users_online() {
 			title: 'Username',
 			align: 'center',
 			valign: 'middle',
-			sortable: true
+			escape: true
 		}, {
 			field: 'operate',
 			title: 'Operation',
@@ -71,16 +70,15 @@ window.usersOnlineOperateEvents =
 
 function load_user_sessions() {
 	var username = getParameterByName('username');
-	if (username == null)
+	if (username === null)
 		username = "";
-	$table = $("#table-session");
-	$table.bootstrapTable({
-		url: '/service?action=user_sessions&username=' + username,
+	$("#table-session").bootstrapTable({
+		url: window.config.BASE_URL + '/service?action=user_sessions&username=' + username,
 		responseHandler: sessionsResponseHandler,
 		cache: true,
 		striped: true,
 		pagination: true,
-		pageSize: 25,
+		pageSize: 10,
 		pageList: [25, 50, 100, 200],
 		search: true,
 		showColumns: true,
@@ -137,7 +135,7 @@ function sessionsResponseHandler(res) {
 
 function sessionsOperateFormatter(value, row, index) {
 	return [
-		'<button class="btn btn-default tickout" href="javascript:void(0)">',
+		'<button class="btn btn-default tickout">',
 		'<i class="glyphicon glyphicon-log-out"></i>&nbsp;Log out',
 		'</button>'
 	].join('');
@@ -147,7 +145,7 @@ window.sessionsOperateEvents =
 	{
 		'click .tickout': function (e, value, row, index) {
 			var ajax = $.ajax({
-				url: "/service?action=tick_out",
+				url: window.config.BASE_URL + "/service?action=tick_out",
 				type: 'POST',
 				data: {
 					username: row.username,
@@ -155,12 +153,15 @@ window.sessionsOperateEvents =
 				}
 			});
 			ajax.done(function (res) {
-				if (res["errno"] === 0) {
-					$('#table-session').bootstrapTable("refresh");
-				} else {
+				if (res["errno"] !== 0) {
 					$('#modal-msg').modal('show');
 					$('#modal-msg-content').text(res["msg"]);
 				}
+				$('#table-session').bootstrapTable("refresh");
+			});
+			ajax.fail(function (jqXHR, textStatus) {
+				$('#modal-msg').modal('show');
+				$("#modal-msg-content").text("Request failed :" + textStatus);
 			});
 		}
 	};

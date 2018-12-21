@@ -39,7 +39,7 @@ require_once('init.inc.php');
 							<li><a href="<?= BASE_URL ?>/ucenter?notice">Notice&nbsp;<span class="badge">0</span></a>
 							</li>
 							<li><a href="<?= BASE_URL ?>/ucenter?home">Settings</a></li>
-							<li><a href="javascript:void(0)" id="btn-signout">Sign out</a></li>
+							<li><a href="javascript:void(0)" id="btn-signout-header">Sign out</a></li>
 							<li role="separator" class="divider"></li>
 						<?php } ?>
 						<li><a href="<?= BASE_URL ?>/help">Help</a></li>

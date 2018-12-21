@@ -16,7 +16,7 @@ require_once('OAuth2.class.php');
 require_once('config.inc.php');
 require_once('init.inc.php');
 
-/* detect SSO or OAuth */
+/* get OAuth client domain */
 function auth_get_site(CRObject $rule)
 {
 	$r = new CRObject();
@@ -42,7 +42,7 @@ function auth_grant(CRObject $rule)
 	$site = SiteManager::get($client);
 
 	if (Session::get('username') === null) {
-		$res['errno'] = Code::NOT_LOGED;
+		$res['errno'] = Code::NOT_LOGGED;
 	} else if ($rule->get('response_type') !== 'code') {
 		$res['errno'] = Code::INVALID_PARAM;
 	} else if ($site === null) {
@@ -53,6 +53,8 @@ function auth_grant(CRObject $rule)
 		$res['errno'] = Code::DOMAIN_MISMATCH;
 	} else if ($rule->get('state') === null) {
 		$res['errno'] = Code::INCOMPLETE_CONTENT;
+	} else if (!ENABLE_OAUTH) {
+		$res['errno'] = Code::OAUTH_DISABLED;
 	} else {
 		$open_id = OAuth2::getOpenID(Session::get('username'), $rule->get('client_id'));
 		$rule->set('open_id', $open_id);
@@ -86,7 +88,7 @@ function auth_get_token(CRObject $rule)
 		$token = OAuth2::getToken($rule);
 		$res['errno'] = $token !== null ? Code::SUCCESS : Code::CODE_EXPIRED;
 		$res['token'] = $token;
-		$res['expires_in'] = AUTH_TOKEN_TIMEOUT;
+		$res['expires_in'] = OAUTH_TOKEN_TIMEOUT;
 	}
 	$log = new CRObject();
 	$log->set('scope', '[oauth]');
@@ -109,7 +111,7 @@ function auth_refresh_token(CRObject $rule)
 		$token = OAuth2::refreshToken($rule);
 		$res['errno'] = $token !== null ? Code::SUCCESS : Code::TOKEN_EXPIRED;
 		$res['token'] = $token;
-		$res['expires_in'] = AUTH_TOKEN_TIMEOUT;
+		$res['expires_in'] = OAUTH_TOKEN_TIMEOUT;
 	}
 	$log = new CRObject();
 	$log->set('scope', '[oauth]');
@@ -165,12 +167,12 @@ function auth_get_info(CRObject $rule)
 function auth_revoke(CRObject $rule)
 {
 	if (Session::get('username') === null) {
-		$res['errno'] = Code::NOT_LOGED;
+		$res['errno'] = Code::NOT_LOGGED;
 		return $res;
 	}
 	$open_id = OAuth2::getOpenID(Session::get('username'), $rule->get('client_id'));
 	$success = OAuth2::revoke($open_id, $rule->get('client_id'));
-	$res['errno'] = $success > 0 ? Code::SUCCESS : Code::FAIL;
+	$res['errno'] = $success ? Code::SUCCESS : Code::FAIL;
 
 	$log = new CRObject();
 	$log->set('scope', Session::get('username'));
@@ -185,7 +187,7 @@ function auth_revoke(CRObject $rule)
 function auth_list(CRObject $rule)
 {
 	if (Session::get('username') === null) {
-		$res['errno'] = Code::NOT_LOGED;
+		$res['errno'] = Code::NOT_LOGGED;
 		return $res;
 	}
 	$list = OAuth2::getAuthListByUID(Session::get('username'));
@@ -198,15 +200,15 @@ function auth_list(CRObject $rule)
 function site_add(CRObject $site)
 {
 	if (Session::get('username') === null) {
-		$res['errno'] = Code::NOT_LOGED;
+		$res['errno'] = Code::NOT_LOGGED;
 		return $res;
 	}
-	if (!AccessController::hasAccess(Session::get('role', 'visitor'), 'site_add')) {
+	if (!AccessController::hasAccess(Session::get('role', 'visitor'), 'site.add')) {
 		$res['errno'] = Code::NO_PRIVILEGE;
 		return $res;
 	}
 	$client_id = Random::randomString(16);
-	for ($i = 0; $i < 10; $i++) {
+	for ($i = 0; $i < 10; $i++) {// try at most 10 times
 		$site->set('client_id', $client_id);
 		if (SiteManager::get($site) === null) {
 			break;
@@ -228,40 +230,10 @@ function site_add(CRObject $site)
 }
 
 /**/
-function site_update(CRObject $site)
-{
-	if (Session::get('username') === null) {
-		$res['errno'] = Code::NOT_LOGED;
-		return $res;
-	}
-	$site_arr = SiteManager::get($site);
-	if ($site_arr === null) {
-		$res['errno'] = Code::RECORD_NOT_EXIST;
-	} else if ($site_arr['owner'] !== Session::get('username') && !AccessController::hasAccess(Session::get('role', 'visitor'), 'site_update_others')) {
-		$res['errno'] = Code::NO_PRIVILEGE;
-	} else {
-		$site_arr['domain'] = $site->get('domain');
-		$success = SiteManager::update(new CRObject($site_arr));
-		$res['errno'] = $success ? Code::SUCCESS : Code::UNKNOWN_ERROR;
-	}
-	$log = new CRObject();
-	$log->set('scope', Session::get('username'));
-	$log->set('tag', 'client.update');
-	$content = array(
-		'client_id' => $site->get('client_id'),
-		'domain' => $site->get('domain'),
-		'response' => $res['errno']
-	);
-	$log->set('content', json_encode($content));
-	CRLogger::log($log);
-	return $res;
-}
-
-/**/
 function sites_get(CRObject $rule)
 {
 	if ($rule->get('owner') === null || $rule->get('owner') !== Session::get('username')) {
-		if (!AccessController::hasAccess(Session::get('role', 'visitor'), 'sites_get_others')) {
+		if (!AccessController::hasAccess(Session::get('role', 'visitor'), 'site.get_others')) {
 			$res['errno'] = Code::NO_PRIVILEGE;
 			return $res;
 		}
@@ -273,8 +245,33 @@ function sites_get(CRObject $rule)
 }
 
 /**/
-function site_remove($site)
+function site_remove(CRObject $site)
 {
-	$res['errno'] = Code::IN_DEVELOP;
+	if (Session::get('username') === null) {
+		$res['errno'] = Code::NOT_LOGGED;
+		return $res;
+	}
+	if (!AccessController::hasAccess(Session::get('role', 'visitor'), 'site.remove')) {
+		$res['errno'] = Code::NO_PRIVILEGE;
+		return $res;
+	}
+	$site_arr = SiteManager::get($site);
+	if ($site_arr === null) {
+		$res['errno'] = Code::SITE_NOT_EXIST;
+		return $res;
+	}
+	if (Session::get('username') !== $site_arr['owner'] && !AccessController::hasAccess(Session::get('role', 'visitor'), 'site.remove_others')) {
+		$res['errno'] = Code::NO_PRIVILEGE;
+		return $res;
+	}
+	$success = SiteManager::remove($site);
+	$res['errno'] = $success ? Code::SUCCESS : Code::UNKNOWN_ERROR;
+
+	$log = new CRObject();
+	$log->set('scope', Session::get('username'));
+	$log->set('tag', 'client.remove');
+	$content = array('domain' => $site->get('domain'), 'client_id' => $site->get('client_id'), 'response' => $res['errno']);
+	$log->set('content', json_encode($content));
+	CRLogger::log($log);
 	return $res;
 }
