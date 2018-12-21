@@ -8,6 +8,9 @@ Account system which supports OAuth.
   - SendGrid Account
 
 ## Setup
+Want to deploy this service quickly? Try out this [one click setup](https://github.com/QuickDeploy/QuickAuth) 
+in [QuickDeploy](https://github.com/QuickDeploy/).
+
   - Install requirements
   - Rename `config-sample.inc.php` to `config.inc.php`
   - Customize `config.inc.php` & `static/config.js`
