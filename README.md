@@ -10,7 +10,7 @@ Account system which supports OAuth.
 ## Setup
   - Install requirements
   - Rename `config-sample.inc.php` to `config.inc.php`
-  - Customize `config.inc.php`
+  - Customize `config.inc.php` & `static/config.js`
   - Run `install.php` & __Remove `install.php`__
 
 ## Features

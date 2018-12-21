@@ -1,12 +1,16 @@
 $(function () {
 	$("#form-signup-submit").click(function (e) {
-		e.preventDefault();
 		var self = $(this);
-		self.html("submitting");
-		self.attr("disabled", "disabled");
 		var username = $("#form-signup-username").val();
 		var email = $("#form-signup-email").val();
 		var password = $("#form-signup-password").val();
+		if (!validateUsername(username) || !validateEmail(email) || !validatePwd(password)) {
+			$('#modal-msg').modal('show');
+			$("#modal-msg-content").text('invalid username / email');
+			return true;
+		}
+		self.html("submitting");
+		self.attr("disabled", "disabled");
 		var pass = cryptPwd(password);
 		var ajax = $.ajax({
 			url: window.config.BASE_URL + "/service?action=user_register",
@@ -23,7 +27,7 @@ $(function () {
 				$("#modal-msg-content").text('Welcome ! Redirecting to login page ...');
 				setTimeout(function () {
 					window.location.pathname = "login";
-				}, 2000);
+				}, 1500);
 			} else {
 				$('#modal-msg').modal('show');
 				$("#modal-msg-content").text(res['msg']);
@@ -40,10 +44,14 @@ $(function () {
 	});
 
 	$("#form-login-submit").click(function (e) {
-		e.preventDefault();
 		var self = $(this);
 		var account = $("#form-login-account").val();
 		var password = $("#form-login-password").val();
+		if (!validatePwd(password)) {
+			$('#modal-msg').modal('show');
+			$("#modal-msg-content").text('Wrong password !');
+			return true;
+		}
 		var pass = cryptPwd(password);
 		var remember_me = $("#form-login-remember").prop("checked");
 		self.html("submitting");
@@ -125,12 +133,14 @@ $(function () {
 	});
 
 	$("#form-lostpass-submit").click(function (e) {
-		e.preventDefault();
+		var username = $("#form-lostpass-username").val();
+		var email = $("#form-lostpass-email").val();
+		if (!validateUsername(username) || !validateEmail(email)) {
+			return true;
+		}
 		var self = $(this);
 		self.html("submitting");
 		self.attr("disabled", "disabled");
-		var username = $("#form-lostpass-username").val();
-		var email = $("#form-lostpass-email").val();
 		var ajax = $.ajax({
 			url: window.config.BASE_URL + "/service?action=reset_pwd_send_code",
 			type: 'POST',
@@ -144,7 +154,7 @@ $(function () {
 			if (res["errno"] === 0) {
 				$('#modal-msg-content').text("Email has been sent to your email box.");
 			} else {
-				$("#modal-msg-content").html("Unable to deliver(" + res["msg"] + "),<br/> <a href='help.php#qid-9'>see why</a>");
+				$("#modal-msg-content").html(res["msg"]);
 			}
 			self.html("Send email");
 			self.removeAttr("disabled");

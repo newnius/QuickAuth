@@ -142,7 +142,7 @@ foreach ($admin_entries as $entry) {
 							<div class="panel-heading">Welcome</div>
 							<div class="panel-body">
 								Welcome back, <?= htmlspecialchars($username) ?>.<br/>
-								Current IP: &nbsp; <?= cr_get_client_ip(false) ?>.<br/>
+								Now: &nbsp; <?php echo date('H:i:s', time()) ?>
 							</div>
 						</div>
 						<div class="panel panel-default">

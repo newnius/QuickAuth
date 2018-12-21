@@ -2,12 +2,12 @@ body {
 	background-color: #eee;
 }
 
-#login, #signup {
+#login, #signup, #resetpwd, #lostpass {
 	max-width: 320px;
 	margin: 0 auto;
 }
 
-#form-login, #form-signup {
+#form-login, #form-signup, #form-resetpwd, #form-lostpass {
 	max-width: 330px;
 	padding: 25px;
 	margin-top: 20px;
@@ -55,99 +55,12 @@ body {
 	margin: 0 auto;
 }
 
-.form-register {
-	max-width: 330px;
-	padding: 20px;
-	margin-top: 20px;
-	margin-bottom: 20px;
-	background: none repeat scroll 0 0 #fff;
-	box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
-}
-
-#lostpass {
-	max-width: 320px;
-	margin: 0 auto;
-}
-
-#lostpass-error {
-	max-width: 320px;
-	margin: 25px auto 0;
-	border-left: 4px solid #dd3d36;
-	display: none;
-	background: #fff;
-	padding: 12px;
-}
-
-#resetpwd {
-	max-width: 320px;
-	margin: 0 auto;
-}
-
-#resetpwd-error {
-	max-width: 320px;
-	margin: 25px auto 0;
-	border-left: 4px solid #dd3d36;
-	display: none;
-	background: #fff;
-	padding: 12px;
-}
-
-.form-lostpass {
-	max-width: 330px;
-	padding: 25px;
-	margin-top: 20px;
-	margin-bottom: 20px;
-	background: none repeat scroll 0 0 #fff;
-	box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
-}
-
-#validate {
-	max-width: 320px;
-	margin: 0 auto;
-}
-
-.form-validate {
-	max-width: 330px;
-	padding: 25px;
-	margin-top: 20px;
-	margin-bottom: 20px;
-	background: none repeat scroll 0 0 #fff;
-	box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
-}
-
 .msg {
 	padding: 10px 0 0 0;
 }
 
-.footer ul li {
-	display: inline-block;
-}
-
 #help-nav {
 	position: fixed;
-}
-
-#verify {
-	max-width: 320px;
-	margin: 0 auto;
-}
-
-#verify-error {
-	max-width: 320px;
-	margin: 25px auto 0;
-	border-left: 4px solid #dd3d36;
-	display: none;
-	background: #fff;
-	padding: 12px;
-}
-
-.form-verify {
-	max-width: 330px;
-	padding: 25px;
-	margin-top: 20px;
-	margin-bottom: 20px;
-	background: none repeat scroll 0 0 #fff;
-	box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 #havelogged {

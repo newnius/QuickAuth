@@ -14,7 +14,7 @@ require_once('secure.inc.php');
 	<?php require('modals.php'); ?>
 	<div class="container">
 		<div id="resetpwd">
-			<form class="form-resetpwd" action="javascript:void(0)">
+			<form id="form-resetpwd" action="javascript:void(0)">
 				<h2>Reset Password</h2>
 				<div class="form-group">
 					<label class="sr-only" for="form-resetpwd-username">Username</label>

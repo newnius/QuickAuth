@@ -20,7 +20,7 @@ class Validator
 		if ($str === null) {
 			return false;
 		}
-		return preg_match("/^([0-9A-Za-z\\-_\\.]+)@([0-9a-z]+\\.[a-z]{2,3}(\\.[a-z]{2})?)$/i", $str) === 1;
+		return preg_match("/^([0-9A-Za-z\\-_\\.]+)@([0-9a-z-]+\\.[a-z]{2,3}(\\.[a-z]{2})?)$/i", $str) === 1;
 	}
 
 

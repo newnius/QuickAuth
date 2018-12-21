@@ -98,7 +98,8 @@ function load_sites(who) {
 			title: 'Username',
 			align: 'center',
 			valign: 'middle',
-			visible: false
+			visible: false,
+			escape: true
 		}, {
 			field: 'domain',
 			title: 'Domain',

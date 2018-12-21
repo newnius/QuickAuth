@@ -74,7 +74,8 @@ function load_logs(scope) {
 			align: 'center',
 			valign: 'middle',
 			sortable: false,
-			visible: scope === 'all'
+			visible: scope === 'all',
+			escape: true
 		}, {
 			field: 'tag',
 			title: 'Tag',
@@ -130,7 +131,7 @@ var logResponseHandler = function (res) {
 var resultFormatter = function (json) {
 	var res = JSON.parse(json);
 	if (res['response'] === 0) {
-		return '<span class="text-success">成功</span>';
+		return '<span class="text-success">Success</span>';
 	}
-	return '<span class="text-dander">失败</span>';
+	return '<span class="text-dander">Fail</span>';
 };

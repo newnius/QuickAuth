@@ -22,7 +22,8 @@ require_once('secure.inc.php');
 						<div class="input-group-addon">
 							<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
 						</div>
-						<input type="text" class="form-control" id="form-signup-username" placeholder="Username" required autofocus/>
+						<input type="text" class="form-control" id="form-signup-username" placeholder="Username"
+						       required autofocus/>
 					</div>
 				</div>
 				<div class="form-group">
@@ -40,7 +41,8 @@ require_once('secure.inc.php');
 						<div class="input-group-addon">
 							<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
 						</div>
-						<input type="password" class="form-control" id="form-signup-password" placeholder="Password" required/>
+						<input type="password" class="form-control" id="form-signup-password" minlength="6"
+						       placeholder="Password" required/>
 					</div>
 				</div>
 				<button id="form-signup-submit" class="btn btn-lg btn-primary btn-block" type="submit">Register</button>

@@ -14,6 +14,7 @@ header('HTTP/1.1 404 Not Found');
 <body>
 <div class="wrapper">
 	<?php require('header.php'); ?>
+	<?php require('modals.php'); ?>
 	<div class="container">
 		<div class="container">
 			<h2 style="text-align: center"><?= $error ?></h2>

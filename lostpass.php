@@ -14,7 +14,7 @@ require_once('secure.inc.php');
 	<?php require('modals.php'); ?>
 	<div class="container">
 		<div id="lostpass">
-			<form class="form-lostpass">
+			<form id="form-lostpass" action="javascript:void(0)">
 				<h2>Lost password</h2>
 				<div class="form-group">
 					<label class="sr-only" for="form-lostpass-username">Username</label>

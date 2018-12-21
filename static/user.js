@@ -32,7 +32,7 @@ function register_events_user() {
 		}
 		$('#modal-verify').modal("hide");
 		var ajax = $.ajax({
-			url: window.config.BASE_URL + "service?action=verify_email",
+			url: window.config.BASE_URL + "/service?action=verify_email",
 			type: 'POST',
 			data: {
 				code: code
@@ -54,14 +54,13 @@ function register_events_user() {
 	});
 
 	$("#form-email-submit").click(function (e) {
-		e.preventDefault();
 		var email = $("#form-email-email").val();
 		if (email.length < 6) {
-			return false;
+			return true;
 		}
 		$('#modal-email').modal("hide");
 		var ajax = $.ajax({
-			url: window.config.BASE_URL + "service?action=user_update",
+			url: window.config.BASE_URL + "/service?action=user_update",
 			type: 'POST',
 			data: {
 				email: email
@@ -107,16 +106,15 @@ function register_events_user() {
 	});
 
 	$('#form-user-submit').click(function (e) {
-		e.preventDefault();
 		var username = $("#form-user-username").val();
 		var email = $("#form-user-email").val();
 		var password = $("#form-user-password").val();
 		var role = $("#form-user-role").val();
 		if (!validateEmail(email))
-			return false;
+			return true;
+		$('#modal-user').modal('hide');
 		if (password.length !== 0)
 			password = cryptPwd(password);
-		$("#form-user-submit").attr("disabled", "disabled");
 		var ajax = $.ajax({
 			url: window.config.BASE_URL + "/service?action=user_update",
 			type: 'POST',
@@ -129,16 +127,15 @@ function register_events_user() {
 		});
 		ajax.done(function (res) {
 			if (res["errno"] === 0) {
-				$('#modal-user').modal('hide');
 				$('#table-user').bootstrapTable("refresh");
 			} else {
-				$("#form-user-msg").html(res["msg"]);
+				$('#modal-msg').modal("show");
+				$('#modal-msg-content').text(res["msg"]);
 			}
-			$("#form-user-submit").removeAttr("disabled");
 		});
 		ajax.fail(function (jqXHR, textStatus) {
-			alert("Request failed :" + textStatus);
-			$("#form-user-submit").removeAttr("disabled");
+			$('#modal-msg').modal("show");
+			$('#modal-msg-content').text("Request failed :" + textStatus);
 		});
 	});
 }
@@ -285,7 +282,7 @@ function load_profile() {
 			var user = res["user"];
 			$('#user-username').text(user.username);
 			$('#user-email').text(user.email);
-			if (user.email_verified === 1) {
+			if (user.email_verified === "1") {
 				$('#btn-verify-email').text("Verified");
 				$('#btn-verify-email').addClass("hidden");
 			} else {
