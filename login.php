@@ -40,7 +40,7 @@ require_once('init.inc.php');
 				</form>
 			</div>
 		<?php } else { ?>
-			<div id="login" class="panel panel-default">
+			<div id="havelogged" class="panel panel-default" style="padding: 25px">
 				<h4>You have logged in</h4>
 				<div>
 					<input type="radio" checked="checked"

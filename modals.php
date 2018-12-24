@@ -220,7 +220,7 @@
 						</tr>
 					</table>
 					<div>
-						<button id="form-verify-submit" type="submit" class="btn btn-primary">&nbsp;Save&nbsp;</button>
+						<button id="form-verify-submit" type="submit" class="btn btn-primary">&nbsp;Verify&nbsp;</button>
 					</div>
 				</form>
 			</div>

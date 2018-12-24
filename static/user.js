@@ -1,6 +1,8 @@
 function register_events_user() {
 	$("#btn-verify-email").click(function (e) {
 		e.preventDefault();
+		$("#form-verify-code").val('');
+		$('#btn-verify-send').text("Send");
 		$('#modal-verify').modal('show');
 	});
 
