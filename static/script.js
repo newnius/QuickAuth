@@ -100,23 +100,7 @@ $(function () {
 		window.location.pathname = next;
 	});
 
-	$("#btn-signout-header").click(function (e) {
-		e.preventDefault();
-		var ajax = $.ajax({
-			url: window.config.BASE_URL + "/service?action=signout",
-			type: 'POST',
-			data: {}
-		});
-		ajax.done(function (res) {
-			window.location.pathname = "login";
-		});
-		ajax.fail(function (jqXHR, textStatus) {
-			$('#modal-msg').modal('show');
-			$("#modal-msg-content").text("Request failed :" + textStatus);
-		});
-	});
-
-	$("#btn-signout").click(function (e) {
+	$("#btn-signout, #btn-signout-header").click(function (e) {
 		e.preventDefault();
 		var ajax = $.ajax({
 			url: window.config.BASE_URL + "/service?action=signout",
